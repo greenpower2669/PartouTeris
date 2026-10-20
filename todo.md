@@ -1,0 +1,13 @@
+# TODO — PartouTeris
+- [x] Identifier le vrai dépôt `greenpower2669/PartouTeris` et lire son état.
+- [x] Créer la branche `feature/lunar-four-fronts-001` sans modifier main.
+- [x] Implémenter grille polaire et quatre pièces simultanées.
+- [x] Ajouter commandes tactiles, ghosts, graphismes provisoires, score, pause.
+- [x] Préparer l'application Android et son icône.
+- [x] Ajouter tests Node et workflow de génération d'APK directe.
+- [ ] Vérifier l'exécution verte de GitHub Actions et la présence effective de l'APK dans `temp/`.
+- [ ] Tester l'APK sur SM-A576B Android 16, ajuster contrôle/police/contraste selon retour Fab.
+- [ ] Valider les règles de concurrence de pièces sur la frontière de deux cadrans.
+- [ ] Ajouter les FX sonores, animations pyramidales, aides tactiles réglables et réglages d'accessibilité.
+- [ ] Valider avec Fab le package Android avant toute publication Play Store ; AAB signé plus tard.
+- [ ] Ne pas fusionner main ou publier de Release définitive sans validation explicite.
