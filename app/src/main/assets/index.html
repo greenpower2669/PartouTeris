@@ -122,7 +122,7 @@ function overlays(){
   ctx.textAlign="center";ctx.font="bold 13px system-ui";ctx.fillStyle="#e9cc91";
   const labels=["NORD","EST","SUD","OUEST"];
   for(let i=0;i<4;i++){
-    const [x,y]=point(rad(i*12+6),outer+Math.min(31,scale*.13));
+    const [x,y]=point(rad(i*12),outer+Math.min(31,scale*.13));
     ctx.fillText(labels[i],x,y);
   }
 }
