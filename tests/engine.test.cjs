@@ -37,7 +37,7 @@ test('Four lanes move under gravity and pause freezes',()=>{
 });
 test('Blocked moves cannot overwrite occupied sector',()=>{
   const g=new Game(()=>0);let p=g.pieces[0];
-  p.radius=1;g.board[1][6]=3;
+  p.radius=1;g.board[1][0]=3;
   assert.equal(g.canPlace(p),false);
 });
 test('Overflow ends game instead of silently losing cells',()=>{
