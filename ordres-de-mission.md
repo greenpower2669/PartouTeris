@@ -21,4 +21,4 @@
 - **Retour utilisateur :** « Trop rapide la descente et pa,de sons c pas gai ».
 - **Action demandée :** réduire fortement la cadence et ajouter sons/musique motivants.
 - **Implémentation :** v0.1.1 : 5 s/étage, vitesse réglable 2–8 s, progression lente, thème original WebAudio et sons d'interaction, curseurs indépendants et mute.
-- **Statut :** Code développé, résultats CI et essai humain à vérifier avant clôture.
+- **Statut :** Build Android et tests CI vérifiés (#39509803472), APK directe 0.1.1 disponible ; ressenti de Fab et son Android réels restent à valider.
