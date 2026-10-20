@@ -33,8 +33,10 @@
           this.effects=ctx.createGain();this.effects.connect(compressor);
           this.setVolumes(this.musicVolume,this.effectsVolume);
         }
-        if(this.context.state!=="running") this.context.resume().catch(()=>{});
-        this.nextBeat=0;
+        if(this.context.state!=="running") {
+          this.context.resume().catch(()=>{});
+          this.nextBeat=0;
+        }
         return true;
       } catch(e) {this.supported=false;return false;}
     }
