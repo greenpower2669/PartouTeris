@@ -19,3 +19,9 @@ gradle :app:assembleDebug
 Ouvrir `app/src/main/assets/index.html` dans un navigateur récent permet aussi une prévisualisation locale du gameplay. Android compile avec Gradle 8.9, plugin Android 8.7.3 et SDK 35.
 
 Aucune publication ni fusion vers `main` sans validation explicite.
+
+### 📱 APK de test directement installable
+
+[PartouTeris-v0.1.0-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.0-debug.apk) — générée et vérifiée par [GitHub Actions #39504100261](https://github.com/greenpower2669/PartouTeris/actions/runs/39504100261), APK debug (pas une AAB Play Store). Télécharger le fichier `.apk` sans ZIP.
+
+**À valider :** confort tactile/ergonomique, rendu et fluidité sur Samsung SM-A576B Android 16.

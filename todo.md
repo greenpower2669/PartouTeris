@@ -5,7 +5,7 @@
 - [x] Ajouter commandes tactiles, ghosts, graphismes provisoires, score, pause.
 - [x] Préparer l'application Android et son icône.
 - [x] Ajouter tests Node et workflow de génération d'APK directe.
-- [ ] Vérifier l'exécution verte de GitHub Actions et la présence effective de l'APK dans `temp/`.
+- [x] Build et tests verts : GitHub Actions run 39504100261 ; APK direct vérifié (16 005 octets) dans `temp/PartouTeris-v0.1.0-debug.apk`.
 - [ ] Tester l'APK sur SM-A576B Android 16, ajuster contrôle/police/contraste selon retour Fab.
 - [ ] Valider les règles de concurrence de pièces sur la frontière de deux cadrans.
 - [ ] Ajouter les FX sonores, animations pyramidales, aides tactiles réglables et réglages d'accessibilité.

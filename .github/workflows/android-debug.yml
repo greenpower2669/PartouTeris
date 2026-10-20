@@ -6,6 +6,7 @@ on:
       - "feature/lunar-four-fronts-*"
     paths-ignore:
       - "temp/**"
+      - "**/*.md"
 permissions:
   contents: write
 jobs:
