@@ -22,6 +22,8 @@
   class Game {
     constructor(rng=Math.random) { this.rng=rng; this.reset(); }
     reset() {
+      this.baseFallSeconds=this.baseFallSeconds||5.0;
+      this.events=[];
       this.board = Array.from({length:RINGS},()=>Array(SECTORS).fill(-1));
       this.score=0; this.cleared=0; this.level=1; this.seconds=0;
       this.combo=0; this.flash=0; this.over=false; this.paused=false;
@@ -29,6 +31,15 @@
       this.fall=Array(LANES).fill(0);
       for(let i=0;i<LANES;i++) this.spawn(i);
     }
+    setBaseFallSeconds(value) {
+      if(!Number.isFinite(Number(value)))return this.baseFallSeconds;
+      this.baseFallSeconds=Math.min(8,Math.max(2,Number(value)));
+      return this.baseFallSeconds;
+    }
+    fallInterval() {
+      return Math.max(.8,this.baseFallSeconds*Math.pow(.92,this.level-1));
+    }
+    drainEvents(){return this.events.splice(0);}
     spawn(lane) {
       const type=Math.max(0,Math.min(FORMS.length-1,Math.floor(this.rng()*FORMS.length)));
       this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+1,rot:0,boost:false};
@@ -61,7 +72,7 @@
       const rot=mod(p.rot+1,4);
       for(const kick of [0,-1,1,-2,2]) {
         if(this.canPlace(p,mod(p.angle+kick,SECTORS),p.radius,rot)) {
-          p.angle=mod(p.angle+kick,SECTORS); p.rot=rot; return true;
+          p.angle=mod(p.angle+kick,SECTORS); p.rot=rot; this.events.push({type:'rotate',lane}); return true;
         }
       }
       return false;
@@ -78,8 +89,11 @@
       const p=this.pieces[lane];
       if(!p) return;
       const blocks=cellsOf(p);
-      if(blocks.some(([,r])=>r>=RINGS||r<0)) { this.over=true; return; }
+      if(blocks.some(([,r])=>r>=RINGS||r<0)) {
+        this.over=true; this.events.push({type:'gameover',lane}); return;
+      }
       for(const [a,r] of blocks) this.board[r][a]=lane;
+      this.events.push({type:'lock',lane});
       this.pieces[lane]=null;
       this.spawn(lane);
     }
@@ -96,7 +110,7 @@
         this.combo++;
         this.cleared+=n;
         this.score += 480*n*n*this.level + 100*Math.max(0,this.combo-1);
-        this.flash=1;
+        this.flash=1; this.events.push({type:'ring',count:n});
       }else this.combo=0;
       return n;
     }
@@ -104,8 +118,8 @@
       if(this.over||this.paused) return;
       const dt=Math.min(Math.max(dtSeconds,0),0.12);
       this.seconds+=dt;
-      this.level=1+Math.floor(this.cleared/3)+Math.floor(this.seconds/75);
-      const interval=Math.max(0.13,0.82*Math.pow(0.9,this.level-1));
+      this.level=1+Math.floor(this.cleared/3)+Math.floor(this.seconds/150);
+      const interval=this.fallInterval();
       let didLock=false;
       for(let lane=0;lane<LANES;lane++) {
         let p=this.pieces[lane];

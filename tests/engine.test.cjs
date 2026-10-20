@@ -2,6 +2,21 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {Game,SECTORS,RINGS,cellsOf} = require('../app/src/main/assets/engine.js');
 
+test('Default descent is slow, adjustable and increases gradually',()=>{
+  const g=new Game(()=>0);
+  assert.equal(g.baseFallSeconds,5);
+  assert.equal(g.fallInterval(),5);
+  g.setBaseFallSeconds(8);assert.equal(g.fallInterval(),8);
+  g.setBaseFallSeconds(0);assert.equal(g.baseFallSeconds,2);
+  g.level=4;assert.ok(g.fallInterval()<2);
+  g.setBaseFallSeconds(NaN);assert.equal(g.baseFallSeconds,2);
+});
+test('Gameplay effects emit structured events on rotation, locking and rings',()=>{
+  const g=new Game(()=>0);
+  g.rotate(0);assert.equal(g.drainEvents()[0]?.type,'rotate');
+  g.board[0].fill(0);g.clearRings();
+  assert.equal(g.drainEvents()[0]?.type,'ring');
+});
 test('Four directions have four independent falling pieces', () => {
   const g=new Game(()=>0);assert.equal(g.pieces.length,4);
   assert.ok(g.pieces.every(p=>p!==null));assert.equal(g.board.length,RINGS);

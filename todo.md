@@ -11,3 +11,11 @@
 - [ ] Ajouter les FX sonores, animations pyramidales, aides tactiles réglables et réglages d'accessibilité.
 - [ ] Valider avec Fab le package Android avant toute publication Play Store ; AAB signé plus tard.
 - [ ] Ne pas fusionner main ou publier de Release définitive sans validation explicite.
+
+## PT-003 — Descente/audio 0.1.1
+- [x] Ralentir la chute initiale et ajouter contrôle de vitesse sauvegardé.
+- [x] Produire une musique de fond synthétique originale sans accès réseau.
+- [x] Effets rotation, déplacement, collision, couronne, game over ; volumes indépendants et mute.
+- [x] Déclenchement WebAudio après un geste de démarrage explicite.
+- [ ] Valider compilation 0.1.1 et existence APK direct, puis tester son réellement sur Android 16.
+- [ ] Selon retour Fab, enrichir FX pharaons/pyramides avec les ressources partagées (sans créer de dépendance obligatoire).

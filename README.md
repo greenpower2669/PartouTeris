@@ -1,27 +1,23 @@
 # 🌙 PartouTeris — Les Pharaons de la Lune
 
-Jeu de blocs orbital sur **quatre fronts simultanés**. La Lune possède une grille continue de 48 secteurs et 10 couronnes concentriques. Quatre pièces descendent indépendamment depuis le nord, l'est, le sud et l'ouest. Le joueur les oriente et déplace tangentiellement pour compléter une couronne de 360°, la faire disparaître et gagner des points.
+Quatre fronts de blocs tombent autour d'une Lune circulaire. Remplir 360° d'une couronne pour l'effacer !
 
-## Prototype Android 0.1.0
-- Jeu jouable hors ligne dans une WebView locale Android (aucune autorisation Internet).
-- Quatre chutes parallèles, rotations de 90°, ghost, collisions, accélération, score et record local.
-- Fond lunaire égyptien futuriste vectoriel, icône de l'application, mode paysage immersif.
-- Appuyer sur un cadran puis glisser autour de la Lune pour décaler la pièce ; taper pour tourner ; glisser vers le centre pour accélérer. Boutons de rotation et chute disponibles.
-- Actions GitHub : tests Node, compilation APK debug Android et dépôt du fichier décompressé dans `temp/` sur la branche de travail.
+## Prototype Android 0.1.1 — rythme et ambiance
+- Descente **nettement ralentie** : 5 secondes par niveau radial au début (contre 0,82 seconde dans la 0.1.0), et accélération progressive plus douce.
+- Réglage de vitesse : **2 à 8 secondes** par étage radial, sauvegardé sur le téléphone.
+- Musique électronique égyptienne et effets de manipulation, impact, anneau terminé et fin de partie **synthétisés localement** avec WebAudio, sans réseau ni assets externes.
+- Volume de musique et volume d'effets réglables indépendamment, bouton muet.
+- **L'audio Android demande un geste utilisateur :** appuyer sur « ▶ JOUER AVEC LE SON » au démarrage.
+- Les 4 chutes continuent en parallèle, les prévisualisations fantômes, les rotations, les contrôles tactiles et le score restent présents.
+- Icône, plein écran, compatibilité hors ligne.
 
-**Package provisoire :** `com.greenpower2669.partouteris` (à valider avant toute publication Play Store).
+**APK de test :** [PartouTeris-v0.1.1-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.1-debug.apk) (accessible uniquement une fois le build CI réussi).
 
-### Développement
-```bash
-node --test tests/*.test.cjs
-gradle :app:assembleDebug
-```
-Ouvrir `app/src/main/assets/index.html` dans un navigateur récent permet aussi une prévisualisation locale du gameplay. Android compile avec Gradle 8.9, plugin Android 8.7.3 et SDK 35.
+**Contrôle automatique :** `node --test tests/*.test.cjs`, puis `gradle :app:assembleDebug`.
 
-Aucune publication ni fusion vers `main` sans validation explicite.
+**Package provisoire** `com.greenpower2669.partouteris`. Branche `feature/lunar-four-fronts-001`. Ne pas fusionner dans `main` sans accord de Fab.
 
-### 📱 APK de test directement installable
-
-[PartouTeris-v0.1.0-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.0-debug.apk) — générée et vérifiée par [GitHub Actions #39504100261](https://github.com/greenpower2669/PartouTeris/actions/runs/39504100261), APK debug (pas une AAB Play Store). Télécharger le fichier `.apk` sans ZIP.
-
-**À valider :** confort tactile/ergonomique, rendu et fluidité sur Samsung SM-A576B Android 16.
+## Retours de tests attendus
+- Entendre la musique dès « JOUER AVEC LE SON » sur Samsung SM-A576B Android 16.
+- Régler la vitesse et les volumes. Vérifier la fluidité, le toucher et les sons non fatigants.
+- Vérifier la lecture WebAudio (qui dépend de la WebView installée) et les sons après pause/reprise.

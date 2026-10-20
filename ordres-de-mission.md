@@ -16,3 +16,9 @@
 - Livrer une APK debug directement installable depuis GitHub Actions sans extraction ZIP sur téléphone.
 - Tester Android 16 / SM-A576B.
 - **Statut :** APK 0.1.0 debug créée et vérifiée dans GitHub (run #39504100261), lien direct dans README ; validation humaine sur Android 16 attendue, pas de publication Play.
+
+## PT-003 — Descente lente et jeu vivant (21/10/2026)
+- **Retour utilisateur :** « Trop rapide la descente et pa,de sons c pas gai ».
+- **Action demandée :** réduire fortement la cadence et ajouter sons/musique motivants.
+- **Implémentation :** v0.1.1 : 5 s/étage, vitesse réglable 2–8 s, progression lente, thème original WebAudio et sons d'interaction, curseurs indépendants et mute.
+- **Statut :** Code développé, résultats CI et essai humain à vérifier avant clôture.
