@@ -27,5 +27,5 @@
 - [x] Bloquer les rotations accidentelles sur glissement/maintien du second doigt et relâchement du doigt principal.
 - [x] Préserver commandes alternatives, pause, son et sauvegardes.
 - [x] Ajouter six scénarios de test sur les deux doigts.
-- [ ] Vérifier CI et présence effective de l'APK 0.1.2 dans `temp/`.
+- [x] Build et tests verts dans GitHub Actions #39513900116 ; APK directe vérifiée : `temp/PartouTeris-v0.1.2-debug.apk` (21 283 octets).
 - [ ] Confirmer ressenti et multitouch réel sur SM-A576B Android 16, puis ajuster seuils si nécessaire.

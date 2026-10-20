@@ -26,4 +26,4 @@
 ## PT-004 — Contrôle naturel à deux mains (21/10/2026)
 - Retour de Fab : « Pour moi mlus intuitif j attrape main droite et je tapote main gauche pour pivoter ».
 - Contrat : un doigt de la main droite attrape et guide la pièce, le second doigt de la gauche fait tourner **la pièce tenue** par tapotements successifs sans avoir à relâcher la prise ; le second doigt ne détourne jamais la pièce sélectionnée. Bouton de rotation conservé pour un doigt.
-- Statut : implémenté en 0.1.2 sur branche dédiée, à tester réellement sur Samsung SM-A576B Android 16.
+- Statut : implémenté en 0.1.2 ; tests automatiques et build Android validés (#39513900116), APK directe disponible ; validation tactile humaine sur Samsung SM-A576B Android 16 attendue.

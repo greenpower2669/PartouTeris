@@ -24,3 +24,5 @@
 - Observation : le geste de rotation sur un tap du doigt principal obligeait à lâcher le contrôle. Fab préfère attraper/déplacer de la droite tout en tapotant de la gauche pour pivoter.
 - Changement : `touch.js` garde le doigt primaire responsable de la prise et donne aux taps rapides d'un autre doigt la seule commande de rotation. Un contact secondaire ne sélectionne plus un autre front. Les gestes secondaires glissés, longs ou annulés ne pivotent pas ; si la prise se termine avant le tap, celui-ci est annulé.
 - À vérifier sur téléphone : double tactile WebView Samsung, sensibilité des 26 px / 360 ms, possibilité de manipuler les quatre cadrans sur écran paysage.
+
+- Vérification livraison PT-004 : GitHub Actions #39513900116 réussie, compilation Android et tests Node verts ; `temp/PartouTeris-v0.1.2-debug.apk` confirmée (21 283 octets). Essai humain non encore effectué.
