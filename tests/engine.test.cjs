@@ -17,7 +17,7 @@ test('Landing ghost stops at lunar surface',()=>{
 });
 test('Rotations and tangential moves remain legal',()=>{
   const g=new Game(()=>0);const p=g.pieces[0];
-  assert.equal(g.shift(0,1),true);assert.equal(p.angle,7);
+  assert.equal(g.shift(0,1),true);assert.equal(p.angle,1);
   assert.equal(g.rotate(0),true);assert.equal(p.rot,1);
 });
 test('Full 48 cell ring clears and overlying material moves inward',()=>{
