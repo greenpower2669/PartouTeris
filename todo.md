@@ -29,3 +29,12 @@
 - [x] Ajouter six scénarios de test sur les deux doigts.
 - [x] Build et tests verts dans GitHub Actions #39513900116 ; APK directe vérifiée : `temp/PartouTeris-v0.1.2-debug.apk` (21 283 octets).
 - [ ] Confirmer ressenti et multitouch réel sur SM-A576B Android 16, puis ajuster seuils si nécessaire.
+
+## PT-005 et PT-006 — Version 0.1.3
+- [x] Retirer les collisions entre pièces aériennes, sans supprimer les collisions sol/blocs verrouillés.
+- [x] Déterminiser les poses synchronisées et empêcher l'écrasement de blocs.
+- [x] Ajouter tests moteur pour croisements, contact et débordement.
+- [x] Refaire les décors lunaires et pyramides, les cellules, les voiles, les halos et le HUD en rendu procédural.
+- [ ] Vérifier GitHub Actions (tests/compilation), puis lien APK 0.1.3 brut.
+- [ ] Valider qualité, lisibilité et cadence sur Samsung SM-A576B.
+- [ ] Enrichir textures/sons et affiner les effets suivant le ressenti Fab, sans changer le concept.

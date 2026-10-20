@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTeris 0.1.2
+# Contrat de gameplay — PartouTeris 0.1.3
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
@@ -8,3 +8,6 @@
 - Distinguer moteur testé avec Node et interface tactile à valider sur le téléphone.
 
 - Interaction PT-004 : contact primaire maintenu = prise et glissement tangentiel ; tap rapide secondaire (autre doigt) = rotation de 90° de la pièce tenue ; relâchement du primaire = fin de prise et de chute accélérée. Pas de rotation sur simple relâchement du doigt primaire. Le bouton de rotation reste disponible.
+
+- PT-005 : les pièces actives sont non solides entre elles en l'air. canPlace() ne consulte que la grille verrouillée ; lock() résout le placement final vers l'extérieur si un autre bloc a été posé simultanément, puis game-over si aucun logement orbital valide.
+- PT-006 : décor lunaire procédural hors ligne (cratères, texture, pyramides), Terre lointaine, panneaux dorés, blocs à reflets et voiles solaires ; pas encore de textures 3D importées.

@@ -15,3 +15,6 @@
 
 - `app/src/main/assets/touch.js` : contrôleur logique indépendant des Pointer Events ; un contact primaire exclusif (grip), touches secondaires courtes = rotations du même lane, seuil de déplacement et durée, remise à zéro à la pause/perte de focus.
 - `app/src/main/assets/index.html` : adapte les Pointer Events à TwoHandControls, pointage et halo de prise ; `tests/touch.test.cjs` : tests d'interactions à deux mains (tap gauche, drag droite, faux gestes, relâchement, changement de front).
+
+- PT-005 : `engine.js` `canPlace()` ignore les autres blocs actifs ; `landingRadius()` corrige un chevauchement éventuel uniquement au verrouillage. `tests/engine.test.cjs` vérifie les croisements en vol, le raccord angulaire et les atterrissages synchronisés.
+- PT-006 : `app/src/main/assets/visuals.js` est le moteur visuel procédural Canvas 2D ; `index.html` lui délègue le fond, la Lune, les cellules, les parachutes, les impulsions énergétiques. Rendu hors ligne.

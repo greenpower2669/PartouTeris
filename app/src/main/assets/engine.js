@@ -51,10 +51,6 @@
         if(r<0) return false;
         if(r>=RINGS) continue;
         if(this.board[r][a]!==-1) return false;
-        for(const other of this.pieces) {
-          if(!other || other===p) continue;
-          if(cellsOf(other).some(([oa,orad])=>oa===a&&orad===r)) return false;
-        }
       }
       return true;
     }
@@ -85,17 +81,34 @@
       while(this.canPlace(p,p.angle,radius-1,p.rot)) radius--;
       return radius;
     }
+    // During descent, airborne pieces are non-solid. At touchdown they are
+    // resolved in lane order, against committed material ONLY. If a piece is
+    // now embedded in a block placed in the same frame, lift it outward to
+    // the nearest legal supported resting layer; never overwrite board cells.
+    landingRadius(p) {
+      const legal = radius => {
+        const cells=cellsOf(p,p.angle,radius,p.rot);
+        return cells.every(([a,r])=>r>=0 && r<RINGS && this.board[r][a]===-1);
+      };
+      // Start at the present altitude. Going outward avoids teleportation
+      // through the Moon and is needed only for simultaneous arrivals.
+      for(let radius=p.radius;radius<=RINGS+2;radius++){
+        if(legal(radius))return radius;
+      }
+      return null; // material has reached the orbital limit
+    }
     lock(lane) {
       const p=this.pieces[lane];
-      if(!p) return;
-      const blocks=cellsOf(p);
-      if(blocks.some(([,r])=>r>=RINGS||r<0)) {
-        this.over=true; this.events.push({type:'gameover',lane}); return;
+      if(!p || this.over) return false;
+      const radius=this.landingRadius(p);
+      if(radius===null){
+        this.over=true;this.events.push({type:'gameover',lane});return false;
       }
-      for(const [a,r] of blocks) this.board[r][a]=lane;
+      for(const [a,r] of cellsOf(p,p.angle,radius,p.rot)) this.board[r][a]=lane;
       this.events.push({type:'lock',lane});
       this.pieces[lane]=null;
       this.spawn(lane);
+      return true;
     }
     clearRings() {
       let n=0;
@@ -127,7 +140,7 @@
         if(this.fall[lane]>=interval) {
           this.fall[lane]-=interval;
           if(this.canPlace(p,p.angle,p.radius-1,p.rot)) p.radius--;
-          else { this.lock(lane); didLock=true; }
+          else { didLock=this.lock(lane)||didLock; }
           if(this.over) break;
         }
       }

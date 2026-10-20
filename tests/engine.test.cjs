@@ -61,3 +61,56 @@ test('Overflow ends game instead of silently losing cells',()=>{
   const g=new Game(()=>0);
   g.pieces[0].radius=RINGS+1;g.lock(0);assert.equal(g.over,true);
 });
+
+test('Free airborne pieces can cross and overlap without stopping',()=>{
+  const g=new Game(()=>0);
+  g.pieces[0].type=1;g.pieces[1].type=1;
+  g.pieces[0].angle=5;g.pieces[1].angle=5;
+  g.pieces[0].radius=8;g.pieces[1].radius=8;
+  assert.equal(g.canPlace(g.pieces[0],5,7),true);
+  assert.equal(g.canPlace(g.pieces[1],5,7),true);
+  assert.equal(g.ghost(g.pieces[0]),0);
+  for(let i=0;i<45;i++)g.step(.12);
+  assert.equal(g.pieces[0].radius,7);
+  assert.equal(g.pieces[1].radius,7);
+});
+test('Airborne pieces can cross the zero-degree seam',()=>{
+  const g=new Game(()=>0);
+  for(let i=0;i<4;i++){g.pieces[i].angle=0;g.pieces[i].radius=6;}
+  assert.equal(g.canPlace(g.pieces[0]),true);
+  assert.equal(g.shift(0,-1),true);
+  assert.equal(g.pieces[0].angle,47);
+});
+test('Simultaneous arrivals are committed without overwriting solid blocks',()=>{
+  const g=new Game(()=>0);
+  g.pieces[0]={lane:0,type:1,angle:9,radius:0,rot:0,boost:false};
+  g.pieces[1]={lane:1,type:1,angle:9,radius:0,rot:0,boost:false};
+  assert.equal(g.lock(0),true);
+  assert.equal(g.lock(1),true);
+  for(const angle of [9,10]){
+    assert.equal(g.board[0][angle],0);
+    assert.equal(g.board[1][angle],0);
+    assert.equal(g.board[2][angle],1);
+    assert.equal(g.board[3][angle],1);
+  }
+  assert.equal(g.over,false);
+});
+test('No illegal airborne suspended blocks: ground contact is still solid',()=>{
+  const g=new Game(()=>0);
+  g.pieces[0]={lane:0,type:1,angle:4,radius:2,rot:0,boost:false};
+  g.board[1][4]=2;
+  assert.equal(g.canPlace(g.pieces[0],4,1),false);
+  assert.equal(g.canPlace(g.pieces[0],4,2),true);
+  assert.equal(g.ghost(g.pieces[0]),2);
+  assert.equal(g.lock(0),true);
+  assert.equal(g.board[2][4],0);
+});
+test('Near orbital limit, simultaneous occupied landing produces real game over',()=>{
+  const g=new Game(()=>0);
+  g.pieces[0]={lane:0,type:1,angle:6,radius:8,rot:0,boost:false};
+  g.board[8][6]=3;
+  assert.equal(g.lock(0),false);
+  assert.equal(g.over,true);
+  assert.equal(g.board[8][6],3);
+  assert.equal(g.drainEvents().at(-1).type,'gameover');
+});

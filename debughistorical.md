@@ -26,3 +26,9 @@
 - À vérifier sur téléphone : double tactile WebView Samsung, sensibilité des 26 px / 360 ms, possibilité de manipuler les quatre cadrans sur écran paysage.
 
 - Vérification livraison PT-004 : GitHub Actions #39513900116 réussie, compilation Android et tests Node verts ; `temp/PartouTeris-v0.1.2-debug.apk` confirmée (21 283 octets). Essai humain non encore effectué.
+
+## PT-005/PT-006 — 21/10/2026
+- Bug rapporté par Fab : les pièces sous parachute se bloquent mutuellement **en l'air** ; cause confirmée par lecture : `canPlace()` comparait chaque case aux quatre pièces actives, ce qui gelait leur descente.
+- Correctif : `canPlace()` ignore les pièces aériennes et consulte seulement les blocs définitivement posés ; `landingRadius()` résout les arrivées concurrentes avant écriture sur le plateau et ne permet plus d'écrasement.
+- Visuel : rendu Canvas initial trop minimal (petite Lune, arcs unis, parachute filaire) ; remplacé par art procédural hors ligne, cratères/pyramides ombrés, cellules réfléchissantes et HUD métallique.
+- Tests CI et performances/ergonomie Android réelles restent à vérifier.
