@@ -17,6 +17,7 @@
 - [x] Produire une musique de fond synthétique originale sans accès réseau.
 - [x] Effets rotation, déplacement, collision, couronne, game over ; volumes indépendants et mute.
 - [x] Déclenchement WebAudio après un geste de démarrage explicite.
-- [ ] Valider compilation 0.1.1 et existence APK direct, puis tester son réellement sur Android 16.
+- [x] Tests et compilation APK 0.1.1 validés par GitHub Actions #39509803472 ; fichier brut `temp/PartouTeris-v0.1.1-debug.apk` vérifié (20 206 octets).
+- [ ] Tester la nouvelle vitesse et l'audio réellement sur SM-A576B Android 16.
 - [ ] Selon retour Fab, enrichir FX pharaons/pyramides avec les ressources partagées (sans créer de dépendance obligatoire).
 - [x] Adapter le test de gravité à la nouvelle durée (ancienne hypothèse 0,82 s incompatible avec 5 s).
