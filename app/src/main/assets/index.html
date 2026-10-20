@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>PartouTeris — Les Pharaons de la Lune</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;background:#060d1c;color:#eaf6ff;touch-action:none;user-select:none;-webkit-user-select:none}
+#screen{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#hud{position:absolute;z-index:2;top:8px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;pointer-events:none;gap:12px;text-shadow:0 2px 6px #000}
+#hud strong{color:#ffdf94;font-size:clamp(16px,2.6vw,25px)}
+#hud small{display:block;color:#a5c1d4;font-size:12px}
+#hud .right{text-align:right}
+#buttons{position:absolute;z-index:4;right:9px;bottom:9px;display:flex;gap:9px}
+button{border:1px solid #d6aa52;border-radius:13px;background:#132941de;color:#fff1c9;font-size:clamp(13px,2vw,18px);font-weight:700;min-height:47px;padding:8px 14px;touch-action:manipulation}
+button:active{background:#3d6177}button:focus-visible{outline:3px solid #ffdb70}
+#tip{position:absolute;z-index:1;bottom:9px;left:10px;width:55%;font-size:clamp(11px,1.6vw,14px);line-height:1.3;color:#b8d5e8;text-shadow:0 2px 4px black;pointer-events:none}
+#alert{position:absolute;z-index:3;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;background:#061a32ee;border:2px solid #dbbc72;border-radius:22px;padding:22px 32px;min-width:260px;display:none;box-shadow:0 0 38px #020815}
+#alert h1{font-size:27px;color:#ffe0a0;margin:0 0 10px}#alert p{font-size:17px;margin:4px}
+@media(max-width:650px){#buttons{bottom:5px;right:5px;gap:5px}button{padding:6px 10px;min-height:39px}#tip{bottom:8px;font-size:11px;width:51%}}
+</style></head><body>
+<canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
+<div id="hud"><div><strong>🌙 PARTOUTERIS</strong><small id="stats">Score 0 · Record 0</small></div><div class="right"><strong id="level">Niveau 1</strong><small id="rings">Couronnes 0 · 4 fronts actifs</small></div></div>
+<div id="tip">Touchez un cadran. Glissez autour de la Lune pour déplacer ; touchez brièvement pour tourner ; glissez vers la Lune pour accélérer.</div>
+<div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
+<div id="alert"><h1>La Lune déborde !</h1><p id="finalScore"></p><p>La Terre a besoin de toi.</p><button id="again">REJOUER</button></div>
+<script src="engine.js"></script>
+<script>
+(function(){
+"use strict";
+const {Game,SECTORS,RINGS,LANES,COLORS,cellsOf,mod}=window.PartouEngine;
+const canvas=document.getElementById("screen"),ctx=canvas.getContext("2d");
+const ui={stats:document.getElementById("stats"),level:document.getElementById("level"),rings:document.getElementById("rings"),alert:document.getElementById("alert"),final:document.getElementById("finalScore"),pause:document.getElementById("pause")};
+const game=new Game();
+let record=0;try{record=+(localStorage.getItem("partouteris-record")||0)}catch(e){}
+let W=1,H=1,dpr=1,cx=0,cy=0,scale=1,inner=0,outer=0,stepR=0;
+let selected=0,lastTime=0,previousCleared=0;
+const pointers=new Map(),stars=[];
+let seed=91;function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+for(let i=0;i<125;i++)stars.push({x:random(),y:random(),r:0.3+random()*1.6,a:0.25+random()*0.65});
+function resize(){
+  dpr=Math.min(window.devicePixelRatio||1,2);W=window.innerWidth;H=window.innerHeight;
+  canvas.width=Math.max(1,Math.round(W*dpr));canvas.height=Math.max(1,Math.round(H*dpr));
+  canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(dpr,0,0,dpr,0,0);
+  cx=W*0.5;cy=H*0.52;scale=Math.min(H*0.54,W*0.32);
+  inner=scale*0.20;outer=scale*0.82;stepR=(outer-inner)/RINGS;
+}
+window.addEventListener("resize",resize);resize();
+const TAU=Math.PI*2;
+function rad(a){return -Math.PI/2+a*TAU/SECTORS}
+function point(angle,r){return [cx+Math.cos(angle)*r,cy+Math.sin(angle)*r]}
+function wedge(s,r,color,opacity=1,stroke=true){
+  if(r<0||r>=RINGS) return;
+  const a0=rad(s)+0.012,a1=rad(s+1)-0.012,lo=inner+stepR*r+0.7,hi=inner+stepR*(r+1)-0.7;
+  ctx.beginPath();ctx.arc(cx,cy,hi,a0,a1,false);ctx.arc(cx,cy,lo,a1,a0,true);ctx.closePath();
+  ctx.globalAlpha=opacity;ctx.fillStyle=color;ctx.fill();
+  if(stroke){ctx.lineWidth=1;ctx.strokeStyle="#ffffff70";ctx.stroke();}
+  ctx.globalAlpha=1;
+}
+function backdrop(){
+  const grd=ctx.createRadialGradient(cx,cy,inner,cx,cy,scale*1.25);
+  grd.addColorStop(0,"#1b3151");grd.addColorStop(0.48,"#091b32");grd.addColorStop(1,"#030916");
+  ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+  for(const s of stars){ctx.globalAlpha=s.a;ctx.fillStyle="#c9ebff";ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r,0,TAU);ctx.fill();}ctx.globalAlpha=1;
+  ctx.strokeStyle="#c3a05a7a";ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(cx,cy,outer+5,0,TAU);ctx.stroke();
+  ctx.strokeStyle="#61c1e93b";ctx.lineWidth=1;
+  for(let r=0;r<=RINGS;r++){ctx.beginPath();ctx.arc(cx,cy,inner+r*stepR,0,TAU);ctx.stroke();}
+  for(let a=0;a<SECTORS;a++){
+    const th=rad(a);let [x1,y1]=point(th,inner),[x2,y2]=point(th,outer);
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle=a%12===0?"#efd58588":"#4daec927";ctx.lineWidth=a%12===0?2:0.65;ctx.stroke();
+  }
+}
+function moon(){
+  const grad=ctx.createRadialGradient(cx-inner*0.5,cy-inner*0.55,2,cx,cy,inner);
+  grad.addColorStop(0,"#d8d8ba");grad.addColorStop(0.5,"#87919a");grad.addColorStop(1,"#273c56");
+  ctx.fillStyle=grad;ctx.beginPath();ctx.arc(cx,cy,inner-1,0,TAU);ctx.fill();
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,inner-2,0,TAU);ctx.clip();
+  const spots=[[.22,-.35,.18],[-.52,.23,.13],[.35,.35,.12],[-.15,-.02,.09],[.48,-.03,.07]];
+  for(const [x,y,r] of spots){
+    ctx.beginPath();ctx.ellipse(cx+x*inner,cy+y*inner,r*inner,r*inner*.8,.3,0,TAU);
+    ctx.fillStyle="#26374c66";ctx.fill();ctx.strokeStyle="#e7e7d155";ctx.lineWidth=1.5;ctx.stroke();
+  }
+  ctx.fillStyle="#e2bb66";ctx.strokeStyle="#fff3bf";ctx.lineWidth=1;
+  for(const [dx,w,h] of [[-0.55,.38,.52],[0,.46,.7],[.56,.32,.4]]){
+    ctx.beginPath();ctx.moveTo(cx+inner*(dx-w/2),cy+inner*.52);ctx.lineTo(cx+inner*dx,cy+inner*(.52-h));ctx.lineTo(cx+inner*(dx+w/2),cy+inner*.52);ctx.closePath();ctx.fill();ctx.stroke();
+  }
+  ctx.restore();
+}
+function parachute(p){
+  const angle=rad(p.angle+.5),radius=inner+(p.radius+1.8)*stepR;
+  if(radius>scale*1.35) return;
+  const [x,y]=point(angle,radius);
+  ctx.save();ctx.translate(x,y);ctx.rotate(angle+Math.PI/2);
+  ctx.strokeStyle="#ffdc97";ctx.lineWidth=1.8;ctx.globalAlpha=.75;
+  ctx.beginPath();ctx.arc(0,-6,13,Math.PI,TAU);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-13,-6);ctx.lineTo(0,13);ctx.lineTo(13,-6);ctx.stroke();
+  ctx.fillStyle=COLORS[p.lane];ctx.beginPath();ctx.arc(0,13,3.3,0,TAU);ctx.fill();ctx.restore();ctx.globalAlpha=1;
+}
+function pieces(){
+  for(const p of game.pieces){
+    if(!p)continue;
+    const ghost=game.ghost(p);
+    for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))wedge(a,r,COLORS[p.lane],.20,false);
+  }
+  for(const p of game.pieces){
+    if(!p)continue;
+    for(const [a,r] of cellsOf(p))wedge(a,r,COLORS[p.lane],.94,true);
+    parachute(p);
+  }
+  const p=game.pieces[selected];
+  if(p){
+    const angle=rad(p.angle+.5),r=Math.min(outer+19,inner+(p.radius+1.0)*stepR);
+    const [x,y]=point(angle,r);ctx.strokeStyle="#fff4a4";ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x,y,8,0,TAU);ctx.stroke();
+  }
+}
+function overlays(){
+  if(game.flash>0){
+    ctx.globalAlpha=game.flash*.26;ctx.strokeStyle="#ffe1a6";ctx.lineWidth=8+12*game.flash;
+    ctx.beginPath();ctx.arc(cx,cy,(inner+outer)/2,0,TAU);ctx.stroke();ctx.globalAlpha=1;
+  }
+  ctx.textAlign="center";ctx.font="bold 13px system-ui";ctx.fillStyle="#e9cc91";
+  const labels=["NORD","EST","SUD","OUEST"];
+  for(let i=0;i<4;i++){
+    const [x,y]=point(rad(i*12+6),outer+Math.min(31,scale*.13));
+    ctx.fillText(labels[i],x,y);
+  }
+}
+function updateHud(){
+  if(game.score>record){record=game.score;try{localStorage.setItem("partouteris-record",String(record))}catch(e){}}
+  ui.stats.textContent="Score "+game.score+" · Record "+record;
+  ui.level.textContent="Niveau "+game.level;
+  ui.rings.textContent="Couronnes "+game.cleared+" · 4 fronts";
+  ui.pause.textContent=game.paused?"▶ REPRENDRE":"Ⅱ PAUSE";
+  if(game.over){ui.final.textContent="Score : "+game.score+" · Couronnes : "+game.cleared;ui.alert.style.display="block";}
+}
+function frame(time){
+  const dt=lastTime?Math.min(.1,(time-lastTime)/1000):0;lastTime=time;
+  const before=game.cleared;game.step(dt);
+  if(game.cleared!==before){previousCleared=game.cleared;if(navigator.vibrate)navigator.vibrate(40);}
+  backdrop();
+  for(let r=0;r<RINGS;r++)for(let a=0;a<SECTORS;a++)if(game.board[r][a]!==-1)wedge(a,r,COLORS[game.board[r][a]],.88,true);
+  moon();pieces();overlays();updateHud();requestAnimationFrame(frame);
+}
+function fromEvent(e){
+  const b=canvas.getBoundingClientRect(),x=e.clientX-b.left,y=e.clientY-b.top;
+  const dx=x-cx,dy=y-cy,theta=Math.atan2(dy,dx)+Math.PI/2;
+  return {x,y,angle:mod(theta/TAU*SECTORS,SECTORS),distance:Math.hypot(dx,dy)};
+}
+function nearestLane(angle){
+  let winner=0,best=Infinity;
+  for(let i=0;i<LANES;i++){
+    const p=game.pieces[i];if(!p)continue;
+    const diff=Math.abs(mod(angle-p.angle+SECTORS/2,SECTORS)-SECTORS/2);
+    if(diff<best){best=diff;winner=i;}
+  }
+  return winner;
+}
+canvas.addEventListener("pointerdown",e=>{
+  e.preventDefault();if(game.over||game.paused)return;
+  const pos=fromEvent(e),lane=nearestLane(pos.angle);selected=lane;
+  pointers.set(e.pointerId,{lane,lastAngle:pos.angle,startDistance:pos.distance,lastDistance:pos.distance,moved:false,x:pos.x,y:pos.y,delta:0});
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointermove",e=>{
+  const t=pointers.get(e.pointerId);if(!t||game.paused)return;
+  e.preventDefault();const pos=fromEvent(e);
+  const diff=mod(pos.angle-t.lastAngle+SECTORS/2,SECTORS)-SECTORS/2;
+  t.delta+=diff;t.lastAngle=pos.angle;
+  if(Math.hypot(pos.x-t.x,pos.y-t.y)>10)t.moved=true;
+  for(let steps=0;Math.abs(t.delta)>=0.8&&steps<8;steps++){
+    const direction=Math.sign(t.delta);
+    game.shift(t.lane,direction);t.delta-=direction;
+  }
+  game.boost(t.lane,pos.distance<t.startDistance-17);
+  t.lastDistance=pos.distance;
+});
+function finish(e){
+  const t=pointers.get(e.pointerId);if(!t)return;
+  e.preventDefault();if(!t.moved&&!game.paused&&!game.over)game.rotate(t.lane);
+  pointers.delete(e.pointerId);
+  if(![...pointers.values()].some(x=>x.lane===t.lane))game.boost(t.lane,false);
+}
+canvas.addEventListener("pointerup",finish);
+canvas.addEventListener("pointercancel",finish);
+document.getElementById("turn").addEventListener("click",()=>game.rotate(selected));
+document.getElementById("pause").addEventListener("click",()=>{if(!game.over){game.paused=!game.paused;lastTime=0;}});
+const fast=document.getElementById("fast");
+fast.addEventListener("pointerdown",e=>{e.preventDefault();fast.setPointerCapture(e.pointerId);game.boost(selected,true);});
+for(const name of ["pointerup","pointercancel","lostpointercapture"])fast.addEventListener(name,()=>game.boost(selected,false));
+document.getElementById("again").addEventListener("click",()=>{game.reset();ui.alert.style.display="none";selected=0;previousCleared=0;});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){game.paused=true;lastTime=0;}});
+window.addEventListener("keydown",e=>{
+ if(e.code==="Space"){e.preventDefault();game.paused=!game.paused;}
+ if(e.key==="ArrowLeft")game.shift(selected,-1);
+ if(e.key==="ArrowRight")game.shift(selected,1);
+ if(e.key==="ArrowUp")game.rotate(selected);
+ if(e.key==="ArrowDown")game.boost(selected,true);
+ if(["1","2","3","4"].includes(e.key))selected=Number(e.key)-1;
+});
+window.addEventListener("keyup",e=>{if(e.key==="ArrowDown")game.boost(selected,false);});
+requestAnimationFrame(frame);
+})();
+</script></body></html>
