@@ -39,17 +39,17 @@ jobs:
         run: gradle :app:assembleDebug --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: PartouTeris-v0.1.3-debug
+          name: PartouTeris-v0.1.4-debug
           path: app/build/outputs/apk/debug/app-debug.apk
       - name: Publish uncompressed temporary APK on working branch
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         shell: bash
         run: |
           mkdir -p temp
-          cp app/build/outputs/apk/debug/app-debug.apk temp/PartouTeris-v0.1.3-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk temp/PartouTeris-v0.1.4-debug.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add temp/PartouTeris-v0.1.3-debug.apk
+          git add temp/PartouTeris-v0.1.4-debug.apk
           if ! git diff --cached --quiet; then
             git commit -m "build: temporary installable PartouTeris debug APK [skip ci]"
             git push origin "HEAD:${GITHUB_REF_NAME}"

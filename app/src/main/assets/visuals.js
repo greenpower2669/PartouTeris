@@ -48,22 +48,7 @@ class Artist {
       x.fillStyle=random()>.54?"rgba(245,245,224,.095)":"rgba(8,27,45,.10)";
       x.fillRect(xx,yy,.6+random()*1.7,.6+random()*1.8);
     }
-    // Carved lunar Egyptian temples: strong left/right facets and gold apex.
-    const pyramid=(px,py,w,h)=>{
-      x.fillStyle="#4e4c48aa";
-      x.beginPath();x.moveTo(px-w*.48,py+7);x.lineTo(px+w*.54,py+11);
-      x.lineTo(px+w*.63,py+19);x.lineTo(px-w*.5,py+15);x.closePath();x.fill();
-      x.fillStyle="#e5c07b";x.beginPath();x.moveTo(px-w/2,py);x.lineTo(px,py-h);x.lineTo(px,py);x.closePath();x.fill();
-      x.fillStyle="#93613f";x.beginPath();x.moveTo(px,py-h);x.lineTo(px+w/2,py);x.lineTo(px,py);x.closePath();x.fill();
-      x.strokeStyle="#f9e3a2";x.lineWidth=3;x.beginPath();x.moveTo(px-w/2,py);x.lineTo(px,py-h);x.lineTo(px+w/2,py);x.stroke();
-      x.lineWidth=1;x.strokeStyle="#ffe0a076";for(let j=1;j<4;j++){
-        x.beginPath();x.moveTo(px-w/2+(w/2)*(j/4),py-h*(j/4));
-        x.lineTo(px+w/2-(w/2)*(j/4),py-h*(j/4));x.stroke();
-      }
-    };
-    pyramid(cx-r*.40,cy+r*.52,r*.43,r*.42);
-    pyramid(cx+r*.40,cy+r*.60,r*.41,r*.48);
-    pyramid(cx,cy+r*.78,r*.60,r*.72);
+    // PT-007: Pyramids now live beside the title, leaving the Moon unobstructed.
     // Golden crown / visual focus.
     const glow=x.createRadialGradient(cx,cy-r*.2,3,cx,cy-r*.2,r*.35);
     glow.addColorStop(0,"rgba(255,237,153,.35)");glow.addColorStop(1,"rgba(255,215,140,0)");

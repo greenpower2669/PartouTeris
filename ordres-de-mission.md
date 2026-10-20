@@ -37,3 +37,11 @@
 - **Demande Fab :** « les graphismes doivent être plus beaux que la, on dirait un poc dégeux » ; « Ok code ça ».
 - **Contrat :** Lune plus volumétrique, cratères et ombrages, blocs à facettes/reflets, voiles techno-pharaoniques, fond spatial, effets d'énergie, interface plus soignée ; maintenir la lisibilité.
 - **Statut :** première refonte graphique procédurale codée en 0.1.3 ; build CI #39517259972 validé ; rendu visuel réel et ressenti de Fab à valider sur téléphone.
+
+## PT-007 — Portrait fixe et pyramides près du titre (21/10/2026)
+- Source : capture Android paysage de la 0.1.3 envoyée par Fab.
+- Demande explicite : « Met ça en portrait figé stp et les piramides met les plutôt vers le titre en haut ^^ ».
+- Verrouillage Android portrait via manifeste et activité, plein écran maintenu.
+- Le plateau doit rester entre le HUD et les boutons, jamais sous les contrôles ; l'interface portrait place les commandes sur deux rangées.
+- Trois pyramides décoratives à côté du titre en haut, retirées de la texture lunaire (cratères conservés).
+- Statut : code et tests ajoutés en v0.1.4 ; build GitHub et test humain en attente.

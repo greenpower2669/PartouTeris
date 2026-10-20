@@ -1,26 +1,21 @@
 # 🌙 PartouTeris — Les Pharaons de la Lune
 
-## Android v0.1.3 — Physique aérienne & habillage lunaire
+## Android 0.1.4 — portrait verrouillé et pyramides en haut
 
-Le jeu conserve **quatre pièces simultanées**, la prise tactile avec main droite et rotation à tapotements main gauche, la musique synthétisée et la descente douce.
+**Demande utilisateur :** afficher le jeu en **portrait fixe** et déplacer les pyramides de la surface lunaire près du titre en haut.
 
-### PT-005 — Terrain solide, ciel libre
-- Les pièces **encore en vol** ne se bloquent et ne se poussent pas mutuellement ; elles peuvent se traverser.
-- Seules les cases du plateau déjà verrouillées et la Lune sont solides.
-- Au contact, le verrouillage est déterministe dans l'ordre des quatre voies. Une pièce arrivant dans une case verrouillée au même instant est repoussée vers la couche externe légale, sans écraser les cases existantes.
-- Débordement orbital réel si aucune place n'est libre, sans arrêt suspendu au milieu de l'air.
+### Interface portrait
+- L'activité Android est verrouillée sur `portrait` (et non `sensorLandscape`). Une demande explicite `SCREEN_ORIENTATION_PORTRAIT` est appliquée au démarrage.
+- Grille et Lune recalculées automatiquement dans la bande libre entre le HUD supérieur et les commandes inférieures ; le plateau ne doit plus passer derrière les boutons.
+- Contrôles toujours disponibles à deux mains, avec cinq boutons répartis sur deux rangées adaptées au téléphone.
+- Instructions courtes dans un panneau distinct au-dessus des boutons ; N/E/S/O abrégés.
+- **Les trois pyramides dorées** sont maintenant une emblème vectorielle à côté du titre `PARTOUTERIS` ; les pyramides ont été retirées de la texture de la Lune, dont les cratères restent visibles.
+- Préserve : quatre chutes simultanées, traversée libre dans les airs, poses solides au sol, vitesse réglable, musique et volumes, records locaux, pause.
 
-### PT-006 — Nouveau rendu procédural
-- Nouveau moteur graphique hors ligne dans `app/src/main/assets/visuals.js`.
-- Lune texturée par génération procédurale : reliefs, cratères, clair-obscur, trois pyramides facettées.
-- Arrière-plan spatial plus riche, Terre visible, anneaux énergétiques et éléments de temples.
-- Blocs métalliques galbés, reflets et stries, interfaces dorées, voiles techno-pharaoniques.
-- Aucun média externe requis ; aucune connexion Internet.
+### Installation Android
+Fichier APK direct (non ZIP) disponible après compilation :
+[PartouTeris-v0.1.4-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.4-debug.apk)
 
-### Livraison
-Fichier debug Android direct après succès de GitHub Actions :
-[PartouTeris-v0.1.3-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.3-debug.apk).
+Package `com.greenpower2669.partouteris` inchangé et provisoire. Branche `feature/lunar-four-fronts-001`, aucune fusion dans `main` sans approbation.
 
-`node --test tests/*.test.cjs`, `gradle :app:assembleDebug`.
-
-**Package provisoire :** `com.greenpower2669.partouteris`. Aucun merge dans `main` avant validation humaine. Licence MIT.
+`node --test tests/*.test.cjs` ; `gradle :app:assembleDebug`.

@@ -38,3 +38,12 @@
 - [x] GitHub Actions #39517259972 : tests Node et build Android réussis ; APK brute vérifiée dans `temp/PartouTeris-v0.1.3-debug.apk` (25 278 octets).
 - [ ] Valider qualité, lisibilité et cadence sur Samsung SM-A576B.
 - [ ] Enrichir textures/sons et affiner les effets suivant le ressenti Fab, sans changer le concept.
+
+## PT-007 — Portrait et titre
+- [x] Verrouiller Android en portrait via manifeste et activité.
+- [x] Adapter géométrie lunaire au rectangle central libre.
+- [x] Réorganiser les cinq boutons en deux rangées sans recouvrir le jeu.
+- [x] Déplacer les pyramides près du titre et nettoyer la texture lunaire.
+- [x] Ajouter tests Node orientation et géométrie aux tailles portrait.
+- [ ] Vérifier tests/build GitHub Actions et APK directe 0.1.4.
+- [ ] Valider visuellement sur SM-A576B Android 16 avec une nouvelle capture.

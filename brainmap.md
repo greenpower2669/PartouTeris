@@ -18,3 +18,5 @@
 
 - PT-005 : `engine.js` `canPlace()` ignore les autres blocs actifs ; `landingRadius()` corrige un chevauchement éventuel uniquement au verrouillage. `tests/engine.test.cjs` vérifie les croisements en vol, le raccord angulaire et les atterrissages synchronisés.
 - PT-006 : `app/src/main/assets/visuals.js` est le moteur visuel procédural Canvas 2D ; `index.html` lui délègue le fond, la Lune, les cellules, les parachutes, les impulsions énergétiques. Rendu hors ligne.
+
+- PT-007 : `app/src/main/assets/layout.js` calcule un plateau portrait borné entre HUD et dock bas. `index.html` intègre emblème SVG des trois pyramides à côté du titre, commandes en grille 2 lignes ; `visuals.js` conserve une Lune à cratères sans pyramides. `AndroidManifest.xml` et `MainActivity.java` forcent le mode portrait. `tests/portrait.test.cjs` garantit orientation et espacements portrait.

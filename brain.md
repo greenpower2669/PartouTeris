@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTeris 0.1.3
+# Contrat de gameplay — PartouTeris 0.1.4
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
@@ -11,3 +11,5 @@
 
 - PT-005 : les pièces actives sont non solides entre elles en l'air. canPlace() ne consulte que la grille verrouillée ; lock() résout le placement final vers l'extérieur si un autre bloc a été posé simultanément, puis game-over si aucun logement orbital valide.
 - PT-006 : décor lunaire procédural hors ligne (cratères, texture, pyramides), Terre lointaine, panneaux dorés, blocs à reflets et voiles solaires ; pas encore de textures 3D importées.
+
+- PT-007 : verrouillage portrait Android (manifest + Activity), plateau calculé entre HUD et dock inférieur via layout.js. Pyramides déplacées près du titre, effacées de la surface lunaire ; quatre chutes conservées.

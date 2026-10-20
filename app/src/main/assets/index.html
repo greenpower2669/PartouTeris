@@ -29,11 +29,70 @@ button:active{background:#3d6177}button:focus-visible{outline:3px solid #ffdb70}
 #alert{position:absolute;z-index:3;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;background:#061a32ee;border:2px solid #dbbc72;border-radius:22px;padding:22px 32px;min-width:260px;display:none;box-shadow:0 0 38px #020815}
 #alert h1{font-size:27px;color:#ffe0a0;margin:0 0 10px}#alert p{font-size:17px;margin:4px}
 @media(max-width:650px){#buttons{bottom:5px;right:5px;gap:5px}button{padding:6px 10px;min-height:39px}#tip{bottom:8px;font-size:11px;width:51%}}
+
+/* PT-007: a fixed portrait game cabinet. Game canvas never sits beneath controls. */
+html,body {height:100%;height:100dvh;overscroll-behavior:none}
+#screen {position:fixed;inset:0;width:100vw;height:100%;height:100dvh}
+#hud {
+  position:fixed;z-index:3;
+  left:10px;right:10px;top:max(9px,env(safe-area-inset-top));
+  align-items:stretch;gap:8px;
+}
+#hud>div {padding:8px 9px;min-width:0}
+#hud .brand {flex:1 1 66%;display:flex;align-items:center;gap:8px}
+#hud .scoreboard {flex:0 0 auto;max-width:43%;display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
+.brand-copy{min-width:0;display:flex;flex-direction:column;justify-content:center}
+#hud .brand-title {font-size:clamp(15px,4.35vw,24px);letter-spacing:.015em;white-space:nowrap}
+.pyramids-mark {width:clamp(43px,12.5vw,60px);height:50px;flex:none;filter:drop-shadow(0 2px 5px #bb864eaa)}
+#hud small{font-size:clamp(10px,2.8vw,13px);line-height:1.25}
+#hud .scoreboard strong{font-size:clamp(16px,4.2vw,23px)}
+#controlDeck{
+  position:fixed;left:10px;right:10px;
+  bottom:max(10px,env(safe-area-inset-bottom));
+  z-index:4;display:flex;flex-direction:column;gap:9px;
+  max-height:40vh;
+}
+#tip{position:static;z-index:auto;bottom:auto;left:auto;max-width:100%;width:100%;font-size:clamp(11px,2.9vw,14px);padding:8px 10px;line-height:1.33;background:linear-gradient(120deg,#0c2742ef,#102a427f)}
+#buttons{position:static;bottom:auto;right:auto;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+#buttons button{font-size:clamp(12px,3.25vw,16px);min-height:48px;padding:7px 3px;width:100%;white-space:nowrap}
+#turn,#fast{grid-column:span 3}
+#audioButton,#options,#pause{grid-column:span 2}
+#startPanel,#settingsPanel{max-height:76dvh;width:min(94vw,430px)}
+#alert{width:min(88vw,390px);min-width:0}
+@media(max-width:370px){
+  #hud .brand-title{font-size:14px}
+  .pyramids-mark{width:41px}
+  #hud small{font-size:10px}
+  #buttons button{font-size:12px;min-height:44px}
+  #tip{font-size:11px}
+}
+@media(max-height:680px){
+  #hud>div{padding:5px 7px}
+  .pyramids-mark{height:36px}
+  #buttons button{min-height:38px}
+  #controlDeck{gap:5px}
+  #tip{padding:5px 9px;font-size:10px}
+}
 </style></head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
-<div id="hud"><div><strong>🌙 PARTOUTERIS</strong><small id="stats">Score 0 · Record 0</small></div><div class="right"><strong id="level">Niveau 1</strong><small id="rings">Couronnes 0 · 4 fronts actifs</small></div></div>
-<div id="tip">✋ Maintiens la pièce avec la main droite pour la déplacer. ☝️ Tapote avec la gauche pour pivoter, sans relâcher. Glisse vers la Lune pour accélérer.</div>
+<div id="hud">
+  <div class="brand">
+    <svg class="pyramids-mark" viewBox="0 0 96 66" role="img" aria-label="Trois pyramides dorées" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c1"/><stop offset=".55" stop-color="#e8b66e"/><stop offset="1" stop-color="#936038"/></linearGradient></defs>
+      <path d="M3 56 L22 23 L39 56Z" fill="#e8bc76"/><path d="M22 23 L39 56 L22 56Z" fill="#946040"/>
+      <path d="M32 59 L58 5 L83 59Z" fill="url(#gold)"/><path d="M58 5 L83 59 L58 59Z" fill="#89542e"/>
+      <path d="M65 54 L80 29 L95 54Z" fill="#e8b66b"/><path d="M80 29 L95 54 L80 54Z" fill="#936040"/>
+      <path d="M3 56 L22 23 L39 56 M32 59 L58 5 L83 59 M65 54 L80 29 L95 54" fill="none" stroke="#ffe7a6" stroke-width="1.8"/>
+      <path d="M41 40 H74 M37 49 H79" stroke="#f9dd9c" stroke-opacity=".48" stroke-width="1"/>
+    </svg>
+    <div class="brand-copy"><strong class="brand-title">PARTOUTERIS</strong><small id="stats">Score 0 · Record 0</small></div>
+  </div>
+  <div class="right scoreboard"><strong id="level">Niveau 1</strong><small id="rings">Couronnes 0 · 4 fronts</small></div>
+</div>
+<div id="controlDeck">
+<div id="tip">✋ Main droite : attrape et glisse. ☝️ Main gauche : tapote pour pivoter sans lâcher.</div>
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
+</div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
 <h1>🌙 Les Pharaons de la Lune</h1><p>✋ Main droite : attrape et déplace une pièce. ☝️ Main gauche : tapote l'écran pour la faire pivoter, même pendant la prise.</p><p>Quatre fronts simultanés, vitesse réglable et musique électronique originale.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
@@ -54,6 +113,7 @@ button:active{background:#3d6177}button:focus-visible{outline:3px solid #ffdb70}
 <script src="audio.js"></script>
 <script src="touch.js"></script>
 <script src="visuals.js"></script>
+<script src="layout.js"></script>
 <script>
 (function(){
 "use strict";
@@ -98,8 +158,9 @@ function resize(){
   dpr=Math.min(window.devicePixelRatio||1,2);W=window.innerWidth;H=window.innerHeight;
   canvas.width=Math.max(1,Math.round(W*dpr));canvas.height=Math.max(1,Math.round(H*dpr));
   canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(dpr,0,0,dpr,0,0);
-  cx=W*0.5;cy=H*0.52;scale=Math.min(H*0.54,W*0.32);
-  inner=scale*0.34;outer=scale*0.98;stepR=(outer-inner)/RINGS;
+  const headerBottom=document.getElementById("hud").getBoundingClientRect().bottom;
+  const controlsTop=document.getElementById("controlDeck").getBoundingClientRect().top;
+  ({cx,cy,scale,inner,outer,stepR}=window.PartouLayout.computePortraitLayout({width:W,height:H,headerBottom,controlsTop}));
 }
 window.addEventListener("resize",resize);resize();
 const TAU=Math.PI*2;
@@ -137,10 +198,10 @@ function pieces(){
 }
 function overlays(){
   art.energy({cx,cy,inner,outer,flash:game.flash,time:performance.now()/1000});
-  ctx.textAlign="center";ctx.font="700 13px system-ui";ctx.fillStyle="#f3d69c";
-  const labels=["NORD","EST","SUD","OUEST"];
+  ctx.textAlign="center";ctx.font="700 12px system-ui";ctx.fillStyle="#f3d69c";
+  const labels=["N","E","S","O"];
   for(let i=0;i<4;i++){
-    const [x,y]=point(rad(i*12),outer+Math.min(31,scale*.13));
+    const [x,y]=point(rad(i*12),outer+Math.min(13,scale*.045));
     ctx.fillText(labels[i],x,y);
   }
 }
