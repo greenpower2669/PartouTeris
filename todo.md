@@ -35,6 +35,6 @@
 - [x] Déterminiser les poses synchronisées et empêcher l'écrasement de blocs.
 - [x] Ajouter tests moteur pour croisements, contact et débordement.
 - [x] Refaire les décors lunaires et pyramides, les cellules, les voiles, les halos et le HUD en rendu procédural.
-- [ ] Vérifier GitHub Actions (tests/compilation), puis lien APK 0.1.3 brut.
+- [x] GitHub Actions #39517259972 : tests Node et build Android réussis ; APK brute vérifiée dans `temp/PartouTeris-v0.1.3-debug.apk` (25 278 octets).
 - [ ] Valider qualité, lisibilité et cadence sur Samsung SM-A576B.
 - [ ] Enrichir textures/sons et affiner les effets suivant le ressenti Fab, sans changer le concept.

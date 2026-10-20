@@ -31,9 +31,9 @@
 ## PT-005 — Collision aérienne non bloquante (21/10/2026)
 - **Demande Fab :** « Les block entre se bloque dàs les air il ne faut pas tans que parachute, bousculé mais continu vers le sol ».
 - **Contrat :** aucune collision solide entre blocs actifs en vol ; les blocs verrouillés et le sol sont les seuls obstacles ; priorité de pose déterministe et zéro écrasement lors d'atterrissages simultanés.
-- **Statut :** implémenté dans la 0.1.3 ; tests et retour tactile sur téléphone à valider.
+- **Statut :** implémenté dans la 0.1.3 ; CI #39517259972 réussie, APK 0.1.3 directe vérifiée ; test sur téléphone encore attendu.
 
 ## PT-006 — Refonte visuelle pharaons (21/10/2026)
 - **Demande Fab :** « les graphismes doivent être plus beaux que la, on dirait un poc dégeux » ; « Ok code ça ».
 - **Contrat :** Lune plus volumétrique, cratères et ombrages, blocs à facettes/reflets, voiles techno-pharaoniques, fond spatial, effets d'énergie, interface plus soignée ; maintenir la lisibilité.
-- **Statut :** première refonte graphique procédurale codée en 0.1.3 ; rendu matériel et ressenti utilisateur à valider.
+- **Statut :** première refonte graphique procédurale codée en 0.1.3 ; build CI #39517259972 validé ; rendu visuel réel et ressenti de Fab à valider sur téléphone.

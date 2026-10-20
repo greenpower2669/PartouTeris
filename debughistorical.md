@@ -32,3 +32,5 @@
 - Correctif : `canPlace()` ignore les pièces aériennes et consulte seulement les blocs définitivement posés ; `landingRadius()` résout les arrivées concurrentes avant écriture sur le plateau et ne permet plus d'écrasement.
 - Visuel : rendu Canvas initial trop minimal (petite Lune, arcs unis, parachute filaire) ; remplacé par art procédural hors ligne, cratères/pyramides ombrés, cellules réfléchissantes et HUD métallique.
 - Tests CI et performances/ergonomie Android réelles restent à vérifier.
+
+- Preuve technique PT-005/PT-006 : GitHub Actions #39517259972 réussie (tests Node, compilation Android, copie Git du fichier). APK `temp/PartouTeris-v0.1.3-debug.apk` vérifiée, 25 278 octets. Les rendus sur appareil ne sont pas encore observés.
