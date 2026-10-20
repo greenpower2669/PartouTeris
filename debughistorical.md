@@ -13,3 +13,5 @@
 - Cause de vitesse dans la 0.1.0 : intervalle initial codé à 0,82 seconde par case radiale, avec quatre fronts simultanés : trop peu de temps de décision.
 - Correction de code 0.1.1 : intervalle initial 5,0 secondes (réglable 2–8 s), palier de progression tempéré, FX et musique WebAudio originaux.
 - Risque à tester : WebAudio nécessite un geste Android ; activé par écran de démarrage explicite. Performance et volumes réels à vérifier.
+
+- CI premier essai 0.1.1 : 14 tests / 15, échec d'un ancien test qui attendait une chute après seulement 1,08 s. Contrat modifié : 5 s/étage ; test corrigé pour vérifier l'absence de chute à 1,08 s et une chute après 5 s. Ce n'était pas une panne moteur.

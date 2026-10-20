@@ -47,7 +47,9 @@ test('Incomplete ring stays',()=>{
 test('Four lanes move under gravity and pause freezes',()=>{
   const g=new Game(()=>0);const original=g.pieces.map(p=>p.radius);
   for(let i=0;i<9;i++)g.step(.12);
-  assert.ok(g.pieces.every((p,i)=>p.radius<original[i]));
+  assert.deepEqual(g.pieces.map(p=>p.radius),original,'default 5-second drop must not fall in the first second');
+  for(let i=0;i<38;i++)g.step(.12);
+  assert.ok(g.pieces.every((p,i)=>p.radius<original[i]),'gravity eventually advances all four fronts');
   const stamp=g.seconds;g.paused=true;g.step(2);assert.equal(g.seconds,stamp);
 });
 test('Blocked moves cannot overwrite occupied sector',()=>{

@@ -19,3 +19,4 @@
 - [x] Déclenchement WebAudio après un geste de démarrage explicite.
 - [ ] Valider compilation 0.1.1 et existence APK direct, puis tester son réellement sur Android 16.
 - [ ] Selon retour Fab, enrichir FX pharaons/pyramides avec les ressources partagées (sans créer de dépendance obligatoire).
+- [x] Adapter le test de gravité à la nouvelle durée (ancienne hypothèse 0,82 s incompatible avec 5 s).
