@@ -21,3 +21,11 @@
 - [ ] Tester la nouvelle vitesse et l'audio réellement sur SM-A576B Android 16.
 - [ ] Selon retour Fab, enrichir FX pharaons/pyramides avec les ressources partagées (sans créer de dépendance obligatoire).
 - [x] Adapter le test de gravité à la nouvelle durée (ancienne hypothèse 0,82 s incompatible avec 5 s).
+
+## PT-004 — Tactile à deux mains
+- [x] Attraper et guider d'une main pendant que l'autre tapote pour pivoter la pièce tenue.
+- [x] Bloquer les rotations accidentelles sur glissement/maintien du second doigt et relâchement du doigt principal.
+- [x] Préserver commandes alternatives, pause, son et sauvegardes.
+- [x] Ajouter six scénarios de test sur les deux doigts.
+- [ ] Vérifier CI et présence effective de l'APK 0.1.2 dans `temp/`.
+- [ ] Confirmer ressenti et multitouch réel sur SM-A576B Android 16, puis ajuster seuils si nécessaire.

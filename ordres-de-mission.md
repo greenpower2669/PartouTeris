@@ -22,3 +22,8 @@
 - **Action demandée :** réduire fortement la cadence et ajouter sons/musique motivants.
 - **Implémentation :** v0.1.1 : 5 s/étage, vitesse réglable 2–8 s, progression lente, thème original WebAudio et sons d'interaction, curseurs indépendants et mute.
 - **Statut :** Build Android et tests CI vérifiés (#39509803472), APK directe 0.1.1 disponible ; ressenti de Fab et son Android réels restent à valider.
+
+## PT-004 — Contrôle naturel à deux mains (21/10/2026)
+- Retour de Fab : « Pour moi mlus intuitif j attrape main droite et je tapote main gauche pour pivoter ».
+- Contrat : un doigt de la main droite attrape et guide la pièce, le second doigt de la gauche fait tourner **la pièce tenue** par tapotements successifs sans avoir à relâcher la prise ; le second doigt ne détourne jamais la pièce sélectionnée. Bouton de rotation conservé pour un doigt.
+- Statut : implémenté en 0.1.2 sur branche dédiée, à tester réellement sur Samsung SM-A576B Android 16.

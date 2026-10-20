@@ -19,3 +19,8 @@
 - Correction complémentaire : un toucher ne doit pas remettre l'horloge musicale à zéro ; test mock WebAudio ajouté.
 - CI finale 0.1.1 #39509803472 : tests Node et build Android réussis, fichier `temp/PartouTeris-v0.1.1-debug.apk` confirmé (20 206 octets). Un build intermédiaire a échoué uniquement lors du push de l'APK à cause de builds parallèles ; le dernier a réussi.
 - Audio réel sur téléphone toujours **à valider**, pas de conclusion tirée du simple build.
+
+## PT-004 — Retour ergonomique, 21/10/2026
+- Observation : le geste de rotation sur un tap du doigt principal obligeait à lâcher le contrôle. Fab préfère attraper/déplacer de la droite tout en tapotant de la gauche pour pivoter.
+- Changement : `touch.js` garde le doigt primaire responsable de la prise et donne aux taps rapides d'un autre doigt la seule commande de rotation. Un contact secondaire ne sélectionne plus un autre front. Les gestes secondaires glissés, longs ou annulés ne pivotent pas ; si la prise se termine avant le tap, celui-ci est annulé.
+- À vérifier sur téléphone : double tactile WebView Samsung, sensibilité des 26 px / 360 ms, possibilité de manipuler les quatre cadrans sur écran paysage.

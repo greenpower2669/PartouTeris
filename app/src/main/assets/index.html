@@ -32,10 +32,10 @@ button:active{background:#3d6177}button:focus-visible{outline:3px solid #ffdb70}
 </style></head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
 <div id="hud"><div><strong>🌙 PARTOUTERIS</strong><small id="stats">Score 0 · Record 0</small></div><div class="right"><strong id="level">Niveau 1</strong><small id="rings">Couronnes 0 · 4 fronts actifs</small></div></div>
-<div id="tip">Touchez un cadran. Glissez autour de la Lune pour déplacer ; touchez brièvement pour tourner ; glissez vers la Lune pour accélérer.</div>
+<div id="tip">✋ Maintiens la pièce avec la main droite pour la déplacer. ☝️ Tapote avec la gauche pour pivoter, sans relâcher. Glisse vers la Lune pour accélérer.</div>
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
-<h1>🌙 Les Pharaons de la Lune</h1><p>Quatre fronts en même temps. Des descentes plus douces et une musique électronique originale !</p>
+<h1>🌙 Les Pharaons de la Lune</h1><p>✋ Main droite : attrape et déplace une pièce. ☝️ Main gauche : tapote l'écran pour la faire pivoter, même pendant la prise.</p><p>Quatre fronts simultanés, vitesse réglable et musique électronique originale.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
 <p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -52,6 +52,7 @@ button:active{background:#3d6177}button:focus-visible{outline:3px solid #ffdb70}
 <div id="alert"><h1>La Lune déborde !</h1><p id="finalScore"></p><p>La Terre a besoin de toi.</p><button id="again">REJOUER</button></div>
 <script src="engine.js"></script>
 <script src="audio.js"></script>
+<script src="touch.js"></script>
 <script>
 (function(){
 "use strict";
@@ -88,7 +89,7 @@ updateSliders();updateAudioLabel();game.paused=true;
 let record=0;try{record=+(localStorage.getItem("partouteris-record")||0)}catch(e){}
 let W=1,H=1,dpr=1,cx=0,cy=0,scale=1,inner=0,outer=0,stepR=0;
 let selected=0,lastTime=0,previousCleared=0;
-const pointers=new Map(),stars=[];
+const stars=[];
 let seed=91;function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
 for(let i=0;i<125;i++)stars.push({x:random(),y:random(),r:0.3+random()*1.6,a:0.25+random()*0.65});
 function resize(){
@@ -165,7 +166,7 @@ function pieces(){
   const p=game.pieces[selected];
   if(p){
     const angle=rad(p.angle+.5),r=Math.min(outer+19,inner+(p.radius+1.0)*stepR);
-    const [x,y]=point(angle,r);ctx.strokeStyle="#fff4a4";ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x,y,8,0,TAU);ctx.stroke();
+    const [x,y]=point(angle,r);ctx.strokeStyle="#fff4a4";ctx.lineWidth=hands.isGripping()?4:2.5;ctx.beginPath();ctx.arc(x,y,hands.isGripping()?13:8,0,TAU);ctx.stroke();
   }
 }
 function overlays(){
@@ -212,39 +213,41 @@ function nearestLane(angle){
   }
   return winner;
 }
+const hands=new window.PartouTouch.TwoHandControls({
+  sectorCount:SECTORS,
+  chooseLane:nearestLane,
+  onSelect:lane=>{selected=lane;},
+  onMove:(lane,direction)=>{if(game.shift(lane,direction))sound.cue("move");},
+  onRotate:lane=>{game.rotate(lane);},
+  onBoost:(lane,value)=>{game.boost(lane,value);}
+});
+function touchInfo(e){
+  const p=fromEvent(e);
+  return {id:e.pointerId,x:p.x,y:p.y,angle:p.angle,distance:p.distance,time:e.timeStamp};
+}
 canvas.addEventListener("pointerdown",e=>{
   e.preventDefault();if(game.over||game.paused)return;
   if(sound.enabled)sound.start();
-  const pos=fromEvent(e),lane=nearestLane(pos.angle);selected=lane;
-  pointers.set(e.pointerId,{lane,lastAngle:pos.angle,startDistance:pos.distance,lastDistance:pos.distance,moved:false,x:pos.x,y:pos.y,delta:0});
-  canvas.setPointerCapture(e.pointerId);
+  if(hands.down(touchInfo(e)))canvas.setPointerCapture(e.pointerId);
 });
 canvas.addEventListener("pointermove",e=>{
-  const t=pointers.get(e.pointerId);if(!t||game.paused)return;
-  e.preventDefault();const pos=fromEvent(e);
-  const diff=mod(pos.angle-t.lastAngle+SECTORS/2,SECTORS)-SECTORS/2;
-  t.delta+=diff;t.lastAngle=pos.angle;
-  if(Math.hypot(pos.x-t.x,pos.y-t.y)>10)t.moved=true;
-  for(let steps=0;Math.abs(t.delta)>=0.8&&steps<8;steps++){
-    const direction=Math.sign(t.delta);
-    if(game.shift(t.lane,direction))sound.cue("move");t.delta-=direction;
-  }
-  game.boost(t.lane,pos.distance<t.startDistance-17);
-  t.lastDistance=pos.distance;
+  if(game.over||game.paused)return;
+  e.preventDefault();
+  hands.move(touchInfo(e));
 });
-function finish(e){
-  const t=pointers.get(e.pointerId);if(!t)return;
-  e.preventDefault();if(!t.moved&&!game.paused&&!game.over)game.rotate(t.lane);
-  pointers.delete(e.pointerId);
-  if(![...pointers.values()].some(x=>x.lane===t.lane))game.boost(t.lane,false);
-}
-canvas.addEventListener("pointerup",finish);
-canvas.addEventListener("pointercancel",finish);
+canvas.addEventListener("pointerup",e=>{
+  e.preventDefault();
+  hands.up(touchInfo(e));
+});
+canvas.addEventListener("pointercancel",e=>{
+  e.preventDefault();hands.cancel(touchInfo(e));
+});
+window.addEventListener("blur",()=>hands.reset());
 document.getElementById("turn").addEventListener("click",()=>{if(sound.enabled)sound.start();game.rotate(selected);for(const ev of game.drainEvents())sound.cue(ev.type,ev.count);});
 document.getElementById("pause").addEventListener("click",()=>{
   if(!started||game.over||settingsOpen)return;
   if(sound.enabled)sound.start();
-  game.paused=!game.paused;lastTime=0;
+  hands.reset();game.paused=!game.paused;lastTime=0;
 });
 document.getElementById("start").addEventListener("click",()=>{
   started=true;game.paused=false;lastTime=0;
@@ -261,7 +264,7 @@ document.getElementById("audioButton").addEventListener("click",()=>{
 });
 document.getElementById("options").addEventListener("click",()=>{
   if(settingsOpen)return;
-  settingsOpen=true;pausedBeforeSettings=game.paused;game.paused=true;
+  hands.reset();settingsOpen=true;pausedBeforeSettings=game.paused;game.paused=true;
   document.getElementById("settingsPanel").style.display="block";
 });
 document.getElementById("optionsClose").addEventListener("click",()=>{
@@ -281,12 +284,12 @@ const fast=document.getElementById("fast");
 fast.addEventListener("pointerdown",e=>{e.preventDefault();fast.setPointerCapture(e.pointerId);game.boost(selected,true);});
 for(const name of ["pointerup","pointercancel","lostpointercapture"])fast.addEventListener(name,()=>game.boost(selected,false));
 document.getElementById("again").addEventListener("click",()=>{
-  game.reset();ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
+  hands.reset();game.reset();ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
   if(sound.enabled)sound.start();
 });
-document.addEventListener("visibilitychange",()=>{if(document.hidden){game.paused=true;lastTime=0;}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hands.reset();game.paused=true;lastTime=0;}});
 window.addEventListener("keydown",e=>{
- if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();game.paused=!game.paused;}
+ if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();game.paused=!game.paused;}
  if(e.key==="ArrowLeft"&&game.shift(selected,-1))sound.cue("move");
  if(e.key==="ArrowRight"&&game.shift(selected,1))sound.cue("move");
  if(e.key==="ArrowUp")game.rotate(selected);

@@ -1,23 +1,24 @@
 # 🌙 PartouTeris — Les Pharaons de la Lune
 
-Quatre fronts de blocs tombent autour d'une Lune circulaire. Remplir 360° d'une couronne pour l'effacer !
+Jeu de Tetris polaire sur quatre fronts simultanés ; effacer les couronnes continues à 360°.
 
-## Prototype Android 0.1.1 — rythme et ambiance
-- Descente **nettement ralentie** : 5 secondes par niveau radial au début (contre 0,82 seconde dans la 0.1.0), et accélération progressive plus douce.
-- Réglage de vitesse : **2 à 8 secondes** par étage radial, sauvegardé sur le téléphone.
-- Musique électronique égyptienne et effets de manipulation, impact, anneau terminé et fin de partie **synthétisés localement** avec WebAudio, sans réseau ni assets externes.
-- Volume de musique et volume d'effets réglables indépendamment, bouton muet.
-- **L'audio Android demande un geste utilisateur :** appuyer sur « ▶ JOUER AVEC LE SON » au démarrage.
-- Les 4 chutes continuent en parallèle, les prévisualisations fantômes, les rotations, les contrôles tactiles et le score restent présents.
-- Icône, plein écran, compatibilité hors ligne.
+## Prototype Android 0.1.2 : contrôle naturel à deux mains
 
-**APK de test :** [PartouTeris-v0.1.1-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.1-debug.apk) (accessible uniquement une fois le build CI réussi).
+**Nouvelle commande par défaut :** pose et maintiens un doigt de la main droite sur la pièce/cadran à déplacer ; glisse pour la guider tangentiellement. **Sans relever la main droite, tapote l'écran avec un doigt de la main gauche** pour pivoter cette même pièce d'un quart de tour à chaque tapotement.
 
-**Contrôle automatique :** `node --test tests/*.test.cjs`, puis `gradle :app:assembleDebug`.
+- La seconde main ne vole pas la sélection : elle pilote uniquement la rotation de la pièce tenue.
+- Les contacts secondaires longs ou glissés ne tournent pas la pièce ; un simple relâchement de la main droite ne déclenche plus de rotation inattendue.
+- Main droite glissée vers le centre : accélérer. Relâcher : retrouver la chute normale.
+- Bouton « ↻ TOURNER » toujours disponible pour jouer à une main ou en accessibilité.
+- Sélection visuelle renforcée par un halo pendant la prise.
+- Les quatre pièces continuent de tomber indépendamment.
+- Descente douce, 5 s/étage au départ ; réglage 2–8 s sauvegardé.
+- Musique et effets électroniques originaux hors ligne ; activation après « JOUER AVEC LE SON » ; curseurs de volume et mute.
+- Test automatique dédié au contrôle à deux doigts `tests/touch.test.cjs`.
 
-**Package provisoire** `com.greenpower2669.partouteris`. Branche `feature/lunar-four-fronts-001`. Ne pas fusionner dans `main` sans accord de Fab.
+**APK directement installable** (après vérification du build Actions) :
+[PartouTeris-v0.1.2-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.2-debug.apk).
 
-## Retours de tests attendus
-- Entendre la musique dès « JOUER AVEC LE SON » sur Samsung SM-A576B Android 16.
-- Régler la vitesse et les volumes. Vérifier la fluidité, le toucher et les sons non fatigants.
-- Vérifier la lecture WebAudio (qui dépend de la WebView installée) et les sons après pause/reprise.
+Code sur `feature/lunar-four-fronts-001`, `main` intacte. Package provisoire `com.greenpower2669.partouteris` (ne pas modifier sans accord avant publication). MIT.
+
+Vérification : `node --test tests/*.test.cjs` et `gradle :app:assembleDebug`.
