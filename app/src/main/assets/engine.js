@@ -31,7 +31,7 @@
     }
     spawn(lane) {
       const type=Math.max(0,Math.min(FORMS.length-1,Math.floor(this.rng()*FORMS.length)));
-      this.pieces[lane]={lane,type,angle:6+12*lane,radius:RINGS+1,rot:0,boost:false};
+      this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+1,rot:0,boost:false};
       this.fall[lane]=0;
     }
     canPlace(p,angle=p.angle,radius=p.radius,rot=p.rot) {
