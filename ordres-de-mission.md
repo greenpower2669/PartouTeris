@@ -44,4 +44,4 @@
 - Verrouillage Android portrait via manifeste et activité, plein écran maintenu.
 - Le plateau doit rester entre le HUD et les boutons, jamais sous les contrôles ; l'interface portrait place les commandes sur deux rangées.
 - Trois pyramides décoratives à côté du titre en haut, retirées de la texture lunaire (cratères conservés).
-- Statut : code et tests ajoutés en v0.1.4 ; build GitHub et test humain en attente.
+- Statut : code et tests validés par CI #39518335994, APK directe 0.1.4 vérifiée ; contrôle du rendu portrait sur Samsung toujours attendu.

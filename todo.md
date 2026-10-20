@@ -45,5 +45,5 @@
 - [x] Réorganiser les cinq boutons en deux rangées sans recouvrir le jeu.
 - [x] Déplacer les pyramides près du titre et nettoyer la texture lunaire.
 - [x] Ajouter tests Node orientation et géométrie aux tailles portrait.
-- [ ] Vérifier tests/build GitHub Actions et APK directe 0.1.4.
+- [x] CI GitHub Actions #39518335994 réussie (tests Node + compilation Android) ; APK directe vérifiée `temp/PartouTeris-v0.1.4-debug.apk` (26 736 octets).
 - [ ] Valider visuellement sur SM-A576B Android 16 avec une nouvelle capture.

@@ -39,3 +39,5 @@
 - Problème constaté sur la capture fournie : plateau immense en paysage, fond du cercle caché sous les cinq boutons horizontaux ; pyramides posées sur la Lune alors que Fab les veut près du titre.
 - Résolution : portrait Android forcé, mise en page HUD/cercle/commandes en trois zones avec bornes calculées depuis les rectangles DOM. Pyramides en icône SVG près du titre, cratères lunaires laissés libres.
 - Risques à confirmer sur Samsung : taille réelle des boutons, zones tactiles et disponibilité de l'espace pour les quatre voiles en portrait.
+
+- CI PT-007 : run #39518335994 **success**, tests Node, build Android et publication APK brute de 26 736 octets dans `temp/PartouTeris-v0.1.4-debug.apk`. Aucune fusion `main` ; capture réelle du mode portrait en attente.
