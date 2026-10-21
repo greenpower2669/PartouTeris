@@ -208,3 +208,9 @@
 - [x] Capture `design/rendu-jeu-apercu.jpg` inspectée : cyclones blancs visibles sur la Terre sans empiéter sur les couronnes, trois satellites présents. Rotation continue (petite vitesse) et nuages indépendants vérifiés dans le code.
 - [ ] Valider visuellement en mouvement réel sur Samsung les nuages/cyclones/rotation, puis maintenir le laser 1,3s sur brique fixe et contrôler le malus, les annulations et la vibration.
 - [ ] Vérifier également stabilité du maintien avec deux doigts et absence de décrochage audio sur appareil réel.
+
+## PT-019 — Laser de correction, Android 0.2.6
+- [x] Ciblage facilité des briques fixées et visée persistante après relâchement du doigt.
+- [x] Barre de progression pendant 1,3 seconde et retrait d'une brique avec le malus existant.
+- [x] Tests et compilation GitHub Actions #39689590579 réussis ; APK brute dans temp/PartouTetris-v0.2.6-debug.apk.
+- [ ] Essai sur Samsung : choix de la cible, progression visible, pénalité, annulation et conservation des records.
