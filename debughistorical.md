@@ -65,3 +65,5 @@
 - Débris en flammes : nouvel effet procédural limité à la phase haute de chute ; aucune collision ni vitesse modifiée.
 - Lasers : sélection de la cible proche seulement lorsque mode laser activé ; rotation 90° et poussée d'un secteur en cas de visée latérale, respect strict des blocs verrouillés ; son et faisceau Canvas depuis la Terre ; cooldown 420 ms.
 - Tests intégration, performances et gestes Android réels nécessaires avant validation finale.
+
+- Preuve livraison PT-010 : GitHub Actions #39578438005 **success**, tests Node, compilation Android, dépôt APK directe (37 691 octets) sous temp/PartouTetris-v0.1.7-debug.apk. main inchangée. Ergonomie du podium, pseudo, lasers et flammes à confirmer sur téléphone.

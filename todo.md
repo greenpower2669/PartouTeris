@@ -75,5 +75,5 @@
 - [x] Tir laser depuis Terre vers une pièce, rotation et éventuelle correction tangentielle si collision libre ; mode explicite.
 - [x] Sons laser et respect du mode visuel doux ; anciens contrôles préservés.
 - [x] Tests Node pour pseudo, classement, collisions laser et interfaces.
-- [ ] Vérifier CI et existence effective APK 0.1.7 directement téléchargeable non ZIP.
+- [x] CI GitHub Actions #39578438005 : tests Node et compilation Android réussis ; APK brute PartouTetris-v0.1.7-debug.apk vérifiée sur branche (37 691 octets).
 - [ ] Tester intuitivité lasers, lisibilité haut/bas et sensation des flammes sur SM-A576B Android 16.
