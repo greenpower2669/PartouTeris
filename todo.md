@@ -111,3 +111,7 @@
 - [ ] Écouter le MP3 en entier et vérifier sa boucle sans blanc perceptible. Valider les effets laser avec Fab.
 - [ ] Examiner provenance et droits de chaque son Djipie avant éventuelle intégration individuelle au dépôt public ; aucun son privé automatiquement redistribué.
 - [ ] Préserver `main`, package, données locales, et publier Release/AAB uniquement après accord de Fab.
+
+- [x] #39627108353 : tests Node, Android Gradle et APK brut 0.2.0 vérifiés après reprise du modèle Terre/horizon.
+- [x] Aperçu de la véritable charte graphique généré et inspecté ; correction des proportions terre et disposition 5 boutons.
+- [ ] Contrôler capture du rendu réel par Chromium CI (si disponible), puis test visuel/tactile/sonore sur Samsung.

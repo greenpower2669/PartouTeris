@@ -91,3 +91,5 @@
 - Audio : HTMLAudioElement local en boucle après un geste, fallback WebAudio seulement en cas de fichier/lecture indisponible ; joindre une lecture réelle sur Samsung pour contrôler latence, gap à la boucle et niveau de fond.
 - Sons Djipie : index consultés, nombreuses sources privées, droits unitaires/identité de provenance insuffisamment vérifiés ; aucun son préexistant copié en public. Laser synthétique construit en couches, non assimilé abusivement à des prises sonores réalistes certifiées.
 - Statut CI 0.2.0 et install Android : **à vérifier** avant de confirmer une APK finale.
+
+- PT-013 : une miniature GitHub CI a permis d'examiner la charte authentique : Terre occupante massive, titre or centré et cinq commandes sur une rangée. La refonte Terre/horizon correspondante a passé CI #39627108353 ; le rendu écran reste à comparer et valider sur Android.

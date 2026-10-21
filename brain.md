@@ -35,3 +35,5 @@
 
 - PT-013 / 0.2.0 : référence visuelle canonique copiée sans altération dans `design/charte-officielle.png`, rendu toujours dynamique Canvas et DOM indépendant, panneaux/titre or et cyan renforcés, aides gestes main droite (maintenir/guider) + main gauche (tap 90°, maintien boost). Laser multi-émetteurs accompagné d'une charge Canvas.
 - Musique officielle MP3 locale, boucle HTMLAudioElement après interaction, niveau *0,58 du volume musique réglé ; thème WebAudio original strictement secours sans superposition. FX laser synthétique à phases courtes. Audio Djipie privé non copié sans licences individuelles vérifiées.
+
+- PT-013 après lecture de la charte : Terre monumentale texturée une fois (480×480), satellites alignés sur horizon gauche/centre/droite, titre doré centré et dock de cinq boutons avec laser séparé.

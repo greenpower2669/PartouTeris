@@ -1,21 +1,33 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Prototype Android 0.1.9 — deux phases de descente et satellites pyramidaux
+## Prototype Android 0.2.0 — PT-013 : refonte et musique officielle
 
-Retour utilisateur (21 octobre 2026) : rétablir des parachutes **très discrets dans la zone lunaire seulement**, s'inspirer de l'icône officielle PartouTetris et de l'illustration des pharaons et pyramides-satellites pour l'esthétique.
+**Branche :** `feature/lunar-four-fronts-001` — `main` conservée intacte.
 
-- **Espace lointain (r ≥ 10) :** pièces enflammées sur quatre étapes radiales hors de la grille ; aucun parachute.
-- **Zone lunaire (0 ≤ r < 10) :** le bloc active une **petite voile de stabilisation** cyan et or semi-transparente (6 à 11 px, fils très fins), en conservant sa forme et sa maniabilité. La voile ne participe pas aux collisions et ne ralentit pas artificiellement le moteur.
-- **Satellites terrestres :** les trois anciens modules rectangulaires sont redessinés dans l'univers du concept : silhouettes de **pyramides dorées** à facettes, base à anneau cyan lumineux, propulsion subtile. Trois lasers convergent toujours vers la cible visée.
-- **Identité artistique :** bleu nuit spatial, cyan technologique, lueurs dorées, ambiance pharaons futuristes, fines orbites terrestres. Reprise de l'icône originale dans Android et près du titre, sans remplacer son fichier.
-- **La Lune ne porte aucune pyramide.** Les pyramides sont uniquement dans le logo et les satellites hors de la Lune.
-- Tout le gameplay conservé : quatre fronts, mode portrait, tirs, score et podium, pseudo, combo et célébrations, double tactile, réglages et musique.
-- Un mode d'effets visuels doux reste disponible.
+### 📲 APK Android direct (sans ZIP)
 
-### APK Android installable
-Après validation du build GitHub Actions, APK brute sans archive ZIP :
-[PartouTetris-v0.1.9-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.1.9-debug.apk).
+**[Télécharger PartouTetris-v0.2.0-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.0-debug.apk)**
 
-Source : `greenpower2669/PartouTetris`, branche `feature/lunar-four-fronts-001`. Ne jamais fusionner `main` ou publier une Release sans validation explicite. Package `com.greenpower2669.partouteris` et préférences historiques conservés.
+APK debug compilé par [GitHub Actions](https://github.com/greenpower2669/PartouTetris/actions), directement installable sur Android ; AAB de publication seulement après validation de Fab.
 
-Tests : `node --test tests/*.test.cjs`; build Android `gradle :app:assembleDebug`.
+### Visuels et règles
+
+La charte graphique déposée par Fab sur `main` est copiée à l'identique dans `design/charte-officielle.png`. Miniature pour contrôle : `design/charte-apercu.jpg`.
+
+Rendu dynamique Canvas et DOM : titre doré, score géant, couronnes cyan/or, Lune géologique sans pyramides, quatre fronts et débris incandescents venant de l'espace, voiles légères seulement en zone lunaire, grande Terre texturée en bas, trois satellites pyramidaux, lasers convergents, cinq boutons en bas et icône officielle. La fidélité finale à la charte est **encore à valider à l'écran**.
+
+Gestes préservés : main droite maintenue pour attraper et déplacer ; main gauche tap bref pour rotation 90°, appui long pour descente accélérée. Mode Laser et commandes alternatives maintenus. Gameplay, collisions aériennes non bloquantes, scores, couronnes 360°, records, pseudo et paramètres conservés.
+
+### Audio
+
+Musique officielle fournie dans `main`, copiée octet par octet dans `app/src/main/assets/official-theme.mp3`. Lecture après interaction, volume indépendant/mute sauvegardés, répétition en boucle, secours musical synthétique WebAudio sans superposition. Laser synthétique multi-phase (activation, plasma, départ, impact).
+
+Catalogue Djipie consulté : aucun son privé recopié dans le dépôt public faute de droits de redistribution vérifiés par ressource.
+
+### Tests et validation
+
+Tests Node : `node --test tests/*.test.cjs`. Compilation APK : `gradle :app:assembleDebug`. Workflow `.github/workflows/android-debug.yml` ; apk brute en `temp/`.
+
+À vérifier réellement sur **Samsung SM-A576B, Android 16** : fidélité du visuel, rendu du plateau, performance de la Terre précalculée, multitouch, volume et écoute complète de la musique, éventuel raccord audible de boucle, laser et vibrations.
+
+Package interne `com.greenpower2669.partouteris` inchangé pour préserver les sauvegardes. Pas de Release ni fusion vers `main` sans autorisation de Fab.

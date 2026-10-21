@@ -32,6 +32,30 @@ jobs:
           im.save("design/charte-apercu.jpg", format="JPEG", quality=76, optimize=True)
           print("PT-013 graphic preview", im.size)
           PY
+      - name: Render game snapshot for graphical QA
+        shell: bash
+        run: |
+          BROWSER="$(command -v google-chrome || command -v chromium || true)"
+          if test -n "$BROWSER"; then
+            python3 - <<'PY'
+          from pathlib import Path
+          path=Path("app/src/main/assets")
+          html=(path/"index.html").read_text(encoding="utf-8")
+          html=html.replace("</body>", '<script>document.getElementById("startPanel").style.display="none";</script></body>')
+          (path/"audit-temporary.html").write_text(html,encoding="utf-8")
+          PY
+            timeout 22s "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --allow-file-access-from-files --hide-scrollbars --window-size=412,915 --force-device-scale-factor=1 --virtual-time-budget=2400 --screenshot="$PWD/design/rendu-jeu-apercu.png" "file://$PWD/app/src/main/assets/audit-temporary.html" || true
+            rm -f app/src/main/assets/audit-temporary.html
+            if test -f design/rendu-jeu-apercu.png; then
+              /tmp/pt-art-env/bin/python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          p=Path("design/rendu-jeu-apercu.png")
+          Image.open(p).convert("RGB").save("design/rendu-jeu-apercu.jpg",format="JPEG",quality=79,optimize=True)
+          p.unlink()
+          PY
+            fi
+          fi
       - name: Test the polar engine
         run: node --test tests/*.test.cjs
       - uses: actions/setup-java@v4
@@ -63,6 +87,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add temp/PartouTetris-v0.2.0-debug.apk design/charte-apercu.jpg
+          if test -f design/rendu-jeu-apercu.jpg; then git add design/rendu-jeu-apercu.jpg; fi
           if ! git diff --cached --quiet; then
             git commit -m "build: temporary installable PartouTetris debug APK [skip ci]"
             git push origin "HEAD:${GITHUB_REF_NAME}"

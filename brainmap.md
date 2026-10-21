@@ -37,3 +37,5 @@
 - PT-013 / 0.2.0 : `design/charte-officielle.png` = référence PNG originale de Fab (hors rendu temps réel), `app/src/main/assets/official-theme.mp3` = piste officielle locale reprise depuis le blob `main` sans réencodage.
 - `audio.js` = HTMLAudioElement (loop, activation geste, pause/mute, volumes) avec fallback musical WebAudio exclusif et FX laser synthétique multi-phase.
 - `visuals.js` = nébuleuses, anneaux cyan/or, tracé de charge des 3 satellites, faisceaux/impacts Canvas. `index.html` = thème HUD doré, tutoriel tactile corrigé, synchronisation de charge et laser. `tests/pt013.test.cjs` = intégrité de l'import et séparation graphique/audio.
+
+- PT-013 : `layout.js` réserve une Terre basse à fort diamètre ; `Artist.makeEarthTexture()` précalcule le globe hors écran, `satelliteOrigins` déploie les trois satellites sur l'horizon. `index.html` centre le logo or et dispose cinq boutons sur une rangée, LASER supplémentaire. `design/charte-apercu.jpg` = source; `design/rendu-jeu-apercu.jpg` = instantané CI optionnel.
