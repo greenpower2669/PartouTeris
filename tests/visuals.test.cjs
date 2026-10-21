@@ -52,3 +52,11 @@ test('Authentic user icon is present as Android drawable and as in-game image',(
  assert.match(manifest,/android:icon="@drawable\/icon"/);
  assert.equal(fs.existsSync('app/src/main/res/drawable/icon.xml'),false);
 });
+
+test('The optimized user icon has the exact validated Git binary hash',()=>{
+ const crypto=require('node:crypto');
+ const p='app/src/main/assets/brand-icon.webp';
+ const data=fs.readFileSync(p);
+ const gitBlob=Buffer.concat([Buffer.from('blob '+data.length+'\\0'),data]);
+ assert.equal(crypto.createHash('sha1').update(gitBlob).digest('hex'),'e0eedc703359d7e27be9501b0f3c67bec1186229');
+});
