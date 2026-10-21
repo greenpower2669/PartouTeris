@@ -147,3 +147,7 @@
 - Prototype : maintien LASER 1,3 s sur une case verrouillée ; glissement >23px ou relâchement annule la charge, effet visible, une seule case détruite, pas de destruction en chaîne.
 - Pénalité = 80×(r+1)×ceil((r+1)/2), facturation plafonnée au score pour empêcher les points négatifs ; toutes les sauvegardes restent inchangées.
 - Tout est rendu en Canvas local, satellites avec micro-orbites et poussée cyan pulsante, météo illustrée, réduction effets honorée. Aucun merge `main`, version 0.2.5 branch test.
+
+### PT-018 — Prêt pour validation de Fab
+- APK Android de test 0.2.5 livrée non compressée, Actions #39687843781 **success** ; artefact `temp/PartouTetris-v0.2.5-debug.apk` sur branche. Aucune fusion `main`, aucun AAB de publication.
+- Les animations Terre/cloud/cyclones/satellites sont calculées localement sans asset de météo ; scoring de laser maintenu et chute ×10 inchangés. Essai réel sur Samsung encore requis.

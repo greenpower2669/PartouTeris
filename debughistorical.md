@@ -145,3 +145,5 @@
 - Risque de régression : laser bref sur pièce mobile = déjà rotation, et gestes à deux doigts ; séparation du laser par mode et hit-test des **cases fixées** uniquement. Maintien unique 1300 ms et tolérance 23 px ; arrêt sur sortie de mode, pause, annulation, relâchement et perte de focus.
 - Formule prototype : 80 × (r+1) × ceil((r+1)/2), facturation bornée au score existant, affichage MALUS théorique dans scoreboard, records intacts. Cases vides, limites polaires et partie arrêtée refusées.
 - Concurrence CI : publication automatique antérieure APK 0.2.4 sur la branche pendant les commits. Toutes les écritures suivantes utilisent le SHA de tête actualisé. CI 0.2.5 encore à confirmer.
+
+- **PT-018 rendu final :** CI #39687843781 réussie après correction doublon sonore et défilement continu de la rotation planétaire. APK 0.2.5 brute 8 791 813 octets vérifiée ; capture statique Chromium montre au moins un cyclone et les trois satellites, mais ne remplace pas un essai animé/tactile. Un run intermédiaire a échoué uniquement sur l'étape de publication Git après une mise à jour concurrente, tests + Gradle y avaient réussi ; le run final s'est publié avec succès.

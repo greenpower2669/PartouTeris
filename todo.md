@@ -201,3 +201,10 @@
 - [x] HUD signale le MALUS, nouveau son de destruction ; tests et build Android 0.2.5 déclenchés.
 - [ ] Valider GitHub Actions et présence de l'APK directe v0.2.5.
 - [ ] Tester le maintien avec les doigts sur Samsung et observer la performance des nuages/cyclones.
+
+### PT-018 — Compilation finale vérifiée
+- [x] GitHub Actions [#39687843781](https://github.com/greenpower2669/PartouTetris/actions/runs/39687843781) : **success** (tests Node, Gradle, capture Chromium, APK brute).
+- [x] `temp/PartouTetris-v0.2.5-debug.apk` (8 791 813 octets, blob Git `734e4e8ac4c40629abbcfc52b26e1af275e8d060`) vérifiée sur `feature/lunar-four-fronts-001`.
+- [x] Capture `design/rendu-jeu-apercu.jpg` inspectée : cyclones blancs visibles sur la Terre sans empiéter sur les couronnes, trois satellites présents. Rotation continue (petite vitesse) et nuages indépendants vérifiés dans le code.
+- [ ] Valider visuellement en mouvement réel sur Samsung les nuages/cyclones/rotation, puis maintenir le laser 1,3s sur brique fixe et contrôler le malus, les annulations et la vibration.
+- [ ] Vérifier également stabilité du maintien avec deux doigts et absence de décrochage audio sur appareil réel.
