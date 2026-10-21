@@ -1,6 +1,7 @@
 (function (root) {
   "use strict";
   const SECTORS = 48, RINGS = 10, LANES = 4, SPACE_STEPS = 5, BOOST_MULTIPLIER=10, SPACE_INTERVAL_FACTOR=.82, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
+  const LOCKED_LASER_HOLD_MS=1300, DESTRUCTION_BASE=80;
   const FORMS = [
     [[-1,0],[0,0],[1,0],[2,0]],
     [[0,0],[1,0],[0,1],[1,1]],
@@ -40,6 +41,24 @@
       return Math.max(.8,this.baseFallSeconds*Math.pow(.92,this.level-1));
     }
     drainEvents(){return this.events.splice(0);}
+    // PT-018: upward bricks carry an increasing destructive cost.
+    destructionPenalty(radius){
+      if(!Number.isInteger(radius)||radius<0||radius>=RINGS)return 0;
+      return DESTRUCTION_BASE*(radius+1)*Math.ceil((radius+1)/2);
+    }
+    destroyLockedCell(sector,radius){
+      if(this.over||this.paused||!Number.isInteger(sector)||!Number.isInteger(radius)||
+         sector<0||sector>=SECTORS||radius<0||radius>=RINGS||
+         this.board[radius][sector]===-1)return null;
+      const owner=this.board[radius][sector],penalty=this.destructionPenalty(radius);
+      this.board[radius][sector]=-1;
+      const charged=Math.min(this.score,penalty);
+      this.score-=charged;
+      const result={type:"destroy",sector,radius,owner,penalty,charged,
+        multiplier:(radius+1)*Math.ceil((radius+1)/2),total:this.score};
+      this.events.push(result);
+      return result;
+    }
     award(points,reason,details={}) {
       if(!Number.isSafeInteger(points)||points<=0) return 0;
       const before=this.score;
@@ -215,7 +234,7 @@
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);

@@ -26,6 +26,7 @@ class Artist {
     for(let i=0;i<170;i++)this.stars.push({x:rand(),y:rand(),r:.25+rand()*1.25,a:.24+rand()*.6});
     this.moonTexture=this.makeMoonTexture();
     this.earthTexture=this.makeEarthTexture();
+    this.cloudBand=this.makeCloudBand();
   }
   makeEarthTexture(){
     // Prebaked once per launch: textured Earth remains one draw call per frame.
@@ -78,6 +79,48 @@ class Artist {
     c.putImageData(pixels,0,0);
     return el;
   }
+  makeCloudBand(){
+    // White translucent atmospheric strokes generated once, not per frame.
+    const el=document.createElement("canvas");
+    el.width=512;el.height=256;
+    const c=el.getContext("2d"),rand=rng(782103);
+    for(let i=0;i<160;i++){
+      const x=rand()*512,y=18+rand()*220,w=8+rand()*68;
+      c.save();c.globalAlpha=.035+rand()*.10;
+      c.strokeStyle="#ffffff";c.shadowColor="#e5f6ff";
+      c.shadowBlur=rand()*7;c.lineWidth=1+rand()*7;
+      c.beginPath();c.moveTo(x-w*.5,y);
+      c.bezierCurveTo(x-w*.2,y-8-rand()*9,x+w*.2,y+10+rand()*9,x+w*.5,y);
+      c.stroke();c.restore();
+    }
+    return el;
+  }
+  cyclones({x,y,r,time=0,reduced=false}){
+    const c=this.ctx;
+    for(let i=0;i<3;i++){
+      const latitude=[-.32,.06,.38][i],theta=time*.043+i*2.38+.5;
+      const horizontal=Math.sin(theta),front=Math.cos(theta);
+      if(front<-.12)continue;
+      const xx=x+horizontal*r*.68,yy=y+latitude*r;
+      const size=r*[.16,.115,.085][i]*(reduced?.8:1);
+      c.save();c.translate(xx,yy);c.rotate(time*.22*(i%2?1:-1));
+      c.scale(Math.max(.15,front),1);
+      c.strokeStyle="rgba(246,253,255,"+(.19+.29*Math.max(0,front))+")";
+      c.shadowColor="#d9f5ff";c.shadowBlur=reduced?0:5;
+      for(let k=0;k<3;k++){
+        c.lineWidth=Math.max(.7,size*.065);c.beginPath();
+        for(let j=0;j<=44;j++){
+          const t=j/44*Math.PI*3.4+k*.36,rad=size*(.12+j/55);
+          const px=Math.cos(t)*rad,py=Math.sin(t)*rad*.66;
+          if(j===0)c.moveTo(px,py);else c.lineTo(px,py);
+        }
+        c.stroke();
+      }
+      c.fillStyle="rgba(228,247,255,.20)";
+      c.beginPath();c.arc(0,0,size*.11,0,TAU);c.fill();
+      c.restore();
+    }
+  }
   makeMoonTexture(){
     const size=640,c=document.createElement("canvas");c.width=size;c.height=size;
     const x=c.getContext("2d"),cx=size/2,cy=size/2,r=size*.47;
@@ -113,7 +156,7 @@ class Artist {
     x.lineWidth=r*.025;x.strokeStyle="#fff6d089";x.beginPath();x.arc(cx,cy,r-2,3.0,5.25);x.stroke();
     return c;
   }
-  backdrop({W,H,cx,cy,inner,outer,stepR,sectors,flash=0,earth=null}){
+  backdrop({W,H,cx,cy,inner,outer,stepR,sectors,flash=0,earth=null,time=0,reduced=false}){
     const c=this.ctx;
     const deep=c.createRadialGradient(cx,cy,inner*.4,cx,cy,Math.max(W,H)*.74);
     deep.addColorStop(0,"#1c284a");deep.addColorStop(.38,"#080f26");deep.addColorStop(1,"#020512");
@@ -151,8 +194,19 @@ class Artist {
       aura.addColorStop(1,"rgba(42,98,221,0)");
       c.fillStyle=aura;c.beginPath();c.arc(x,y,r*1.28,0,TAU);c.fill();
       c.shadowColor="#67d8ff";c.shadowBlur=r*.22;
-      c.drawImage(this.earthTexture,x-r,y-r,r*2,r*2);
-      c.shadowBlur=0;
+      c.save();c.translate(x,y);
+      c.rotate(reduced?0:Math.sin(time*.017)*.12);
+      c.drawImage(this.earthTexture,-r,-r,r*2,r*2);
+      c.restore();c.shadowBlur=0;
+      c.save();c.beginPath();c.arc(x,y,r*.958,0,TAU);c.clip();
+      c.globalAlpha=reduced?.20:.37;
+      const layerWidth=r*2.15,layerHeight=r*2;
+      const offset=((time*(reduced?1:4.8))%layerWidth+layerWidth)%layerWidth;
+      for(let k=-1;k<=1;k++)
+        c.drawImage(this.cloudBand,x-r+offset+k*layerWidth,y-r,layerWidth,layerHeight);
+      c.globalAlpha=1;
+      this.cyclones({x,y,r,time,reduced});
+      c.restore();
       c.strokeStyle="rgba(161,229,255,.80)";c.lineWidth=Math.max(2,r*.014);
       c.beginPath();c.arc(x,y,r*.965,Math.PI*1.08,Math.PI*1.91);c.stroke();
       c.restore();
@@ -372,7 +426,7 @@ class Artist {
     c.restore();
     return true;
   }
-  satelliteOrigins({earth,W=360,H=780}) {
+  satelliteOrigins({earth,W=360,H=780,time=0}) {
     if(!earth)return [];
     const {x,y,r}=earth;
     const points=[
@@ -381,10 +435,13 @@ class Artist {
       {x:x,y:y-.30*r},
       {x:x+.72*r,y:y-.93*r}
     ];
-    return points.map(p=>({x:Math.max(17,Math.min(W-17,p.x)),y:Math.max(14,Math.min(H-17,p.y))}));
+    return points.map((p,i)=>({
+      x:Math.max(17,Math.min(W-17,p.x+(time?Math.sin(time*.95+i*2.3)*2.8:0))),
+      y:Math.max(14,Math.min(H-17,p.y+(time?Math.cos(time*1.1+i*2.1)*3.4:0)))
+    }));
   }
   satellites({earth,W=360,H=780,time=0,reduced=false}){
-    const origins=this.satelliteOrigins({earth,W,H});
+    const origins=this.satelliteOrigins({earth,W,H,time});
     if(!earth)return origins;
     const c=this.ctx;
     for(let i=0;i<origins.length;i++){
@@ -405,11 +462,27 @@ class Artist {
       c.strokeStyle="rgba(255,236,179,.56)";c.lineWidth=.85;
       c.beginPath();c.moveTo(-11,-1);c.lineTo(11,-1);c.moveTo(-7,4);c.lineTo(7,4);c.stroke();
       c.fillStyle="#193559";c.fillRect(-6,8,12,3.5);
-      c.shadowColor="#55d6ff";c.shadowBlur=reduced?0:9;
-      c.fillStyle="#a1efff";c.beginPath();c.ellipse(0,12,4.6,2.4,0,0,TAU);c.fill();
+      const pulse=reduced?.5:.65+.35*Math.sin(time*5+i*2.4);
+      c.shadowColor="#55d6ff";c.shadowBlur=reduced?0:9+11*pulse;
+      c.fillStyle="#a1efff";c.beginPath();c.ellipse(0,12,4.6+1.8*pulse,2.4+1.5*pulse,0,0,TAU);c.fill();
+      // Animated blue ion propulsion and a live navigational beacon.
+      c.fillStyle="rgba(64,214,255,"+(.25+.38*pulse)+")";
+      c.beginPath();c.moveTo(-3,14);c.lineTo(0,19+8*pulse);c.lineTo(3,14);c.closePath();c.fill();
+      c.fillStyle="#fff7c9";c.shadowColor="#f9d781";
+      c.shadowBlur=reduced?0:5+6*pulse;
+      c.beginPath();c.arc(0,-10,1.4+.7*pulse,0,TAU);c.fill();
       c.restore();
     }
     return origins;
+  }
+  laserDrill({from,to,progress=0,reduced=false}){
+    if(!from||!to)return;
+    this.laser({from,to,life:.28+.7*progress,reduced});
+    const c=this.ctx,r=11+8*progress;
+    c.save();c.strokeStyle="#ffda84";c.shadowColor="#ffbb41";
+    c.shadowBlur=reduced?2:14;c.lineWidth=2.5;
+    c.beginPath();c.arc(to.x,to.y,r,-Math.PI/2,-Math.PI/2+TAU*progress);c.stroke();
+    c.restore();
   }
   energy({cx,cy,inner,outer,flash,time=0}){
     const c=this.ctx;
