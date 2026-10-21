@@ -56,3 +56,5 @@
 - Tactile : tap secondaire < 360ms tourne ; appui secondaire stable ≥420ms accélère et n'entraîne pas de rotation ; test d'annulation au relâchement.
 - Visuel : Terre plus grande dans espace sous Lune, particules / faisceau sortant de la Terre, non interceptant, préférence effets doux conservée.
 - Tests et compilation 0.1.6 à contrôler avant d'annoncer une APK.
+
+- CI et sortie finales : GitHub Actions #39573299164 success (tests Node, Android, dépôt APK directe). Fichier temp/PartouTetris-v0.1.6-debug.apk 33 060 octets. Correctif supplémentaire : 6 coordonnées aux appels Bézier de la Terre pour éviter une exception Canvas au rendu. main non fusionnée ; vérification sur téléphone encore nécessaire.

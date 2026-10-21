@@ -64,4 +64,4 @@
 - Scoring : 40 points de base + 12 × proximité radiale moyenne vers la Lune, multiplicateur ×N à partir de N=2 cellules déjà posées distinctes en contact radial ou tangentiel. Un contact = ×1. Contacts évalués avant placement ; pas de bonus avec la nouvelle pièce elle-même.
 - Gestes : doigt primaire guide ; deuxième doigt tap court = rotation ; maintien stable ≥420 ms = chute rapide, retour à normal au relâchement, aucune rotation lors du maintien.
 - Visuel : Terre plus grosse, place réservée sous le cercle en portrait ; faisceau, bulles et particules sortent de la Terre vers la Lune ; accessibilité préservée.
-- Statut : code et tests PT-009 prévus dans la 0.1.6, valider CI + test visuel Samsung avant clôture.
+- Statut : code PT-009 et APK 0.1.6 compilés avec succès en CI #39573299164 ; test visuel/multitactile Samsung toujours à faire.

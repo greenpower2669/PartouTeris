@@ -64,5 +64,5 @@
 - [x] Valoriser placement près du centre et multiplicateur xN par N cellules déjà posées voisines.
 - [x] Appui long stable du second doigt pour chute rapide, tap bref conservé pour tourner.
 - [x] Couvrir les nouveaux comportements par tests Node, sans désactiver les tests précédents.
-- [ ] Vérifier CI GitHub Actions et lien APK directe PartouTetris 0.1.6.
+- [x] CI GitHub Actions #39573299164 réussie après correction Bézier des continents ; tests Node + build Android, APK 0.1.6 brute vérifiée, 33 060 octets.
 - [ ] Tester physiquement sur Samsung SM-A576B Android 16 : taille Terre, audio, récompenses, gestes 2 doigts.
