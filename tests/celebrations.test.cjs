@@ -95,3 +95,12 @@ test('PT-018 demolition cost appears in the HUD, never across the Moon',()=>{
  assert.match(html,/#hud #pointFeed\.penalty/);
  assert.match(html,/sound\.cue\("destroy"\)/);
 });
+
+test('PT-018 actual malus text is bounded by current score, never invents lost points',()=>{
+ const fs=require('node:fs');
+ const src=fs.readFileSync('app/src/main/assets/celebrations.js','utf8');
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ assert.match(src,/event\.charged\.toLocaleString/);
+ assert.match(html,/ev\.type!=="points"&&ev\.type!=="destroy"/);
+ assert.match(html,/sound\.cue\("destroy"\)/);
+});

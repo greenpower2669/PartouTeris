@@ -517,7 +517,7 @@ function frame(time){
   for(const ev of game.drainEvents()){
     festival.handle(ev);
     if(ev.type==="milestone")sound.cue("milestone");
-    else if(ev.type!=="points")sound.cue(ev.type,ev.count);
+    else if(ev.type!=="points"&&ev.type!=="destroy")sound.cue(ev.type,ev.count);
   }
   if(laserTarget){
     if(!laserMode||game.paused||game.over||

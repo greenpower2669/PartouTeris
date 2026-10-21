@@ -113,7 +113,7 @@ class Festival {
    if(event.type==="points"&&event.reason==="placement")this.floatScore(event);
    else if(event.type==="destroy"){
      if(this.gainHost){
-       this.gainHost.textContent="MALUS −"+event.penalty.toLocaleString("fr-FR")+
+       this.gainHost.textContent="MALUS −"+event.charged.toLocaleString("fr-FR")+
          " ×"+event.multiplier;
        this.gainHost.classList?.add("penalty");
        this.gainHost.hidden=false;
