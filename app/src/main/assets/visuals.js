@@ -195,7 +195,7 @@ class Artist {
       c.fillStyle=aura;c.beginPath();c.arc(x,y,r*1.28,0,TAU);c.fill();
       c.shadowColor="#67d8ff";c.shadowBlur=r*.22;
       c.save();c.translate(x,y);
-      c.rotate(reduced?0:Math.sin(time*.017)*.12);
+      c.rotate(reduced?0:(time*.018)%TAU); // uninterrupted planetary rotation
       c.drawImage(this.earthTexture,-r,-r,r*2,r*2);
       c.restore();c.shadowBlur=0;
       c.save();c.beginPath();c.arc(x,y,r*.958,0,TAU);c.clip();
