@@ -188,7 +188,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="laserButton" aria-label="Activer le mode laser pour orienter les pièces" aria-pressed="false">⚡ LASER</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
-<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Quatre débris venus de l'espace, sans parachute, sous la protection de satellites terrestres.</p><p>Vitesse réglable et musique originale.</p>
+<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique originale.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
 <p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -317,6 +317,10 @@ function pieces(){
   for(const p of game.pieces){
     if(!p)continue;
     art.incoming({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,time:performance.now()/1000,reduced:reducedCelebrations.checked});
+    // Space: flames only. Once inside the 10 playable lunar rings, a
+    // discreet stabilizing canopy deploys behind the active block.
+    if(window.PartouVisuals.shouldDeployCanopy(p.radius,RINGS))
+      art.canopy({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,color:COLORS[p.lane],reduced:reducedCelebrations.checked});
     for(const [a,r] of cellsOf(p))wedge(a,r,COLORS[p.lane],.94,true);
 
   }

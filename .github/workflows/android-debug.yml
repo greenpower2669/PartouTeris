@@ -39,17 +39,17 @@ jobs:
         run: gradle :app:assembleDebug --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: PartouTetris-v0.1.8-debug
+          name: PartouTetris-v0.1.9-debug
           path: app/build/outputs/apk/debug/app-debug.apk
       - name: Publish uncompressed temporary APK on working branch
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         shell: bash
         run: |
           mkdir -p temp
-          cp app/build/outputs/apk/debug/app-debug.apk temp/PartouTetris-v0.1.8-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk temp/PartouTetris-v0.1.9-debug.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add temp/PartouTetris-v0.1.8-debug.apk
+          git add temp/PartouTetris-v0.1.9-debug.apk
           if ! git diff --cached --quiet; then
             git commit -m "build: temporary installable PartouTetris debug APK [skip ci]"
             git push origin "HEAD:${GITHUB_REF_NAME}"

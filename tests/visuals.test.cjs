@@ -20,11 +20,19 @@ test('Incoming flaming trails and Earth laser are visual-only Canvas primitives'
  assert.match(src,/createLinearGradient/);
 });
 
-test('No parachutes in the game or in space (artist or entry point)',()=>{
+test('Small landing canopy deploys only inside the ten lunar rings',()=>{
+ const {shouldDeployCanopy}=require('../app/src/main/assets/visuals.js');
+ for(const r of [14,13,12,11,10,-1,NaN])assert.equal(shouldDeployCanopy(r,10),false);
+ for(const r of [9,8,5,1,0])assert.equal(shouldDeployCanopy(r,10),true);
+});
+test('Parachutes are visual-only and constrained by the same zone rule',()=>{
  const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
  const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
- assert.doesNotMatch(art,/parachute\s*\(/);
- assert.doesNotMatch(html,/parachute\s*\(/);
+ assert.match(art,/canopy\(\{cx,cy,inner,stepR,angle,radial/);
+ assert.match(art,/if\(!shouldDeployCanopy\(radial\)\)return false/);
+ assert.match(html,/if\(window\.PartouVisuals\.shouldDeployCanopy\(p\.radius,RINGS\)\)/);
+ assert.match(html,/art\.canopy\(/);
+ assert.doesNotMatch(html,/art\.canopy\([\s\S]*?art\.incoming\(/);
 });
 test('Three terrestrial satellites are positioned and used as convergent laser emitters',()=>{
  const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
@@ -59,4 +67,13 @@ test('The optimized user icon has the exact validated Git binary hash',()=>{
  const data=fs.readFileSync(p);
  const gitBlob=Buffer.concat([Buffer.from('blob '+data.length+'\0'),data]);
  assert.equal(crypto.createHash('sha1').update(gitBlob).digest('hex'),'e0eedc703359d7e27be9501b0f3c67bec1186229');
+});
+
+test('Satellite craft show gold triangular hulls and cyan propulsion rings',()=>{
+ const src=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ assert.match(src,/Pyramid-shaped defence craft/);
+ assert.match(src,/c\.ellipse\(0,11,17,4\.3/);
+ assert.match(src,/c\.moveTo\(0,-17\);c\.lineTo\(16,7\)/);
+ assert.match(src,/rgba\(41,210,249/);
+ assert.doesNotMatch(src,/pyramid\(cx[+-]/);
 });

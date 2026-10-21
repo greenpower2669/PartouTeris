@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTetris 0.1.8
+# Contrat de gameplay — PartouTetris 0.1.9
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
@@ -29,3 +29,6 @@
 - PT-011 : icône fournie par Fab (PT doré + éléments pharaoniques, futuristes) intégrée dans drawable-nodpi/icon.webp et assets/brand-icon.webp sans réinterprétation graphique. La Lune ne contient aucune pyramide ; elles n'existent que dans l'identité visuelle.
 - Débris : 4 étapes spatiales à l'extérieur des 10 anneaux (SPACES_STEPS 4), cellules visibles au-delà de la zone occupable, flammes spatiales, zéro parachute dans gameplay.
 - Défense : satellites terrestres distincts au nombre de trois près de la Terre ; trois faisceaux convergent vers la pièce ciblée lors du tir laser. Garder l'effet et la collision précédente.
+
+- PT-012 : deux phases strictes. r ≥ RINGS (10) = espace avec flammes, aucun parachute. r dans [0,9] = petite voile de stabilisation semi-transparente, simple dessin derrière la pièce, sans physique. Aucun parachute n'affecte la gravité.
+- Direction esthétique définie par l'icône officielle PT et l'illustration des Pharaonites : or et cyan, anneaux lumineux, satellites **pyramidaux** avec noyau cyan, Terre orbitale. La Lune reste naturelle et sans pyramides.

@@ -76,3 +76,9 @@
 
 - PT-011 CI finale : première tentative échouée à cause d'une ancienne assertion `radial<4.5` non mise à jour vers `radial<9` ; corrigée. Deuxième passage détection d'une variation lors de la transcription binaire WebP optimisée ; l'icône a été corrigée en confrontant les blocs encodés à l'original et SHA Git exact `e0eedc703359d7e27be9501b0f3c67bec1186229`. Test d'empreinte ajouté et vert.
 - **Build final réussi GitHub Actions #39591033182** : tests Node, compilation Gradle, APK directe `temp/PartouTetris-v0.1.8-debug.apk` vérifiée à 47 265 octets. `main` non fusionnée. Essai tactile/visuel Samsung encore à faire.
+
+## PT-012 — Nouvelle convention parachutes après phase spatiale (21 octobre 2026)
+- Précision de Fab : le retrait total des parachutes (PT-011) était trop radical. Ils doivent revenir **uniquement dans la zone lunaire**, en taille plus discrète.
+- Ancien test « No parachutes » est remplacé par tests sur la règle r<10 ; logique des collisions inchangée. Petite voile cyan/or à fils discrets, sans capsule massive.
+- Les satellites rectangulaires du prototype ne représentaient pas suffisamment les deux dernières références : remplacés par **pyramides-satellites dorées**, anneaux de propulsion cyan. Orbits fines ajoutées autour de la Terre ; aucun objet pyramidal ajouté à la Lune.
+- À valider : cohérence visuelle sur petit écran Samsung Android 16, non-obstruction des blocs, phonophobie/contrastes ; CI et APK en attente.

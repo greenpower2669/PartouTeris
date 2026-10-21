@@ -81,3 +81,10 @@
 - Lasers : le tir n'émane plus d'un point central de la Terre mais de **3 satellites terrestres visibles et distincts**, leurs faisceaux convergeant vers une cible unique. Préserver impacts et effets sonores existants.
 - Lune : conserver seulement cratères et texture géologique, **aucune pyramide**, aucune icône collée sur le globe ; l'Égypte futuriste reste dans logo et HUD.
 - Branches/FabCopilot : intervenir uniquement sur feature/lunar-four-fronts-001, sans fusion main ni Release; APK directe non ZIP. Statut : CI #39591033182 et APK 0.1.8 brute vérifiées ; rendu visuel à valider sur Samsung.
+
+## PT-012 — Petites voiles en zone lunaire et esthétique des deux images (21 octobre 2026)
+- Fab précise : les parachutes doivent se déployer **une fois que les pièces entrent dans la zone de jeu**, et rester beaucoup plus discrets qu'au début.
+- Phase spatiale de quatre rayons au-delà des dix couronnes : blocs incandescents **sans parachute** ; zone de dix couronnes : petites voiles de stabilisation cyan/or, transparentes, accessoires purement graphiques.
+- Inspiration visuelle obligatoire : **icône officielle PartouTetris** (bleu, cyan néon, or, pyramides) + visuel récent de pharaons futuristes, Terre et pyramides-satellites. Satellites modélisés en forme de pyramides dorées avec anneaux et moteurs cyan. Aucun nouveau dessin généré, exclusivement code Canvas Android.
+- **Interdit de dessiner des pyramides sur la surface lunaire.** Conserver textures/cratères et tous les contrôles, sauvegardes, scores, vitesse, musique.
+- Travaux v0.1.9 dans `feature/lunar-four-fronts-001` ; aucun merge main/release définitive. Valider CI puis téléphone avant clôture.

@@ -1,20 +1,21 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Android 0.1.8 — Véritable icône, espace sans parachute, satellites de défense
+## Prototype Android 0.1.9 — deux phases de descente et satellites pyramidaux
 
-**Référence utilisateur :** icône originale `/mnt/data/25255.png` fournie par Fab (emblème PT doré, cercles techno cyan, pyramides dans l'illustration). Son rendu WebP optimisé est embarqué dans l'APK : `app/src/main/res/drawable-nodpi/icon.webp` et `app/src/main/assets/brand-icon.webp`. L'illustration reste dans l'icône et le titre seulement, jamais sur la Lune.
+Retour utilisateur (21 octobre 2026) : rétablir des parachutes **très discrets dans la zone lunaire seulement**, s'inspirer de l'icône officielle PartouTetris et de l'illustration des pharaons et pyramides-satellites pour l'esthétique.
 
-- **Lune :** planète à cratères ; **zéro pyramide dessinée sur sa surface**, contrairement à l'illustration conceptuelle précédente.
-- **Phase spatiale prolongée :** les quatre pièces débutent à `RINGS + 4` et avancent sur quatre étapes supplémentaires avant de traverser le plateau. La gravité extérieure reste progressive (intervalle ×0,72) ; les pièces apparaissent visuellement comme des segments lumineux **au-delà de l'anneau**, avec traînées incandescentes.
-- **Aucun parachute en vol** : ancien rendu du petit parachute complètement retiré du moteur visuel et de l'écran. Les débris restent libres de se croiser dans l'espace et dans l'orbite.
-- **Trois satellites autour de la Terre**, visibles en bas de l'écran, équipés d'un corps doré, de panneaux solaires bleu nuit et d'un émetteur cyan. Au tir, **trois faisceaux distincts** partent des satellites et convergent vers la même pièce touchée. Le tir continue de tourner la pièce et de la repousser légèrement si visée sur le côté et si la case est libre.
-- **Identité visuelle :** utilisation de l'icône fournie et non d'une redessinée par IA, dans Android et le titre du jeu.
-- **Tout le gameplay conservé :** portrait fixe, score grand en haut, podium des meilleurs scores, pseudo, quatre fronts, commandes à deux mains, musique offline, points par profondeur et contacts, combos, feux d'artifice et réglages d'accessibilité.
-- **Identifiant Android inchangé** : `com.greenpower2669.partouteris`, pour préserver les données lors de l'installation.
+- **Espace lointain (r ≥ 10) :** pièces enflammées sur quatre étapes radiales hors de la grille ; aucun parachute.
+- **Zone lunaire (0 ≤ r < 10) :** le bloc active une **petite voile de stabilisation** cyan et or semi-transparente (6 à 11 px, fils très fins), en conservant sa forme et sa maniabilité. La voile ne participe pas aux collisions et ne ralentit pas artificiellement le moteur.
+- **Satellites terrestres :** les trois anciens modules rectangulaires sont redessinés dans l'univers du concept : silhouettes de **pyramides dorées** à facettes, base à anneau cyan lumineux, propulsion subtile. Trois lasers convergent toujours vers la cible visée.
+- **Identité artistique :** bleu nuit spatial, cyan technologique, lueurs dorées, ambiance pharaons futuristes, fines orbites terrestres. Reprise de l'icône originale dans Android et près du titre, sans remplacer son fichier.
+- **La Lune ne porte aucune pyramide.** Les pyramides sont uniquement dans le logo et les satellites hors de la Lune.
+- Tout le gameplay conservé : quatre fronts, mode portrait, tirs, score et podium, pseudo, combo et célébrations, double tactile, réglages et musique.
+- Un mode d'effets visuels doux reste disponible.
 
-### APK Android de test (directe, non ZIP)
-[PartouTetris-v0.1.8-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.1.8-debug.apk)
+### APK Android installable
+Après validation du build GitHub Actions, APK brute sans archive ZIP :
+[PartouTetris-v0.1.9-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.1.9-debug.apk).
 
-Ce lien n'est validé qu'après réussite GitHub Actions et confirmation du fichier dans `temp/`. Aucune fusion `main` ni Release définitive sans l'accord de Fab.
+Source : `greenpower2669/PartouTetris`, branche `feature/lunar-four-fronts-001`. Ne jamais fusionner `main` ou publier une Release sans validation explicite. Package `com.greenpower2669.partouteris` et préférences historiques conservés.
 
-Tests : `node --test tests/*.test.cjs`, puis `gradle :app:assembleDebug`.
+Tests : `node --test tests/*.test.cjs`; build Android `gradle :app:assembleDebug`.

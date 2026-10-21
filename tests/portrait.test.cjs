@@ -71,3 +71,10 @@ test('Horizontal space outside the circular puzzle fits outer entry cells',()=>{
   assert.ok(width/2-l.outer>=width*.10);
  }
 });
+
+test('Landing canopy appears in lunar play zone, not in four-step approach from space',()=>{
+ const {shouldDeployCanopy}=require('../app/src/main/assets/visuals.js');
+ const {RINGS,SPACE_STEPS}=require('../app/src/main/assets/engine.js');
+ for(let r=RINGS;r<=RINGS+SPACE_STEPS;r++)assert.equal(shouldDeployCanopy(r,RINGS),false);
+ assert.equal(shouldDeployCanopy(RINGS-1,RINGS),true);
+});

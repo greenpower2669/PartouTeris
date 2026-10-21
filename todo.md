@@ -88,3 +88,13 @@
 - [x] Conserver une Lune à cratères, sans pyramides.
 - [x] GitHub Actions #39591033182 : tests Node et APK Android 0.1.8 validés ; fichier direct vérifié (47 265 octets). Icône WebP exacte contrôlée par le SHA Git `e0eedc703359d7e27be9501b0f3c67bec1186229` dans Android + assets.
 - [ ] Confirmer esthétique, espaces, lasers, fluidité sur SM-A576B Android 16.
+
+## PT-012 — 0.1.9 Pharaonites et parachutes légers
+- [x] Parachutes discrets uniquement à l'intérieur des 10 couronnes ; jamais dans l'espace.
+- [x] Voiles cyan/or semi-transparentes, petites et dessinées sous les cellules.
+- [x] Refonte des trois satellites vers des pyramides spatiales dorées à propulsion cyan.
+- [x] Ajouter orbites cyan/or autour de la Terre, sans pyramide sur la Lune.
+- [x] Préserver flammes hors zone, collisions, lasers, score, highscore, tactile et musique.
+- [x] Tests Node sur transition des deux phases et intégration des trois satellites pyramidaux.
+- [ ] Tests GitHub Actions et APK 0.1.9 directe à vérifier.
+- [ ] Essai réel SM-A576B : élégance, taille et visibilité des voiles, trois lasers satellites, nouvelles lumières.

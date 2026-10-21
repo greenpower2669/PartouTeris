@@ -15,6 +15,10 @@ function shadeFor(color){
 }
 function rng(seed){return function(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 function position(cx,cy,r,a){return [cx+Math.cos(a)*r,cy+Math.sin(a)*r];}
+// The chute is a landing aid, never a feature of the outer-space journey.
+function shouldDeployCanopy(radial,ringCount=10){
+  return Number.isFinite(radial) && radial>=0 && radial<ringCount;
+}
 class Artist {
   constructor(ctx) {
     this.ctx=ctx;
@@ -110,6 +114,21 @@ class Artist {
       c.textAlign="center";c.fillStyle="#cee9ff";
       c.font="700 "+Math.max(10,Math.min(13,r*.32))+"px system-ui";
       c.fillText("TERRE",x,y+r+Math.max(10,r*.25));
+    }
+    // Low-contrast cyan/gold orbital halos around Earth, inspired by the
+    // official PT icon and the user's pyramid-satellite defence illustration.
+    // Their rear-plane placement keeps the planet and falling blocks legible.
+    if(earth&&earth.r>3){
+      c.save();
+      c.lineWidth=1.3;
+      c.strokeStyle="rgba(67,210,252,.30)";
+      c.beginPath();c.ellipse(earth.x,earth.y,earth.r*2.05,earth.r*.73,-.18,0,TAU);c.stroke();
+      c.shadowColor="#f7d082";c.shadowBlur=5;
+      c.strokeStyle="rgba(241,192,103,.55)";
+      c.lineWidth=2;
+      c.beginPath();c.ellipse(earth.x,earth.y,earth.r*2.06,earth.r*.74,-.18,.2,1.20);c.stroke();
+      c.shadowBlur=0;
+      c.restore();
     }
     // Gold-tech temple orbital machinery, restrained grid for clarity.
     c.save();c.shadowColor="#edb35d";c.shadowBlur=flash>0?16:5;
@@ -222,6 +241,37 @@ class Artist {
     }
     c.restore();
   }
+  canopy({cx,cy,inner,stepR,angle,radial,color="#72e8ff",reduced=false}){
+    if(!shouldDeployCanopy(radial))return false;
+    const c=this.ctx;
+    const theta=-Math.PI/2+(angle+.5)*TAU/48;
+    // Tether stays on the outside of the currently controlled piece.
+    const r=inner+(radial+1.95)*stepR;
+    const [x,y]=position(cx,cy,r,theta);
+    // One small foldable gold/cyan foil, much subtler than the old parachute.
+    const s=Math.max(6,Math.min(11,stepR*1.6));
+    c.save();
+    c.translate(x,y);c.rotate(theta+Math.PI/2);
+    c.globalAlpha=reduced?.48:.67;
+    const g=c.createLinearGradient(-s,-s,s,0);
+    g.addColorStop(0,"rgba(255,243,205,.75)");
+    g.addColorStop(.52,"rgba(83,204,234,.63)");
+    g.addColorStop(1,"rgba(212,154,71,.84)");
+    c.fillStyle=g;c.strokeStyle="rgba(252,221,154,.90)";c.lineWidth=.85;
+    c.beginPath();c.moveTo(-s,-s*.25);
+    c.quadraticCurveTo(-s*.73,-s*.85,0,-s*.82);
+    c.quadraticCurveTo(s*.73,-s*.85,s,-s*.25);
+    c.quadraticCurveTo(0,-s*.47,-s,-s*.25);
+    c.closePath();c.fill();c.stroke();
+    c.strokeStyle="rgba(151,229,242,.76)";c.lineWidth=.65;
+    c.beginPath();c.moveTo(-s,-s*.25);c.lineTo(0,s*.38);
+    c.moveTo(s,-s*.25);c.lineTo(0,s*.38);c.stroke();
+    // Tiny cyan stabilizer instead of a large canopy and hanging capsule.
+    c.fillStyle=color;c.globalAlpha*=.7;
+    c.beginPath();c.arc(0,s*.38,Math.max(1,s*.1),0,TAU);c.fill();
+    c.restore();
+    return true;
+  }
   satelliteOrigins({earth,W=360,H=780}) {
     if(!earth)return [];
     const {x,y,r}=earth;
@@ -238,19 +288,24 @@ class Artist {
     const c=this.ctx;
     for(let i=0;i<origins.length;i++){
       const {x,y}=origins[i],scale=Math.max(.65,Math.min(1.25,earth.r/40));
-      c.save();c.translate(x,y);c.rotate((i-1)*.27);c.scale(scale,scale);
-      c.shadowColor="#64d9fa";c.shadowBlur=reduced?2:7;
-      c.fillStyle="#173560";c.strokeStyle="#80d7ff";c.lineWidth=1.3;
-      c.fillRect(-22,-7,16,14);c.strokeRect(-22,-7,16,14);
-      c.fillRect(6,-7,16,14);c.strokeRect(6,-7,16,14);
-      c.strokeStyle="#d5eaf4";c.lineWidth=.8;
-      for(const x0 of [-18,-13,9,14,19]){
-        c.beginPath();c.moveTo(x0,-6);c.lineTo(x0,6);c.stroke();
-      }
-      c.fillStyle="#cca069";c.strokeStyle="#f5d8a8";
-      c.fillRect(-5,-9,10,18);c.strokeRect(-5,-9,10,18);
-      c.shadowBlur=reduced?0:8;
-      c.fillStyle="#9cf4ff";c.beginPath();c.arc(0,-9,3.3,0,TAU);c.fill();
+      c.save();c.translate(x,y);c.rotate((i-1)*.20);c.scale(scale,scale);
+      // Pyramid-shaped defence craft: gold facets, dark side, cyan energy.
+      // Satellites are outside the Moon; the Moon texture stays geological.
+      c.shadowColor="#69dfff";c.shadowBlur=reduced?2:8;
+      c.fillStyle="rgba(41,210,249,.22)";
+      c.beginPath();c.ellipse(0,11,19,6,0,0,TAU);c.fill();
+      c.strokeStyle="#6ee7fc";c.lineWidth=2.4;
+      c.beginPath();c.ellipse(0,11,17,4.3,0,0,TAU);c.stroke();
+      c.shadowBlur=0;
+      c.fillStyle="#edc27d";c.strokeStyle="#ffe9af";c.lineWidth=1.3;
+      c.beginPath();c.moveTo(-16,7);c.lineTo(0,-17);c.lineTo(0,7);c.closePath();c.fill();c.stroke();
+      c.fillStyle="#96643e";c.beginPath();
+      c.moveTo(0,-17);c.lineTo(16,7);c.lineTo(0,7);c.closePath();c.fill();c.stroke();
+      c.strokeStyle="rgba(255,236,179,.56)";c.lineWidth=.85;
+      c.beginPath();c.moveTo(-11,-1);c.lineTo(11,-1);c.moveTo(-7,4);c.lineTo(7,4);c.stroke();
+      c.fillStyle="#193559";c.fillRect(-6,8,12,3.5);
+      c.shadowColor="#55d6ff";c.shadowBlur=reduced?0:9;
+      c.fillStyle="#a1efff";c.beginPath();c.ellipse(0,12,4.6,2.4,0,0,TAU);c.fill();
       c.restore();
     }
     return origins;
@@ -275,6 +330,6 @@ class Artist {
     c.restore();
   }
 }
-root.PartouVisuals={Artist};
-if(typeof module!=="undefined"&&module.exports)module.exports={Artist};
+root.PartouVisuals={Artist,shouldDeployCanopy};
+if(typeof module!=="undefined"&&module.exports)module.exports={Artist,shouldDeployCanopy};
 })(typeof globalThis!=="undefined"?globalThis:this);
