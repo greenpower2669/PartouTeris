@@ -80,4 +80,4 @@
 - Arrivées : les quatre pièces démarrent 4 niveaux radiaux hors du plateau (approche spatiale distincte), traînées incandescentes et blocs réellement visibles en espace libre ; enlever tout parachute du jeu. Maintenir vitesse réglée, quatre fronts, collisions uniquement avec blocs verrouillés, et contrôle tactile à deux doigts.
 - Lasers : le tir n'émane plus d'un point central de la Terre mais de **3 satellites terrestres visibles et distincts**, leurs faisceaux convergeant vers une cible unique. Préserver impacts et effets sonores existants.
 - Lune : conserver seulement cratères et texture géologique, **aucune pyramide**, aucune icône collée sur le globe ; l'Égypte futuriste reste dans logo et HUD.
-- Branches/FabCopilot : intervenir uniquement sur feature/lunar-four-fronts-001, sans fusion main ni Release; APK directe non ZIP. Statut : code à valider CI puis test visuel Samsung.
+- Branches/FabCopilot : intervenir uniquement sur feature/lunar-four-fronts-001, sans fusion main ni Release; APK directe non ZIP. Statut : CI #39591033182 et APK 0.1.8 brute vérifiées ; rendu visuel à valider sur Samsung.

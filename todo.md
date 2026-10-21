@@ -86,5 +86,5 @@
 - [x] Supprimer tous les parachutes du jeu, sans retirer le motif de l'icône originale.
 - [x] Dessiner trois satellites autour de la Terre et faire converger leurs lasers vers la cible.
 - [x] Conserver une Lune à cratères, sans pyramides.
-- [ ] Vérifier GitHub Actions, APK directe 0.1.8 et icon drawable effective.
+- [x] GitHub Actions #39591033182 : tests Node et APK Android 0.1.8 validés ; fichier direct vérifié (47 265 octets). Icône WebP exacte contrôlée par le SHA Git `e0eedc703359d7e27be9501b0f3c67bec1186229` dans Android + assets.
 - [ ] Confirmer esthétique, espaces, lasers, fluidité sur SM-A576B Android 16.

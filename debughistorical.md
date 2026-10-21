@@ -73,3 +73,6 @@
 - Cause : `spawn` à RINGS+1, cellules dessinées seulement sur r<10, parachute toujours rendu, laser depuis l'objet Terre unique.
 - Correction : apparition à RINGS+4, cellules rendues jusqu'à r<16 avec compression de l'espace, traînée de flammes en phase spatiale ; parachute entièrement retiré, 3 satellites terrestres affichés et 3 rayons par tir, visée et scoring conservés.
 - Lune sans pyramides (elles figurent dans l'icône et près du titre seulement). Tests et rendu téléphone à valider.
+
+- PT-011 CI finale : première tentative échouée à cause d'une ancienne assertion `radial<4.5` non mise à jour vers `radial<9` ; corrigée. Deuxième passage détection d'une variation lors de la transcription binaire WebP optimisée ; l'icône a été corrigée en confrontant les blocs encodés à l'original et SHA Git exact `e0eedc703359d7e27be9501b0f3c67bec1186229`. Test d'empreinte ajouté et vert.
+- **Build final réussi GitHub Actions #39591033182** : tests Node, compilation Gradle, APK directe `temp/PartouTetris-v0.1.8-debug.apk` vérifiée à 47 265 octets. `main` non fusionnée. Essai tactile/visuel Samsung encore à faire.
