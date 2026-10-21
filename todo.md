@@ -152,3 +152,9 @@
 - [x] Tests du pseudo et de la préservation des scores. Version Android 0.2.2.
 - [ ] Vérifier compilation Actions et APK brute `temp/PartouTetris-v0.2.2-debug.apk`.
 - [ ] Vérifier le libellé et pseudo sur SM-A576B.
+
+### PT-015 — Validation technique finale
+- [x] Exécution GitHub Actions [#39647494324](https://github.com/greenpower2669/PartouTetris/actions/runs/39647494324) : **success** (tests Node et APK Android).
+- [x] Fichier non compressé `temp/PartouTetris-v0.2.2-debug.apk` vérifié (8 783 572 octets ; SHA blob Git `07ada0aa7d5a00acf77dce04c42319d39f4f9048`).
+- [x] Aperçu portrait `design/rendu-jeu-apercu.jpg` inspecté : « MEILLEUR SCORE DE PHARAONITE » et « Tous3nKamion » visibles sans chevauchement du plateau.
+- [ ] Validation sur Samsung du pseudo migré et des anciens records sur une installation existante.

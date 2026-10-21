@@ -116,3 +116,7 @@
 - Correction de Fab : **« Meilleur score de Pharaonite »** (libellé de la rubrique) et pseudo **« Tous3nKamion »** par défaut, jeu de mots avec Toutânkhamon.
 - Préserver classement top 3/top 10, sauvegardes, anciens records, pseudos personnalisés et package Android. Migration de la seule ancienne valeur par défaut « PHARAON », sans altérer les entrées du classement.
 - Version cible 0.2.2, branche `feature/lunar-four-fronts-001` seulement ; `main` inchangée. CI et APK à vérifier.
+
+### PT-015 — Livraison à valider
+- Version 0.2.2 compilée et tests verts, Actions #39647494324 ; APK brute disponible sur branche via `temp/PartouTetris-v0.2.2-debug.apk`.
+- Contrôle visuel Chromium de la bannière « MEILLEUR SCORE DE PHARAONITE » et du pseudo « Tous3nKamion » effectué ; tests réels Samsung et audio restent ouverts. `main` intacte.

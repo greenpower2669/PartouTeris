@@ -113,3 +113,5 @@
 ## PT-015 — Pseudo et titre de classement (21/10/2026)
 - Fab précise qu'il ne demande pas une nouvelle récompense en jeu mais le **libellé du meilleur score de Pharaonite** et un **pseudo par défaut Tous3nKamion** (Toutânkhamon).
 - Ancien défaut `PHARAON` dans `cleanName`, constructeur, fallback et placeholder. Correction des textes ; `partoutetris-leaderboard-v1`/`partouteris-record` et scores historiques conservés. L'ancien défaut exact est migré à la lecture. Une ancienne valeur personnalisée exactement « PHARAON » n'est pas distinguable du défaut d'origine.
+
+- **PT-015 CI finale :** #39647494324 success, APK directe v0.2.2 présente sur branche (8 783 572 octets). Capture Chromium portrait vérifiée : libellé complet, pseudo exact sans obstruction du jeu. Tests de conservation des scores et de migration de l'ancien défaut exécutés en CI. Installation réelle Android à valider.
