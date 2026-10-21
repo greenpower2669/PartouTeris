@@ -111,3 +111,8 @@
 - **Livré, à valider par Fab :** version Android 0.2.1 via Actions #39644183018 (success), fichier .apk non compressé dans `temp/`.
 - Maintien du lecteur officiel en boucle `track.loop=true`, sans modification du fichier musical ni des préférences de volume. La présence de la boucle dans le code est confirmée, mais la qualité du raccord ne peut être certifiée sans écoute de toute la piste.
 - Aucun merge `main` ni Release officielle, prochain essai humain : palier 20 000 et gains simultanés sur Samsung.
+
+## PT-015 — Score de Pharaonite et pseudo Tous3nKamion (21/10/2026)
+- Correction de Fab : **« Meilleur score de Pharaonite »** (libellé de la rubrique) et pseudo **« Tous3nKamion »** par défaut, jeu de mots avec Toutânkhamon.
+- Préserver classement top 3/top 10, sauvegardes, anciens records, pseudos personnalisés et package Android. Migration de la seule ancienne valeur par défaut « PHARAON », sans altérer les entrées du classement.
+- Version cible 0.2.2, branche `feature/lunar-four-fronts-001` seulement ; `main` inchangée. CI et APK à vérifier.

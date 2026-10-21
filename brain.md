@@ -39,3 +39,5 @@
 - PT-013 après lecture de la charte : Terre monumentale texturée une fois (480×480), satellites alignés sur horizon gauche/centre/droite, titre doré centré et dock de cinq boutons avec laser séparé.
 
 - PT-014 (v0.2.1) : toute annonce de gain ou de couronne/palier est restreinte au panneau supérieur des scores. `pointFeed` dans l'entête du classement, `scoreAnnouncement` par-dessus la seule ligne du podium pendant la scène. Aucun texte de score dans la surface lunaire, même lors des milestones, de doubles couronnes ou d'événements simultanés. Grand score, classements, bonus et effets sonores intacts. Musique officielle boucle avec `HTMLAudioElement.loop=true` ; continuité acoustique à valider sur Samsung.
+
+- PT-015 : libellé « MEILLEUR SCORE DE PHARAONITE » et pseudo par défaut « Tous3nKamion » modifiable. Migration à la lecture de l'ancienne valeur par défaut « PHARAON » sans modifier les lignes de records du classement ni les noms personnalisés.

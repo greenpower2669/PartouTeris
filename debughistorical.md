@@ -109,3 +109,7 @@
 - Solution : bannière dans un hôte absolu *interne* au scoreboard, gain court sur sa ligne de titre, timers bornés et nettoyage ; aucun changement de géométrie du moteur ni du comportement des sons. Vérification CI/capture requise.
 
 - **PT-014, preuve finale :** Actions #39644183018 **success** après mise à jour de l'ancienne assertion PT-010 devenue obsolète ; APK 0.2.1 brute vérifiée 8 783 364 octets. La nouvelle capture Chromium confirme le HUD au repos ; pas de capture d'événement réel au palier 20 000, donc test tactile visuel humain ouvert. La musique officielle conserve `HTMLAudioElement.loop=true` et doit être écoutée jusqu'à son raccord pour confirmer l'absence de blanc audible.
+
+## PT-015 — Pseudo et titre de classement (21/10/2026)
+- Fab précise qu'il ne demande pas une nouvelle récompense en jeu mais le **libellé du meilleur score de Pharaonite** et un **pseudo par défaut Tous3nKamion** (Toutânkhamon).
+- Ancien défaut `PHARAON` dans `cleanName`, constructeur, fallback et placeholder. Correction des textes ; `partoutetris-leaderboard-v1`/`partouteris-record` et scores historiques conservés. L'ancien défaut exact est migré à la lecture. Une ancienne valeur personnalisée exactement « PHARAON » n'est pas distinguable du défaut d'origine.

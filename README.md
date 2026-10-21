@@ -1,12 +1,12 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Prototype Android 0.2.1 — PT-014 : annonces hors plateau, musique officielle
+## Prototype Android 0.2.2 — PT-014 : annonces hors plateau, musique officielle
 
 **Branche :** `feature/lunar-four-fronts-001` — `main` conservée intacte.
 
 ### 📲 APK Android direct (sans ZIP)
 
-**[Télécharger PartouTetris-v0.2.1-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.1-debug.apk)**
+**[Télécharger PartouTetris-v0.2.2-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.2-debug.apk)**
 
 APK debug compilé par [GitHub Actions](https://github.com/greenpower2669/PartouTetris/actions), directement installable sur Android ; AAB de publication seulement après validation de Fab.
 
@@ -34,3 +34,6 @@ Package interne `com.greenpower2669.partouteris` inchangé pour préserver les s
 
 ### PT-014 — Annonces de score
 Les messages « 20 000 POINTS ! », couronnes et combos apparaissent dans le panneau des scores supérieur, sur le podium temporairement remplacé, tandis que le petit gain se positionne à côté de « MEILLEURS SCORES ». Aucun texte de points sur la Lune, ni au bas des anneaux. La musique MP3 locale reste en boucle et les préférences existantes sont conservées.
+
+### PT-015 — Pseudo Tous3nKamion
+Le titre du classement est désormais « MEILLEUR SCORE DE PHARAONITE ». Le pseudo par défaut « Tous3nKamion » (Toutânkhamon) reste modifiable dans Réglages. Les anciens scores et autres pseudos ne changent pas ; seule l'ancienne valeur de défaut « PHARAON » est remplacée à la lecture.

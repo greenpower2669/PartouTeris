@@ -7,7 +7,7 @@ function store(initial={}){
 }
 test("Pseudonym sanitizes markup and limits characters",()=>{
  assert.equal(cleanName("  <Râ>  "),"Râ");
- assert.equal(cleanName(" "),"PHARAON");
+ assert.equal(cleanName(" "),"Tous3nKamion");
  assert.equal(cleanName("ABCDEFGHIJKLMNOPQRSTUVWXYZ").length,16);
 });
 test("Leaderboard stores nickname, ranked best 3 and scores offline",()=>{
@@ -39,4 +39,28 @@ test("Corrupted storage and missing localStorage cannot crash the game",()=>{
  const lb=new Leaderboard(null);
  lb.add(100);
  assert.equal(lb.best(),100);
+});
+
+test("PT-015 defaults and migration do not erase existing Pharaonite records",()=>{
+ const fresh=new Leaderboard(store());
+ assert.equal(fresh.name,"Tous3nKamion");
+ assert.equal(cleanName(null),"Tous3nKamion");
+ const previous=store({"partoutetris-leaderboard-v1":JSON.stringify({name:"PHARAON",
+   scores:[{name:"ANCIEN RECORD",score:20319,at:10},{name:"Cléopâtre",score:340,at:11}]})});
+ const migrated=new Leaderboard(previous);
+ assert.equal(migrated.name,"Tous3nKamion");
+ assert.deepEqual(migrated.top(3).map(x=>[x.name,x.score]),
+   [["ANCIEN RECORD",20319],["Cléopâtre",340]]);
+ const custom=store({"partoutetris-leaderboard-v1":JSON.stringify({name:"Ramsès",
+   scores:[{name:"Ramsès",score:500,at:1}]})});
+ assert.equal(new Leaderboard(custom).name,"Ramsès");
+ assert.equal(new Leaderboard(custom).best(),500);
+});
+test("PT-015 display reads Meilleur score de Pharaonite and nickname",()=>{
+ const fs=require("node:fs");
+ const html=fs.readFileSync("app/src/main/assets/index.html","utf8");
+ assert.match(html,/MEILLEUR SCORE DE PHARAONITE/);
+ assert.match(html,/placeholder="Tous3nKamion"/);
+ assert.match(html,/Tous3nKamion · Record 0/);
+ assert.match(html,/leaderboard\.name\+" · Record "/);
 });

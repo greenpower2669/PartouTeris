@@ -144,3 +144,11 @@
 - [x] APK directe **`temp/PartouTetris-v0.2.1-debug.apk`**, 8 783 364 octets, blob Git SHA `227577f65bdd14fd61996d22e7c5deca160d6b07` (confirmé sur branche).
 - [x] Aperçu portrait Chromium actuel `design/rendu-jeu-apercu.jpg` inspecté : aucune annonce au centre au repos, interface intacte.
 - [ ] Test Samsung avec franchissement de 20 000 points et combos pour vérifier l'effet *en situation* ; continuité perceptive de la boucle MP3 à écouter.
+
+## PT-015 — Meilleur score de Pharaonite et Tous3nKamion
+- [x] Nouveau libellé « MEILLEUR SCORE DE PHARAONITE » dans le HUD.
+- [x] Nouveau pseudo par défaut « Tous3nKamion » dans le code et le champ de réglages.
+- [x] Migration de l'ancien défaut, sans changement des records/personnalisations sauvegardés.
+- [x] Tests du pseudo et de la préservation des scores. Version Android 0.2.2.
+- [ ] Vérifier compilation Actions et APK brute `temp/PartouTetris-v0.2.2-debug.apk`.
+- [ ] Vérifier le libellé et pseudo sur SM-A576B.

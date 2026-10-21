@@ -41,3 +41,5 @@
 - PT-013 : `layout.js` réserve une Terre basse à fort diamètre ; `Artist.makeEarthTexture()` précalcule le globe hors écran, `satelliteOrigins` déploie les trois satellites sur l'horizon. `index.html` centre le logo or et dispose cinq boutons sur une rangée, LASER supplémentaire. `design/charte-apercu.jpg` = source; `design/rendu-jeu-apercu.jpg` = instantané CI optionnel.
 
 - PT-014 : `index.html` héberge désormais `#pointFeed` et `#scoreAnnouncement` **dans `#hud .scoreboard`**, sans flottement Canvas. `Festival` dans `celebrations.js` reçoit `bannerHost` et `gainHost` ; petit gain temporaire géré par `floatScore`, scène temporaire par `show/stop` et réinitialisation par `reset`. `#scoreBurst` ne garde que les particules décoratives passantes. `tests/celebrations.test.cjs` couvre confinement, simultanéité et nettoyage. Aucune modification des clés de sauvegarde.
+
+- PT-015 : `leaderboard.js` DEFAULT_NICKNAME « Tous3nKamion », migration conditionnelle `raw.name === "PHARAON"`; clés `KEY`/`PREVIOUS_RECORD` et `scores` inchangées. `index.html` label Pharaonite, pseudo au HUD et placeholder ; `tests/leaderboard.test.cjs` vérifie migration sans pertes.
