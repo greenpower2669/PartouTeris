@@ -257,7 +257,7 @@ test('PT-017: space pieces rotate without lateral movement, lunar pieces can mov
 });
 test('PT-017: held fast-drop crosses multiple lunar rows even with the shortest interval',()=>{
  const g=new Game(()=>0),p=g.pieces[0];p.radius=8;
- g.level=15;g.baseFallSeconds=2;g.boost(0,true);
+ g.seconds=150*14;g.level=15;g.baseFallSeconds=2;g.boost(0,true);
  const from=p.radius;
  g.step(.12);
  assert.ok(p.radius<=from-1);
