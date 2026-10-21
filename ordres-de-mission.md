@@ -136,3 +136,8 @@
 - Annonce spatiale plus longue (cinq étapes au lieu de quatre, phase légèrement ralentie) ; dans l'espace on peut **tourner mais pas déplacer latéralement**, la prise et l'orientation sont conservées à l'entrée des couronnes.
 - Trajectoires graphiques depuis la Terre au premier plan vers quatre directions d'arrivée autour de la Lune ; le visuel 3D simulé n'affecte ni la position logique du moteur ni le contact des blocs.
 - Préserver quatre fronts, music loop, nouveaux HUD PT-016, pseudo Tous3nKamion, scores/records et package Android. Cible 0.2.4 sur `feature/lunar-four-fronts-001` ; ne pas fusionner `main`.
+
+### PT-017 — Livraison à tester
+- GitHub Actions #39682743622 confirmé **success**, `temp/PartouTetris-v0.2.4-debug.apk` vérifiée 8 789 389 octets sur la branche. Aperçu Chrome réel inspecté : quatre unités spatiales naissent près de l'horizon terrestre et HUD inchangé.
+- Le `×10` signifie une vraie multiplication de progression de chute, non une animation artificielle. Rotation conserve tap court, long appui accélère ; pas de translation de secteur pendant approche.
+- Test humain sur Samsung requis avant validation définitive. Aucune fusion `main`, aucune Release/AAB.

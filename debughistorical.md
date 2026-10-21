@@ -134,3 +134,8 @@
 - Correction : `BOOST_MULTIPLIER=10`, consommation répétée (cap 8 pour éviter les cycles infinis et ne pas booster le nouveau bloc spawn). Deuxième doigt toujours 420 ms/tap bref inchangé ; nouveau libellé CHUTE ×10.
 - Phase espace : 4→5 marches, multiplicateur intervalle .72→.82, `shift` refusé (y compris après laser), `rotate` sans kick angulaire.
 - Affichage : pièce extra-lunaire dessinée avec projection de Terre vers la porte polaire (art.spacePiece) ; aucun changement des collisions, ni de la sauvegarde. CI et visionnage Android à valider.
+
+### PT-017 — Retour du CI et analyse visuelle
+- Deux CI intermédiaires ont échoué sur d'**anciennes assertions de test** devenues invalides (déplacement autorisé dès le départ dans l'espace, ancienne initialisation artificielle du niveau). Tests corrigés en indiquant explicitement la phase lunaire et en ajustant le chronomètre. Aucun rollback du comportement demandé.
+- Exécution finale **#39682743622 success** : Node + Android Gradle + APK 0.2.4 non compressée. Capture `design/rendu-jeu-apercu.jpg` confirme les quatre petites pièces distinctes au départ de la Terre, contrairement à l'ancienne apparition radiale tout autour du cercle.
+- La trajectoire est une **projection graphique depuis la Terre vers les quatre points d'entrée**, tandis que `p.radius` est la seule altitude de collision/gravité. Cela assure la stabilité logique et les quatre fronts, mais l'impression de perspective reste à juger sur le Samsung.
