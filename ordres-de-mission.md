@@ -95,3 +95,7 @@
 - Audio : le MP3 `musique PartouTetris .mp3` de `main` est importé byte-identical comme `official-theme.mp3` ; lecture déclenchée au toucher, boucle et volume paramétrable. Synthèse originale en secours ; laser synthétique étagé activation/charge/tir/impact.
 - Djipie : sources des catégories audio consultées ; droits des fichiers individuels non confirmés pour publication publique, donc **aucune copie des sons privés**.
 - Livraison attendue : APK brute v0.2.0 sous `temp/`, branche `feature/lunar-four-fronts-001` uniquement, `main` inchangée. État : développé sur branche ; tests CI et fidélité visuelle réelle à valider, aucune fusion/release.
+
+### PT-013 — État technique (21 octobre 2026)
+- **Livré sur branche, à valider par Fab :** APK 0.2.0 directe, #39628651992 success, accès via `temp/PartouTetris-v0.2.0-debug.apk`.
+- **Non clos :** fidélité fine à la charte officielle ; écoute et boucle musicale sur Samsung ; sons Djipie privés soumis à preuve de droits ; contrôle tactile réel. Aucune fusion `main`, aucune Release et aucun AAB de publication.

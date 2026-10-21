@@ -120,3 +120,12 @@
 - [ ] Vérifier le nouvel aperçu Chromium après correction du panneau de score, du bouton laser et de l'aide tactile.
 
 - [x] Corriger assertion PT-013 inutilement échouée à cause d'une échappement dans la regex du test ; relancer CI et vérifier capture actualisée.
+
+## PT-013 — Contrôle de clôture technique (21/10/2026)
+- [x] **GitHub Actions #39628651992 : succès** (65+ tests Node, Gradle, APK directe et aperçu Chromium).
+- [x] **APK brute vérifiée** : `temp/PartouTetris-v0.2.0-debug.apk` (8 782 536 octets, SHA Git `01e56c4ae65ca8fd0f5ea7be2b98d22aeb07c997`).
+- [x] Capture réelle du rendu sur navigateur sous `design/rendu-jeu-apercu.jpg` ; panneau score 100 % et LASER sans recouvrement de l'aide confirmés par inspection.
+- [ ] Valider la fidélité fine de la charte par Fab : jeu actuel = refonte graphique codée fonctionnelle mais encore moins photoréaliste que le PNG fourni (Terre, nébuleuses, météorites).
+- [ ] Écoute réelle du MP3 complet et de sa jonction en boucle, latence et sons laser sur Android 16 ; aucun test matériel humain effectué ici.
+- [ ] Définir une sélection Djipie dont provenance et licence sont vérifiées individuellement puis intégrer uniquement ces sons autorisés (aucun son privé recopié actuellement).
+- [ ] Vérifier visuellement, tactilement et en performance l'APK sur Samsung SM-A576B. AAB de publication et merge main non autorisés avant validation.

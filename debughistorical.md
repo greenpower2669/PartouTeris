@@ -97,3 +97,8 @@
 - PT-013 capture headless Chromium 412x915 obtenue, `design/rendu-jeu-apercu.jpg` : deux écarts avérés malgré CI verte : scoreboard étroit à cause du max-width de `#hud .scoreboard` et LASER flottant recouvrant partiellement consignes. Correctifs : scoreboard forcé width/max-width 100%, bouton LASER intégré au panneau d'aide avec pointer-events réactivés uniquement pour lui. Nouveau contrôle sur image CI requis.
 
 - CI b4ee2e6 (#39628428178) : une unique assertion du nouveau test PT-013 a échoué : l'expression régulière du test utilisait `\\s` au lieu de `\s`, sans échec de compilation ni bogue runtime prouvé. Correctif du test par séparation DOM textuelle plutôt que regex échappée ; build à revalider. L'APK 0.2.0 précédent reste disponible.
+
+## PT-013 — Résultat final CI provisoire (21/10/2026)
+- **Exécution #39628651992 = success** : 0.2.0 construite, APK brute 8 782 536 octets dans `temp/`. SHA Git `01e56c4ae65ca8fd0f5ea7be2b98d22aeb07c997`.
+- Vrai snapshot Chromium `design/rendu-jeu-apercu.jpg` : score de nouveau plein format et LASER intégré au panneau d'aide, sans chevauchement. Comparaison avec la charte PNG : style or/cyan, Terre large, Lune et trois satellites reconnaissables ; photo-réalisme du modèle et densité des décors encore inférieurs à l'illustration. Ne pas marquer fidélité 1:1 achevée.
+- **Différence vérifiable :** CI garantit syntaxe, tests moteur et compilation ; elle ne garantit ni qualité audio perceptive, ni performance/gestes réels sur SM-A576B. Pas de sons privés Djipie embarqués sans autorisation documentaire.

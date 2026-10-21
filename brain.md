@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTetris 0.1.9
+# Contrat de gameplay — PartouTetris 0.2.0 (base 0.1.9 préservée)
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
