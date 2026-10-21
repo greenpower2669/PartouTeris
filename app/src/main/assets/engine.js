@@ -1,6 +1,6 @@
 (function (root) {
   "use strict";
-  const SECTORS = 48, RINGS = 10, LANES = 4, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
+  const SECTORS = 48, RINGS = 10, LANES = 4, SPACE_STEPS = 4, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
   const FORMS = [
     [[-1,0],[0,0],[1,0],[2,0]],
     [[0,0],[1,0],[0,1],[1,1]],
@@ -54,7 +54,7 @@
     }
     spawn(lane) {
       const type=Math.max(0,Math.min(FORMS.length-1,Math.floor(this.rng()*FORMS.length)));
-      this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+1,rot:0,boost:false};
+      this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+SPACE_STEPS,rot:0,boost:false};
       this.fall[lane]=0;
     }
     canPlace(p,angle=p.angle,radius=p.radius,rot=p.rot) {
@@ -189,8 +189,10 @@
       for(let lane=0;lane<LANES;lane++) {
         let p=this.pieces[lane];
         this.fall[lane]+=dt*(p&&p.boost?5:1);
-        if(this.fall[lane]>=interval) {
-          this.fall[lane]-=interval;
+        // Space arrival is clearly visible, without slowing the entire session too much.
+        const laneInterval=p.radius>=RINGS?interval*.72:interval;
+        if(this.fall[lane]>=laneInterval) {
+          this.fall[lane]-=laneInterval;
           if(this.canPlace(p,p.angle,p.radius-1,p.rot)) p.radius--;
           else { didLock=this.lock(lane)||didLock; }
           if(this.over) break;
@@ -200,7 +202,7 @@
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);

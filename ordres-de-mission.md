@@ -73,3 +73,11 @@
 - **Laser :** mode explicite par bouton, viser/toucher une pièce volante proche de la trajectoire ; rotation + poussée tangentielle opposée au côté touché si possible ; pas de traversée des blocs fixes, pas d'interruption du contrôle standard lorsqu'on désactive le mode. Son/trace depuis Terre, cadence raisonnable.
 - **Entrée en flammes :** simple présentation Canvas, non liée à collision physique ou à un temps de chute différent ; mouvement réduit honoré.
 - **Statut :** code et tests PT-010 en 0.1.7 ; CI et vérification humaine Samsung en attente.
+
+## PT-011 — Icône authentique, long trajet spatial, satellites convergents, lune sans pyramides (21 octobre 2026)
+- Correction de Fab : « Mais non dessine pas code et prends la nouvelle icone 😀 ... sauf que je ne veux pas de pyramide sur la lune, pas plus maintenant 😜 ».
+- Préserver **exactement le concept graphique de l'icône fournie** ; intégrer en ressource binaire Android et en emblème du bandeau, sans nouveau dessin IA. La source originale envoyée est /mnt/data/25255.png.
+- Arrivées : les quatre pièces démarrent 4 niveaux radiaux hors du plateau (approche spatiale distincte), traînées incandescentes et blocs réellement visibles en espace libre ; enlever tout parachute du jeu. Maintenir vitesse réglée, quatre fronts, collisions uniquement avec blocs verrouillés, et contrôle tactile à deux doigts.
+- Lasers : le tir n'émane plus d'un point central de la Terre mais de **3 satellites terrestres visibles et distincts**, leurs faisceaux convergeant vers une cible unique. Préserver impacts et effets sonores existants.
+- Lune : conserver seulement cratères et texture géologique, **aucune pyramide**, aucune icône collée sur le globe ; l'Égypte futuriste reste dans logo et HUD.
+- Branches/FabCopilot : intervenir uniquement sur feature/lunar-four-fronts-001, sans fusion main ni Release; APK directe non ZIP. Statut : code à valider CI puis test visuel Samsung.

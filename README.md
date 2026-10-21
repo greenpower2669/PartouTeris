@@ -1,27 +1,20 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Android 0.1.7 — HUD de score, podium, étoiles en feu, lasers et pseudo
+## Android 0.1.8 — Véritable icône, espace sans parachute, satellites de défense
 
-**PT-010 / demande Fab :** « les point afficher plus bas il y a de la place et aussi les voir arriverbdenl espace en flammes et pouvoirs lancer des laser dessus pour les orienter aussi en haut le score doit prendre toute la place et en dessous les highscore, dans des options permettre de modifier un pseudo ».
+**Référence utilisateur :** icône originale `/mnt/data/25255.png` fournie par Fab (emblème PT doré, cercles techno cyan, pyramides dans l'illustration). Son rendu WebP optimisé est embarqué dans l'APK : `app/src/main/res/drawable-nodpi/icon.webp` et `app/src/main/assets/brand-icon.webp`. L'illustration reste dans l'icône et le titre seulement, jamais sur la Lune.
 
-### Ce qui change
-- Score **très grand, sur toute la largeur** du bandeau supérieur, en dessous du petit titre avec les pyramides. Le **podium des trois meilleurs scores locaux** se trouve immédiatement dessous, avec pseudo et valeur.
-- Les petits bonus de placement (+points ×multiplicateur) apparaissent **plus bas, à gauche de la Terre**, dans la bande libre sous le jeu. Un petit panneau permanent « GAIN » rappelle le dernier bonus.
-- Classement mémorisé sur le téléphone dans `partoutetris-leaderboard-v1`, limité aux dix meilleures parties (trois affichées à l'écran). Le record historique de `partouteris-record` est repris comme « ANCIEN RECORD » sans le perdre ; nouveaux classements ajoutés après un game-over réel.
-- Pseudo personnalisable sous **⚙ RÉGLAGES > Pseudo du joueur**, 16 caractères maximum, enregistré en mémoire locale, sans compte ni Internet.
-- Les débris arrivant de l'espace ont désormais **des traînées brûlantes** (jaune/orange/rouge), s'atténuant près de la Lune, sans flash stroboscopique. Les quatre chutes restent simultanées et non solides entre elles tant que les pièces volent.
-- Nouveau bouton **⚡ LASER** pour activer/désactiver la visée : toucher ensuite une pièce descendante pour tirer un rayon énergétique depuis la **Terre**. Un impact central fait pivoter la pièce de 90° ; toucher un côté pousse aussi d'un secteur dans le sens opposé à l'impact si libre. Un tir n'ignore jamais les collisions avec les blocs posés. Le mode laser est séparé du contrôle traditionnel à deux mains.
-- Tirs plafonnés à un toutes les 420 ms ; laser et impacts visibles, petit son dédié à volume réglable ; mouvement réduit respecte le paramètre « Effets visuels doux ».
-- Portrait verrouillé, Terre agrandie, musique synthétisée, profondeur/contact scorés, surnoms et records préservés.
+- **Lune :** planète à cratères ; **zéro pyramide dessinée sur sa surface**, contrairement à l'illustration conceptuelle précédente.
+- **Phase spatiale prolongée :** les quatre pièces débutent à `RINGS + 4` et avancent sur quatre étapes supplémentaires avant de traverser le plateau. La gravité extérieure reste progressive (intervalle ×0,72) ; les pièces apparaissent visuellement comme des segments lumineux **au-delà de l'anneau**, avec traînées incandescentes.
+- **Aucun parachute en vol** : ancien rendu du petit parachute complètement retiré du moteur visuel et de l'écran. Les débris restent libres de se croiser dans l'espace et dans l'orbite.
+- **Trois satellites autour de la Terre**, visibles en bas de l'écran, équipés d'un corps doré, de panneaux solaires bleu nuit et d'un émetteur cyan. Au tir, **trois faisceaux distincts** partent des satellites et convergent vers la même pièce touchée. Le tir continue de tourner la pièce et de la repousser légèrement si visée sur le côté et si la case est libre.
+- **Identité visuelle :** utilisation de l'icône fournie et non d'une redessinée par IA, dans Android et le titre du jeu.
+- **Tout le gameplay conservé :** portrait fixe, score grand en haut, podium des meilleurs scores, pseudo, quatre fronts, commandes à deux mains, musique offline, points par profondeur et contacts, combos, feux d'artifice et réglages d'accessibilité.
+- **Identifiant Android inchangé** : `com.greenpower2669.partouteris`, pour préserver les données lors de l'installation.
 
-### Livraison
-L'APK debug brute est disponible après réussite CI GitHub Actions :
-[PartouTetris-v0.1.7-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.1.7-debug.apk).
+### APK Android de test (directe, non ZIP)
+[PartouTetris-v0.1.8-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.1.8-debug.apk)
 
-Contrôle de qualité : `node --test tests/*.test.cjs` puis `gradle :app:assembleDebug`. Tests sur smartphone Android 16 recommandés.
+Ce lien n'est validé qu'après réussite GitHub Actions et confirmation du fichier dans `temp/`. Aucune fusion `main` ni Release définitive sans l'accord de Fab.
 
-### Préservation
-- **Branche :** `feature/lunar-four-fronts-001`. Aucune fusion dans `main` ou publication Release sans validation explicite.
-- **Package Android :** `com.greenpower2669.partouteris` inchangé pour préserver la mise à jour et les préférences existantes.
-- **Clé de configuration historique** `partouteris-audio-and-speed-v1` conservée.
-- Aucun fichier audio privé Djipie ajouté.
+Tests : `node --test tests/*.test.cjs`, puis `gradle :app:assembleDebug`.

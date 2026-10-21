@@ -209,3 +209,19 @@ test('Laser respects paused or ended game and never rewrites existing board',()=
  g.paused=false;g.over=true;assert.equal(g.laser(0,3),null);
  assert.deepEqual(g.board,board);
 });
+
+test('Spawn begins four real orbital steps beyond the filled ring',()=>{
+ const {SPACE_STEPS}=require('../app/src/main/assets/engine.js');
+ assert.equal(SPACE_STEPS,4);
+ const g=new Game(()=>0);
+ assert.ok(g.pieces.every(p=>p.radius===RINGS+SPACE_STEPS));
+ assert.ok(g.pieces.every(p=>g.canPlace(p)));
+});
+test('Outer space flight continues for several steps before reaching the grid',()=>{
+ const {SPACE_STEPS}=require('../app/src/main/assets/engine.js');
+ const g=new Game(()=>0),p=g.pieces[0];
+ for(let i=0;i<31;i++)g.step(.12); // 3.72 seconds > 3.6-second orbital step
+ assert.equal(p.radius,RINGS+SPACE_STEPS-1);
+ assert.equal(g.board.flat().filter(x=>x!==-1).length,0);
+ assert.equal(g.over,false);
+});

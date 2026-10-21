@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTetris 0.1.7
+# Contrat de gameplay — PartouTetris 0.1.8
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
@@ -25,3 +25,7 @@
 - PT-010 : HUD score géant sur toute la largeur, local top 3 sous le score, bonus de pose dans la bande libre sous la Lune. Pseudo modifiable localement (16 caractères), protection contre HTML et remplacement du seul meilleur record par top 10 local sans perte de l'ancien score.
 - PT-010 : blocs entrants possèdent traînées de flammes dessinées en Canvas, purement visuelles ; mode Laser explicite : tap sur une pièce → rayon Terre-pièce, rotation 90° et recul tangentiel opposé au côté visé si libre. Collisions solides inchangées ; gestes droit/gauche restent actifs hors mode laser.
 - Le package et les anciennes clés localStorage doivent rester inchangés pour éviter une perte de progression.
+
+- PT-011 : icône fournie par Fab (PT doré + éléments pharaoniques, futuristes) intégrée dans drawable-nodpi/icon.webp et assets/brand-icon.webp sans réinterprétation graphique. La Lune ne contient aucune pyramide ; elles n'existent que dans l'identité visuelle.
+- Débris : 4 étapes spatiales à l'extérieur des 10 anneaux (SPACES_STEPS 4), cellules visibles au-delà de la zone occupable, flammes spatiales, zéro parachute dans gameplay.
+- Défense : satellites terrestres distincts au nombre de trois près de la Terre ; trois faisceaux convergent vers la pièce ciblée lors du tir laser. Garder l'effet et la collision précédente.

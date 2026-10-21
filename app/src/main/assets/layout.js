@@ -8,7 +8,8 @@
     // Preserve a small dedicated pocket *beneath* the Moon for Earth.
     // Earth is deliberately ~2x the former portrait size.
     const earthR=Math.max(13,Math.min(W*.105,42));
-    const outer=Math.max(1,Math.min(W*.442,(span-(earthR*2+18))/2));
+    // Margin for four extra, visible outer-space orbital lanes (not under HUD).
+    const outer=Math.max(1,Math.min(W*.395,(span-(earthR*2+18))/2));
     const free=Math.max(0,span-2*outer);
     const lift=Math.min(earthR,free*.26);
     const cx=W*.5,cy=(top+lower)*.5-lift;

@@ -19,3 +19,36 @@ test('Incoming flaming trails and Earth laser are visual-only Canvas primitives'
  assert.match(src,/radial<4\.5/);
  assert.match(src,/createLinearGradient/);
 });
+
+test('No parachutes in the game or in space (artist or entry point)',()=>{
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ assert.doesNotMatch(art,/parachute\s*\(/);
+ assert.doesNotMatch(html,/parachute\s*\(/);
+});
+test('Three terrestrial satellites are positioned and used as convergent laser emitters',()=>{
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ assert.match(art,/satelliteOrigins\(\{/);
+ assert.match(art,/satellites\(\{/);
+ assert.match(html,/const emitters=art\.satellites\(/);
+ assert.match(html,/for\(const shot of laserShots\)for\(const from of emitters\)/);
+});
+test('Outer flight debris remains visually rendered beyond the ten radial rings',()=>{
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ assert.match(art,/ring>=16/);
+ assert.match(art,/space=stepR\*\.58/);
+ assert.match(art,/radial<9/);
+ assert.doesNotMatch(art,/pyramid\(cx[+-]/);
+});
+
+test('Authentic user icon is present as Android drawable and as in-game image',()=>{
+ const art='app/src/main/assets/brand-icon.webp',launcher='app/src/main/res/drawable-nodpi/icon.webp';
+ assert.ok(fs.existsSync(art));assert.ok(fs.existsSync(launcher));
+ assert.deepEqual(fs.readFileSync(art),fs.readFileSync(launcher));
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ const manifest=fs.readFileSync('app/src/main/AndroidManifest.xml','utf8');
+ assert.match(html,/<img class="pyramids-mark" src="brand-icon.webp"/);
+ assert.match(manifest,/android:icon="@drawable\/icon"/);
+ assert.equal(fs.existsSync('app/src/main/res/drawable/icon.xml'),false);
+});

@@ -43,7 +43,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 #hud .scoreboard {flex:0 0 auto;max-width:43%;display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
 .brand-copy{min-width:0;display:flex;flex-direction:column;justify-content:center}
 #hud .brand-title {font-size:clamp(15px,4.35vw,24px);letter-spacing:.015em;white-space:nowrap}
-.pyramids-mark {width:clamp(43px,12.5vw,60px);height:50px;flex:none;filter:drop-shadow(0 2px 5px #bb864eaa)}
+.pyramids-mark {width:clamp(43px,12.5vw,60px);height:50px;flex:none;object-fit:contain;border-radius:10px;filter:drop-shadow(0 2px 5px #bb864eaa)}
 #hud small{font-size:clamp(10px,2.8vw,13px);line-height:1.25}
 #hud .scoreboard strong{font-size:clamp(16px,4.2vw,23px)}
 #controlDeck{
@@ -173,14 +173,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <div id="pointFeed" aria-live="polite">BONUS DE POSE +0</div>
 <div id="hud">
   <div class="brand">
-    <svg class="pyramids-mark" viewBox="0 0 96 66" role="img" aria-label="Trois pyramides dorées" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c1"/><stop offset=".55" stop-color="#e8b66e"/><stop offset="1" stop-color="#936038"/></linearGradient></defs>
-      <path d="M3 56 L22 23 L39 56Z" fill="#e8bc76"/><path d="M22 23 L39 56 L22 56Z" fill="#946040"/>
-      <path d="M32 59 L58 5 L83 59Z" fill="url(#gold)"/><path d="M58 5 L83 59 L58 59Z" fill="#89542e"/>
-      <path d="M65 54 L80 29 L95 54Z" fill="#e8b66b"/><path d="M80 29 L95 54 L80 54Z" fill="#936040"/>
-      <path d="M3 56 L22 23 L39 56 M32 59 L58 5 L83 59 M65 54 L80 29 L95 54" fill="none" stroke="#ffe7a6" stroke-width="1.8"/>
-      <path d="M41 40 H74 M37 49 H79" stroke="#f9dd9c" stroke-opacity=".48" stroke-width="1"/>
-    </svg>
+    <img class="pyramids-mark" src="brand-icon.webp" alt="Icône officielle PartouTetris" draggable="false">
     <div class="brand-copy"><strong class="brand-title">PARTOUTETRIS</strong></div>
     <div class="right title-meta"><strong id="level">Niveau 1</strong><small id="rings">Couronnes 0 · 4 fronts</small></div>
   </div>
@@ -195,7 +188,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="laserButton" aria-label="Activer le mode laser pour orienter les pièces" aria-pressed="false">⚡ LASER</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
-<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Quatre fronts simultanés, vitesse réglable et musique électronique originale.</p>
+<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Quatre débris venus de l'espace, sans parachute, sous la protection de satellites terrestres.</p><p>Vitesse réglable et musique originale.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
 <p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -315,12 +308,6 @@ function backdrop(){
   art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash,earth});
 }
 function moon(){art.moon({cx,cy,inner});}
-function parachute(p){
-  const angle=rad(p.angle+.5),radius=inner+(p.radius+1.8)*stepR;
-  if(radius>scale*1.5)return;
-  const [x,y]=point(angle,radius);
-  art.parachute({x,y,angle,color:COLORS[p.lane],size:Math.max(10,Math.min(22,stepR*2.4)),time:performance.now()/1000});
-}
 function pieces(){
   for(const p of game.pieces){
     if(!p)continue;
@@ -331,7 +318,7 @@ function pieces(){
     if(!p)continue;
     art.incoming({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,time:performance.now()/1000,reduced:reducedCelebrations.checked});
     for(const [a,r] of cellsOf(p))wedge(a,r,COLORS[p.lane],.94,true);
-    parachute(p);
+
   }
   const p=game.pieces[selected];
   if(p){
@@ -379,8 +366,10 @@ function frame(time){
   for(let r=0;r<RINGS;r++)for(let a=0;a<SECTORS;a++)if(game.board[r][a]!==-1)wedge(a,r,COLORS[game.board[r][a]],.88,true);
   moon();pieces();overlays();
   laserShots=laserShots.filter(shot=>time-shot.at<480);
-  for(const shot of laserShots)
-    art.laser({from:earth,to:shot.to,life:1-(time-shot.at)/480,reduced:reducedCelebrations.checked});
+  // Three Earth defence satellites independently converge on each target.
+  const emitters=art.satellites({earth,W,H,time:time/1000,reduced:reducedCelebrations.checked});
+  for(const shot of laserShots)for(const from of emitters)
+    art.laser({from,to:shot.to,life:1-(time-shot.at)/480,reduced:reducedCelebrations.checked});
   updateHud();requestAnimationFrame(frame);
 }
 function fromEvent(e){
@@ -413,7 +402,7 @@ function nearestLaserPiece(pos){
   let nearest=-1,distance=Infinity;
   for(const p of game.pieces){
     if(!p)continue;
-    const r=inner+(p.radius+1.05)*stepR;
+    const r=inner+Math.min(p.radius,10)*stepR+Math.max(0,p.radius-10)*stepR*.58+stepR*.36;
     const [x,y]=point(rad(p.angle+.5),r);
     const d=Math.hypot(pos.x-x,pos.y-y);
     if(d<distance){distance=d;nearest=p.lane;}
@@ -432,7 +421,7 @@ canvas.addEventListener("pointerdown",e=>{
     if(!shot)return;
     selected=lane;lastLaserAt=now;
     const p=game.pieces[lane];
-    const radius=inner+(p.radius+1.05)*stepR;
+    const radius=inner+Math.min(p.radius,10)*stepR+Math.max(0,p.radius-10)*stepR*.58+stepR*.36;
     const [x,y]=point(rad(p.angle+.5),radius);
     laserShots.push({to:{x,y},at:now});
     return;

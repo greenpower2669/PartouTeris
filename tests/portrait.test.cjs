@@ -13,7 +13,7 @@ test('Android orientation is always portrait, never sensor landscape',()=>{
 test('Title owns pyramid emblem; lunar surface no longer paints three pyramids',()=>{
   const html=load('app/src/main/assets/index.html');
   const visual=load('app/src/main/assets/visuals.js');
-  assert.match(html,/<svg class="pyramids-mark"/);
+  assert.match(html,/<img class="pyramids-mark" src="brand-icon.webp"/);
   assert.match(html,/class="brand-title">PARTOUTETRIS/);
   assert.doesNotMatch(visual,/pyramid\(cx[+-]/);
 });
@@ -53,4 +53,21 @@ test('Portrait deck retains existing buttons and introduces a laser button',()=>
  assert.match(html,/aria-pressed="false"/);
  assert.match(html,/#turn,#fast,#laserButton\{grid-column:span 2\}/);
  assert.match(html,/nearestLaserPiece\(/);
+});
+
+test('Satellites from Earth remain inside portrait screen',()=>{
+ const {Artist}=require('../app/src/main/assets/visuals.js');
+ const proto=Artist.prototype;
+ const pts=proto.satelliteOrigins.call({}, {earth:{x:281,y:550,r:38},W:360,H:780});
+ assert.equal(pts.length,3);
+ assert.ok(pts.every(p=>p.x>=17&&p.x<=343&&p.y>=14&&p.y<=763));
+});
+
+test('Horizontal space outside the circular puzzle fits outer entry cells',()=>{
+ for(const [width,height,headerBottom,controlsTop] of [
+ [320,568,72,365],[360,780,85,595],[412,915,94,735],[480,900,100,714]]){
+  const l=computePortraitLayout({width,height,headerBottom,controlsTop});
+  assert.ok(l.outer<=width*.395+.001);
+  assert.ok(width/2-l.outer>=width*.10);
+ }
 });

@@ -29,3 +29,5 @@
 
 - PT-010 : `app/src/main/assets/leaderboard.js` localStorage pseudo/records (ancienne clé record conservée), top 10 persisté, top 3 affiché, assainissement des noms ; `tests/leaderboard.test.cjs`.
 - PT-010 : `index.html` HUD score sur largeur, podium sous score, pointFeed bas, formulaire pseudo, bouton de mode LASER, visée de pièce et tir rendu en Canvas ; `engine.js` `laser()` pour impact réorientant avec vérifications de collision ; `visuals.js` `incoming()` flammes et `laser()` faisceau Terre-pièce ; `audio.js` effet laser, `celebrations.js` points flottants en bas.
+
+- PT-011 : icône utilisateur : `app/src/main/res/drawable-nodpi/icon.webp` Android et `app/src/main/assets/brand-icon.webp` titre, depuis l'image originale fournie par Fab ; l'ancien `drawable/icon.xml` ne doit plus être utilisé. `engine.js` SPACE_STEPS=4 pour l'approche spatiale ; `visuals.js` cellules lumineuses hors anneaux, flame trails uniquement avant la Lune, zero parachute, `satelliteOrigins` et `satellites` pour 3 émetteurs. `index.html` trois rayons convergents vers une cible et emblème officiel. `tests/visuals.test.cjs` et `tests/engine.test.cjs` testent rendu et phase.

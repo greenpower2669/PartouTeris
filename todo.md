@@ -77,3 +77,14 @@
 - [x] Tests Node pour pseudo, classement, collisions laser et interfaces.
 - [x] CI GitHub Actions #39578438005 : tests Node et compilation Android réussis ; APK brute PartouTetris-v0.1.7-debug.apk vérifiée sur branche (37 691 octets).
 - [ ] Tester intuitivité lasers, lisibilité haut/bas et sensation des flammes sur SM-A576B Android 16.
+
+## PT-011 — 0.1.8 / direction artistique corrigée
+- [x] Remplacer l'icône Android de prototype par l'icône authentique de Fab (WebP optimisé).
+- [x] Afficher l'icône d'origine à côté du titre.
+- [x] Déplacer le spawn quatre étapes en dehors des anneaux, sans collisions aériennes supplémentaires.
+- [x] Rendre les blocs extérieurs effectivement visibles et enflammés.
+- [x] Supprimer tous les parachutes du jeu, sans retirer le motif de l'icône originale.
+- [x] Dessiner trois satellites autour de la Terre et faire converger leurs lasers vers la cible.
+- [x] Conserver une Lune à cratères, sans pyramides.
+- [ ] Vérifier GitHub Actions, APK directe 0.1.8 et icon drawable effective.
+- [ ] Confirmer esthétique, espaces, lasers, fluidité sur SM-A576B Android 16.

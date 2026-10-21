@@ -67,3 +67,9 @@
 - Tests intégration, performances et gestes Android réels nécessaires avant validation finale.
 
 - Preuve livraison PT-010 : GitHub Actions #39578438005 **success**, tests Node, compilation Android, dépôt APK directe (37 691 octets) sous temp/PartouTetris-v0.1.7-debug.apk. main inchangée. Ergonomie du podium, pseudo, lasers et flammes à confirmer sur téléphone.
+
+## PT-011 — Corrections conceptuelles (21/10/2026)
+- Écart avec demande : la précédente réponse a généré une nouvelle illustration au lieu de coder. Fab réclame un **APK de jeu corrigé**, et sa propre icône doit servir à l'application.
+- Cause : `spawn` à RINGS+1, cellules dessinées seulement sur r<10, parachute toujours rendu, laser depuis l'objet Terre unique.
+- Correction : apparition à RINGS+4, cellules rendues jusqu'à r<16 avec compression de l'espace, traînée de flammes en phase spatiale ; parachute entièrement retiré, 3 satellites terrestres affichés et 3 rayons par tir, visée et scoring conservés.
+- Lune sans pyramides (elles figurent dans l'icône et près du titre seulement). Tests et rendu téléphone à valider.

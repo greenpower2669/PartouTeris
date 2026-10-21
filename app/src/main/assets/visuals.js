@@ -150,11 +150,13 @@ class Artist {
     c.beginPath();c.arc(cx,cy,r,3.5,5.55);c.stroke();
   }
   cell({cx,cy,inner,stepR,sector,ring,color,opacity=1,stroke=true}){
-    if(ring<0||ring>=10)return;
+    if(ring<0||ring>=16)return;
     const c=this.ctx, palette=shadeFor(color);
     const a0=-Math.PI/2+sector*TAU/48+.009;
     const a1=-Math.PI/2+(sector+1)*TAU/48-.009;
-    const low=inner+stepR*ring+1.0,high=inner+stepR*(ring+1)-1;
+    const space=stepR*.58;
+    const radiusAt=(r)=>inner+stepR*Math.min(10,r)+Math.max(0,r-10)*space;
+    const low=radiusAt(ring)+.5,high=radiusAt(ring+1)-.5;
     const gradient=c.createLinearGradient(...position(cx,cy,high,a0),...position(cx,cy,low,a1));
     gradient.addColorStop(0,palette[0]);gradient.addColorStop(.46,palette[1]);gradient.addColorStop(1,palette[2]);
     c.save();c.globalAlpha=opacity;
@@ -177,13 +179,13 @@ class Artist {
   // Hot wreckage approaches radially from space, flame tails outward.
   // Purely visual: it never changes gravity or creates collisions in flight.
   incoming({cx,cy,inner,stepR,angle,radial,time=0,reduced=false}) {
-    if(radial<4.5)return;
+    if(radial<9)return; // Space flight, not a parachute or fire near the Moon
     const c=this.ctx;
-    const radius=inner+(radial+1.05)*stepR;
+    const radius=inner+Math.min(radial,10)*stepR+Math.max(0,radial-10)*stepR*.58+stepR*.4;
     const a=-Math.PI/2+(angle+.5)*TAU/48;
     const ux=Math.cos(a),uy=Math.sin(a);
     const x=cx+ux*radius,y=cy+uy*radius;
-    const k=Math.max(0,Math.min(1,(radial-4.5)/6.5));
+    const k=Math.max(0,Math.min(1,(radial-9)/5));
     const len=(reduced?10:15+Math.min(27,radial*2.3))*k;
     c.save();c.globalAlpha=Math.max(.05,k*(reduced?.38:.84));
     c.shadowColor="#ff8227";c.shadowBlur=reduced?3:13;
@@ -220,29 +222,38 @@ class Artist {
     }
     c.restore();
   }
-  parachute({x,y,angle,color,size=18,time=0}){
+  satelliteOrigins({earth,W=360,H=780}) {
+    if(!earth)return [];
+    const {x,y,r}=earth;
+    const points=[
+      {x:x-1.86*r,y:y-.62*r},
+      {x:x-.44*r,y:y-1.48*r},
+      {x:x+1.17*r,y:y-.84*r}
+    ];
+    return points.map(p=>({x:Math.max(17,Math.min(W-17,p.x)),y:Math.max(14,Math.min(H-17,p.y))}));
+  }
+  satellites({earth,W=360,H=780,time=0,reduced=false}){
+    const origins=this.satelliteOrigins({earth,W,H});
+    if(!earth)return origins;
     const c=this.ctx;
-    c.save();c.translate(x,y);c.rotate(angle+Math.PI/2);
-    const s=Math.max(10,Math.min(23,size)),sway=Math.sin(time*2.1+x*.03)*s*.08;
-    c.translate(sway,0);
-    // Articulated gold solar sail: not a plain semicircle.
-    c.save();c.shadowColor="#eac577";c.shadowBlur=7;
-    const g=c.createLinearGradient(-s,-s,s,s);
-    g.addColorStop(0,"#fff3cc");g.addColorStop(.55,"#9fbbbe");g.addColorStop(1,"#c59b50");
-    c.fillStyle=g;c.strokeStyle="#f5d39a";c.lineWidth=1.6;
-    c.beginPath();c.moveTo(-s*.98,-s*.27);
-    c.quadraticCurveTo(-s*.8,-s*1.18,0,-s*1.15);
-    c.quadraticCurveTo(s*.8,-s*1.18,s*.98,-s*.27);
-    c.quadraticCurveTo(0,-s*.63,-s*.98,-s*.27);
-    c.closePath();c.fill();c.stroke();c.restore();
-    c.strokeStyle="#fce6b1b5";c.lineWidth=.95;
-    for(const f of [-.98,-.4,.4,.98]){
-      c.beginPath();c.moveTo(s*f,-s*.27);c.lineTo(0,s*.78);c.stroke();
+    for(let i=0;i<origins.length;i++){
+      const {x,y}=origins[i],scale=Math.max(.65,Math.min(1.25,earth.r/40));
+      c.save();c.translate(x,y);c.rotate((i-1)*.27);c.scale(scale,scale);
+      c.shadowColor="#64d9fa";c.shadowBlur=reduced?2:7;
+      c.fillStyle="#173560";c.strokeStyle="#80d7ff";c.lineWidth=1.3;
+      c.fillRect(-22,-7,16,14);c.strokeRect(-22,-7,16,14);
+      c.fillRect(6,-7,16,14);c.strokeRect(6,-7,16,14);
+      c.strokeStyle="#d5eaf4";c.lineWidth=.8;
+      for(const x0 of [-18,-13,9,14,19]){
+        c.beginPath();c.moveTo(x0,-6);c.lineTo(x0,6);c.stroke();
+      }
+      c.fillStyle="#cca069";c.strokeStyle="#f5d8a8";
+      c.fillRect(-5,-9,10,18);c.strokeRect(-5,-9,10,18);
+      c.shadowBlur=reduced?0:8;
+      c.fillStyle="#9cf4ff";c.beginPath();c.arc(0,-9,3.3,0,TAU);c.fill();
+      c.restore();
     }
-    c.fillStyle=color;c.strokeStyle="#fff9d2";c.lineWidth=1;
-    c.beginPath();c.moveTo(0,s*.38);c.lineTo(s*.32,s*.78);c.lineTo(0,s*1.06);c.lineTo(-s*.32,s*.78);c.closePath();c.fill();c.stroke();
-    c.strokeStyle="#7cf2f4";c.lineWidth=2;c.beginPath();c.moveTo(-s*.18,s*.83);c.lineTo(s*.18,s*.83);c.stroke();
-    c.restore();
+    return origins;
   }
   energy({cx,cy,inner,outer,flash,time=0}){
     const c=this.ctx;
