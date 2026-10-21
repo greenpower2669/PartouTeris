@@ -120,3 +120,9 @@
 ### PT-015 — Livraison à valider
 - Version 0.2.2 compilée et tests verts, Actions #39647494324 ; APK brute disponible sur branche via `temp/PartouTetris-v0.2.2-debug.apk`.
 - Contrôle visuel Chromium de la bannière « MEILLEUR SCORE DE PHARAONITE » et du pseudo « Tous3nKamion » effectué ; tests réels Samsung et audio restent ouverts. `main` intacte.
+
+## PT-016 — Bannière de jeu néon/or recréée en CODE (21/10/2026)
+- Fab fournit visuel de référence titre PARTOUTETRIS doré, O lunaire cyan, pièces géométriques colorées, carénage science-fiction cyan/or, score or géant, record cyan ; il précise expressément « Non, en code ^^ » après une génération d'image incorrecte.
+- **Contrat : aucun visuel généré plaqué en fond.** Construire le bandeau en HTML/CSS/DOM, chiffres, pseudo, records toujours dynamiques et sauvegardes inchangées. Ne pas dégrader la zone jouable en portrait ni chevaucher les annonces PT-014.
+- Le titre reste accessible sous sa chaîne d'origine, le O visible est une sphère lunaire à cratères dessinée en CSS, 4 tétriminos lumineux sont composés de cellules CSS, les panneaux affichent le score vivant et la meilleure valeur Pharaonite.
+- Branche de travail `feature/lunar-four-fronts-001`, cible Android 0.2.3, CI et photo comparative à valider, aucune fusion de main.

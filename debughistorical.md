@@ -115,3 +115,8 @@
 - Ancien défaut `PHARAON` dans `cleanName`, constructeur, fallback et placeholder. Correction des textes ; `partoutetris-leaderboard-v1`/`partouteris-record` et scores historiques conservés. L'ancien défaut exact est migré à la lecture. Une ancienne valeur personnalisée exactement « PHARAON » n'est pas distinguable du défaut d'origine.
 
 - **PT-015 CI finale :** #39647494324 success, APK directe v0.2.2 présente sur branche (8 783 572 octets). Capture Chromium portrait vérifiée : libellé complet, pseudo exact sans obstruction du jeu. Tests de conservation des scores et de migration de l'ancien défaut exécutés en CI. Installation réelle Android à valider.
+
+## PT-016 — Changement de spécification confirmé (21/10/2026)
+- La demande « Notre bannière est triste, tu peux faire comme celle-là ? » concerne le **HUD intégré dans le logiciel**, et non une image générée. Fab corrige explicitement « Non, en code ^^ » après proposition d'image.
+- Solution : composition CSS sans asset externe `hud-pt016.css`, vraie typographie dorée et tranches de néon, quatre tétriminos construits chacun de quatre carrés HTML, mini-Lune CSS dans le O à l'exécution, score, pseudo et meilleur score reliés aux données.
+- Préserver impérativement l'espace de plateau par layout mesuré DOM et éviter tout modèle statique impossible à actualiser.

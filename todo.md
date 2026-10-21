@@ -158,3 +158,12 @@
 - [x] Fichier non compressé `temp/PartouTetris-v0.2.2-debug.apk` vérifié (8 783 572 octets ; SHA blob Git `07ada0aa7d5a00acf77dce04c42319d39f4f9048`).
 - [x] Aperçu portrait `design/rendu-jeu-apercu.jpg` inspecté : « MEILLEUR SCORE DE PHARAONITE » et « Tous3nKamion » visibles sans chevauchement du plateau.
 - [ ] Validation sur Samsung du pseudo migré et des anciens records sur une installation existante.
+
+## PT-016 — Bannière arcade en CODE 0.2.3
+- [x] Conserver le HUD vrai DOM et les clés de records, pseudo, score et classement.
+- [x] Titre doré, O lunaire en CSS, quatre tétriminos de 4 carrés et carénage cyan/or en CSS responsive.
+- [x] Score géant live or + meilleur score Pharaonite live cyan ; annonce PT-014 et classement restant accessibles.
+- [x] Tests statiques du module bannière, version Gradle et chemin APK 0.2.3.
+- [ ] Valider tous les tests Node, GitHub Actions Gradle et fichier `temp/PartouTetris-v0.2.3-debug.apk`.
+- [ ] Examiner le rendu Chromium de 0.2.3 et ajuster si chevauchement ou réduction du plateau.
+- [ ] Essai réel SM-A576B Android 16 avant publication, `main` intacte.
