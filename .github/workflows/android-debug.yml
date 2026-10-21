@@ -19,6 +19,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Create small charte preview for visual audit
+        run: |
+          python3 -m venv /tmp/pt-art-env
+          /tmp/pt-art-env/bin/pip install --quiet Pillow
+          /tmp/pt-art-env/bin/python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          source=Path("design/charte-officielle.png")
+          im=Image.open(source).convert("RGB")
+          im.thumbnail((420, 840))
+          im.save("design/charte-apercu.jpg", format="JPEG", quality=76, optimize=True)
+          print("PT-013 graphic preview", im.size)
+          PY
       - name: Test the polar engine
         run: node --test tests/*.test.cjs
       - uses: actions/setup-java@v4
@@ -49,7 +62,7 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk temp/PartouTetris-v0.2.0-debug.apk
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add temp/PartouTetris-v0.2.0-debug.apk
+          git add temp/PartouTetris-v0.2.0-debug.apk design/charte-apercu.jpg
           if ! git diff --cached --quiet; then
             git commit -m "build: temporary installable PartouTetris debug APK [skip ci]"
             git push origin "HEAD:${GITHUB_REF_NAME}"
