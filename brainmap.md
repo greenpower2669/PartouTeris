@@ -50,3 +50,5 @@
 - `arrival.js` exporte `projectEarthApproach` (projection Terre → entrée front, interpolation 0..1), chargée par `index.html`; `visuals.js` `Artist.spacePiece` dessine cellules et flammes pendant phase extra-lunaire, avant de passer au Canvas polaire dans les couronnes. Tests `arrival.test.cjs` et engine.
 
 - PT-018 : `engine.js` : `destructionPenalty(r)`, `destroyLockedCell(sector,r)` événement destroy et LOCKED_LASER_HOLD_MS=1300. `visuals.js` : `makeCloudBand`, `cyclones`, `satelliteOrigins(time)`, pulsations / `laserDrill`. `index.html` : `lockedLaserCell`, laserTarget, suivi pointeur/cancel, projection des débris volants depuis Terre, draw laser charge. `celebrations.js` : malus dans gainHost haut sans masquer jeu. `audio.js` : son destroy distinct. Tests engine/visuals/celebrations.
+
+- PT-019 : `laser-aim.js` offre `findLocked` pour cases fixées avec tolérance de visée. `index.html` maintient `laserTarget` au relâchement, affiche `laserFocusHud` pendant 1,3 s et annule sur pause ou changement de mode ; tests `laser-aim.test.cjs`.

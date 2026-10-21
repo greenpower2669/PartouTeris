@@ -147,3 +147,6 @@
 - Concurrence CI : publication automatique antérieure APK 0.2.4 sur la branche pendant les commits. Toutes les écritures suivantes utilisent le SHA de tête actualisé. CI 0.2.5 encore à confirmer.
 
 - **PT-018 rendu final :** CI #39687843781 réussie après correction doublon sonore et défilement continu de la rotation planétaire. APK 0.2.5 brute 8 791 813 octets vérifiée ; capture statique Chromium montre au moins un cyclone et les trois satellites, mais ne remplace pas un essai animé/tactile. Un run intermédiaire a échoué uniquement sur l'étape de publication Git après une mise à jour concurrente, tests + Gradle y avaient réussi ; le run final s'est publié avec succès.
+
+## PT-019 : Ciblage laser trop précis sur Android
+Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.2.5, le pointeur devait rester appuyé, sans bouger, pendant 1300 ms ; un relâchement interrompait le focus. Version 0.2.6 : visée magnétique, focus conservé après levée du doigt, progression visible en haut de l'écran. Run #39689590579 réussi, test réel Samsung à effectuer.

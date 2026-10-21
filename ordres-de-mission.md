@@ -151,3 +151,6 @@
 ### PT-018 — Prêt pour validation de Fab
 - APK Android de test 0.2.5 livrée non compressée, Actions #39687843781 **success** ; artefact `temp/PartouTetris-v0.2.5-debug.apk` sur branche. Aucune fusion `main`, aucun AAB de publication.
 - Les animations Terre/cloud/cyclones/satellites sont calculées localement sans asset de météo ; scoring de laser maintenu et chute ×10 inchangés. Essai réel sur Samsung encore requis.
+
+## PT-019 : Correction laser approuvée par retour utilisateur
+Objectif : corriger un mauvais placement moyennant du temps et des points. L'ancienne manipulation empêchait souvent de terminer le tir. Nouvelle manipulation : LASER activé, touche sur une brique posée, focus automatique 1,3 seconde, malus croissant puis retrait d'une brique. Conserver les sauvegardes et `main` intacte ; APK de test 0.2.6 sur la branche.
