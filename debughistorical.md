@@ -139,3 +139,9 @@
 - Deux CI intermédiaires ont échoué sur d'**anciennes assertions de test** devenues invalides (déplacement autorisé dès le départ dans l'espace, ancienne initialisation artificielle du niveau). Tests corrigés en indiquant explicitement la phase lunaire et en ajustant le chronomètre. Aucun rollback du comportement demandé.
 - Exécution finale **#39682743622 success** : Node + Android Gradle + APK 0.2.4 non compressée. Capture `design/rendu-jeu-apercu.jpg` confirme les quatre petites pièces distinctes au départ de la Terre, contrairement à l'ancienne apparition radiale tout autour du cercle.
 - La trajectoire est une **projection graphique depuis la Terre vers les quatre points d'entrée**, tandis que `p.radius` est la seule altitude de collision/gravité. Cela assure la stabilité logique et les quatre fronts, mais l'impression de perspective reste à juger sur le Samsung.
+
+## PT-018 — Diagnostics du tir laser maintenu
+- Règle Fab : satellites plus vivants, Terre animée, nuages blancs transparents et cyclones, destruction coûteuse des briques fixées au laser long. Implémentation hors-ligne et purement graphique pour météo (pas de données météo réelles).
+- Risque de régression : laser bref sur pièce mobile = déjà rotation, et gestes à deux doigts ; séparation du laser par mode et hit-test des **cases fixées** uniquement. Maintien unique 1300 ms et tolérance 23 px ; arrêt sur sortie de mode, pause, annulation, relâchement et perte de focus.
+- Formule prototype : 80 × (r+1) × ceil((r+1)/2), facturation bornée au score existant, affichage MALUS théorique dans scoreboard, records intacts. Cases vides, limites polaires et partie arrêtée refusées.
+- Concurrence CI : publication automatique antérieure APK 0.2.4 sur la branche pendant les commits. Toutes les écritures suivantes utilisent le SHA de tête actualisé. CI 0.2.5 encore à confirmer.

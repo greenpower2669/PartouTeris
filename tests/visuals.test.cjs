@@ -87,3 +87,16 @@ test('PT-017 Earth entry visuals are independent of the lunar collider',()=>{
  assert.match(html,/art\.spacePiece\(/);
  assert.match(html,/<script src="arrival.js"><\/script>/);
 });
+
+test('PT-018 procedural atmosphere and satellite propulsion are animated locally',()=>{
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ assert.match(art,/makeCloudBand\(\)/);
+ assert.match(art,/cyclones\(\{x,y,r,time=0,reduced=false\}\)/);
+ assert.match(art,/satelliteOrigins\(\{earth,W=360,H=780,time=0\}\)/);
+ assert.match(art,/laserDrill\(\{from,to,progress=0,reduced=false\}\)/);
+ assert.match(html,/art\.laserDrill\(/);
+ assert.match(html,/lockedLaserCell\(pos\)/);
+ assert.match(html,/LOCKED_LASER_HOLD_MS/);
+ assert.match(html,/laserTarget=null/);
+});

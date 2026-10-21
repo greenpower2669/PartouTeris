@@ -86,3 +86,12 @@ test('PT-014 short gains and important milestones use independent slots',()=>{
     assert.equal(banner.children.length,0);assert.equal(gain.hidden,true);
   }finally{if(oldDocument===undefined)delete global.document;else global.document=oldDocument;}
 });
+
+test('PT-018 demolition cost appears in the HUD, never across the Moon',()=>{
+ const source=require('node:fs').readFileSync('app/src/main/assets/celebrations.js','utf8');
+ const html=require('node:fs').readFileSync('app/src/main/assets/index.html','utf8');
+ assert.match(source,/event\.type==="destroy"/);
+ assert.match(source,/MALUS −/);
+ assert.match(html,/#hud #pointFeed\.penalty/);
+ assert.match(html,/sound\.cue\("destroy"\)/);
+});

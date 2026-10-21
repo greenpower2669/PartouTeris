@@ -141,3 +141,9 @@
 - GitHub Actions #39682743622 confirmé **success**, `temp/PartouTetris-v0.2.4-debug.apk` vérifiée 8 789 389 octets sur la branche. Aperçu Chrome réel inspecté : quatre unités spatiales naissent près de l'horizon terrestre et HUD inchangé.
 - Le `×10` signifie une vraie multiplication de progression de chute, non une animation artificielle. Rotation conserve tap court, long appui accélère ; pas de translation de secteur pendant approche.
 - Test humain sur Samsung requis avant validation définitive. Aucune fusion `main`, aucune Release/AAB.
+
+## PT-018 — Satellites plus vivants, Terre en mouvement et malus laser
+- Demande Fab : effets de vie des satellites-pyramides, rotation apparente de la Terre, nuages et cyclones blancs semi-transparents, destruction au tir laser prolongé sur une brique posée avec malus fortement croissant vers les couches élevées.
+- Prototype : maintien LASER 1,3 s sur une case verrouillée ; glissement >23px ou relâchement annule la charge, effet visible, une seule case détruite, pas de destruction en chaîne.
+- Pénalité = 80×(r+1)×ceil((r+1)/2), facturation plafonnée au score pour empêcher les points négatifs ; toutes les sauvegardes restent inchangées.
+- Tout est rendu en Canvas local, satellites avec micro-orbites et poussée cyan pulsante, météo illustrée, réduction effets honorée. Aucun merge `main`, version 0.2.5 branch test.

@@ -1,12 +1,12 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Prototype Android 0.2.4 — PT-014 : annonces hors plateau, musique officielle
+## Prototype Android 0.2.5 — PT-014 : annonces hors plateau, musique officielle
 
 **Branche :** `feature/lunar-four-fronts-001` — `main` conservée intacte.
 
 ### 📲 APK Android direct (sans ZIP)
 
-**[Télécharger PartouTetris-v0.2.4-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.4-debug.apk)**
+**[Télécharger PartouTetris-v0.2.5-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.5-debug.apk)**
 
 APK debug compilé par [GitHub Actions](https://github.com/greenpower2669/PartouTetris/actions), directement installable sur Android ; AAB de publication seulement après validation de Fab.
 
@@ -43,3 +43,6 @@ Le bandeau supérieur est entièrement codé en CSS/DOM : tétriminos lumineux, 
 
 ### PT-017 — Contrôle Tetris ×10 et approche des quatre fronts
 Un appui long (420 ms) avec le second doigt ou le bouton « ⇣ ×10 » accélère réellement la chute par dix, y compris si plusieurs rangs sont parcourus entre deux frames. Un tap court continue à pivoter. En espace, les pièces descendent de la direction visuelle de la Terre vers chaque porte lunaire en **cinq** étapes ; leur rotation est possible mais la translation attend l'entrée dans le plateau. Le score, la musique, le pseudo et la sauvegarde existants sont conservés.
+
+### PT-018 — Nuages et cyclones, laser de démolition
+La Terre s'anime par rotation apparente et nuages blancs translucides mobiles, avec cyclones stylisés ; les trois satellites-pharaons bougent et pulsent. Mode LASER : appui **1,3 seconde** sur une brique déjà posée pour la détruire et payer un malus de plus en plus fort suivant sa hauteur ; viser brièvement une pièce en vol garde la rotation originale. Le classement/record sauvegardé n'est pas débité et le score ne devient jamais négatif.

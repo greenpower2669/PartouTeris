@@ -48,3 +48,5 @@
 
 - PT-017 : `engine.js` BOOST_MULTIPLIER=10, SPACE_STEPS=5, SPACE_INTERVAL_FACTOR=.82, `step` traite plusieurs rangs/frame puis sort lors du verrouillage ; `shift` bloqué tant que radius>=RINGS et `rotate` sans wall-kick dans l'espace.
 - `arrival.js` exporte `projectEarthApproach` (projection Terre → entrée front, interpolation 0..1), chargée par `index.html`; `visuals.js` `Artist.spacePiece` dessine cellules et flammes pendant phase extra-lunaire, avant de passer au Canvas polaire dans les couronnes. Tests `arrival.test.cjs` et engine.
+
+- PT-018 : `engine.js` : `destructionPenalty(r)`, `destroyLockedCell(sector,r)` événement destroy et LOCKED_LASER_HOLD_MS=1300. `visuals.js` : `makeCloudBand`, `cyclones`, `satelliteOrigins(time)`, pulsations / `laserDrill`. `index.html` : `lockedLaserCell`, laserTarget, suivi pointeur/cancel, projection des débris volants depuis Terre, draw laser charge. `celebrations.js` : malus dans gainHost haut sans masquer jeu. `audio.js` : son destroy distinct. Tests engine/visuals/celebrations.

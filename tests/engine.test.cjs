@@ -264,3 +264,32 @@ test('PT-017: held fast-drop crosses multiple lunar rows even with the shortest 
  assert.ok(p.radius<=from-1);
  assert.ok(g.fall[0]<g.fallInterval());
 });
+
+test('PT-018 fixed-brick drilling costs more when the block is higher',()=>{
+ const {DESTRUCTION_BASE,LOCKED_LASER_HOLD_MS}=require('../app/src/main/assets/engine.js');
+ assert.equal(LOCKED_LASER_HOLD_MS,1300);
+ assert.equal(DESTRUCTION_BASE,80);
+ const g=new Game(()=>0);g.score=40000;
+ g.board[0][4]=2;g.board[9][4]=3;
+ assert.equal(g.destructionPenalty(0),80);
+ assert.equal(g.destructionPenalty(9),4000);
+ assert.equal(g.destroyLockedCell(4,0).charged,80);
+ const high=g.destroyLockedCell(4,9);
+ assert.equal(high.multiplier,50);
+ assert.equal(high.charged,4000);
+ assert.equal(g.score,35920);
+ assert.equal(g.board[9][4],-1);
+ assert.equal(g.destroyLockedCell(4,9),null);
+ assert.deepEqual(g.drainEvents().filter(ev=>ev.type==='destroy').map(ev=>ev.radius),[0,9]);
+});
+test('PT-018 pause, empty cell and low score protect the demolition mechanism',()=>{
+ const g=new Game(()=>0);g.board[8][10]=1;g.score=200;
+ g.paused=true;assert.equal(g.destroyLockedCell(10,8),null);
+ assert.equal(g.board[8][10],1);
+ g.paused=false;
+ const hit=g.destroyLockedCell(10,8);
+ assert.ok(hit.penalty>200);
+ assert.equal(hit.charged,200);assert.equal(g.score,0);
+ for(const [s,r] of [[10,8],[-1,8],[48,8],[10,-1],[10,10]])
+   assert.equal(g.destroyLockedCell(s,r),null);
+});

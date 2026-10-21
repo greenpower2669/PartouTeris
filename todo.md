@@ -191,3 +191,13 @@
 - [x] APK brute vérifiée sur `feature/lunar-four-fronts-001` : `temp/PartouTetris-v0.2.4-debug.apk` (8 789 389 octets ; blob SHA `fb12e81c33e5b02fec66a9a1c76d0dd0d31c8970`).
 - [x] `design/rendu-jeu-apercu.jpg` (SHA `dd37613097f7345a3b03cfa8497676264153cb28`) inspectée : quatre pièces arrivant en petits groupes depuis l'horizon de Terre, quatre fronts dégagés et aide « maintien = chute ×10 » correcte.
 - [ ] Tester en conditions réelles : seconde main maintenue, immédiat au relâchement, transition espace → couronnes, verrouillage de collision, lisibilité des trajectoires à différents niveaux.
+
+## PT-018 — Terre et satellites vivants, laser de démolition
+- [x] Terre : rotation apparente douce des continents, couche de nuages blancs translucides et 3 cyclones mobiles, réduction de mouvement.
+- [x] 3 satellites-pyramides : légers mouvements orbitaux, balises et propulseurs cyan pulsants, faisceaux synchronisés sur leurs positions.
+- [x] LASER : maintien stable 1,3 s sur brique verrouillée, indication charge, destruction d'une seule cellule ; annulation sur relâchement/glissement/pause/mode et perte de focus.
+- [x] Coût = 80 × (r+1) × plafond((r+1)/2), 80 près du centre et 4000 à la couronne extérieure ; score courant jamais négatif, meilleurs scores non modifiés.
+- [x] Tir bref conservé sur débris en vol, ciblage aligné avec la trajectoire depuis la Terre.
+- [x] HUD signale le MALUS, nouveau son de destruction ; tests et build Android 0.2.5 déclenchés.
+- [ ] Valider GitHub Actions et présence de l'APK directe v0.2.5.
+- [ ] Tester le maintien avec les doigts sur Samsung et observer la performance des nuages/cyclones.
