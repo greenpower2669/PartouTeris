@@ -107,3 +107,5 @@
 - Preuve : capture réelle Fab 0.2.0, score 20 319, niveau 5 ; la bannière « 20 000 POINTS ! » traverse le centre lunaire et « GAIN +484 ×4 » chevauche le bas des anneaux.
 - Cause isolée dans le code : `Festival.show` ajoutait `.fx-banner` à `#scoreBurst` qui définissait `left:var(--fx-x)` et `top:var(--fx-y)` au centre du jeu ; `Festival.floatScore` créait des nodes sous le plateau ; `index.html` positionnait `#pointFeed` à proximité du bord lunaire.
 - Solution : bannière dans un hôte absolu *interne* au scoreboard, gain court sur sa ligne de titre, timers bornés et nettoyage ; aucun changement de géométrie du moteur ni du comportement des sons. Vérification CI/capture requise.
+
+- **PT-014, preuve finale :** Actions #39644183018 **success** après mise à jour de l'ancienne assertion PT-010 devenue obsolète ; APK 0.2.1 brute vérifiée 8 783 364 octets. La nouvelle capture Chromium confirme le HUD au repos ; pas de capture d'événement réel au palier 20 000, donc test tactile visuel humain ouvert. La musique officielle conserve `HTMLAudioElement.loop=true` et doit être écoutée jusqu'à son raccord pour confirmer l'absence de blanc audible.

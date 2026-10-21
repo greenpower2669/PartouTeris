@@ -106,3 +106,8 @@
 - **Implémentation v0.2.1 :** bannière de célébration dans le panneau score supérieur, remplaçant uniquement le classement pendant l'événement ; petit gain compact sur la ligne « meilleurs scores », sans reflow du HUD. Les animations de particules subsistent sans obstacle tactile. Ces annonces disparaissent automatiquement et libèrent le classement.
 - **Musique :** loop HTMLAudioElement (MP3 local officiel), réglages/mute et solution de secours préservés ; raccord sonore réel à tester à l'écoute.
 - **État :** correction codée sur `feature/lunar-four-fronts-001`, CI et contrôle Samsung à vérifier. `main` intacte.
+
+### PT-014 — État de livraison (21/10/2026)
+- **Livré, à valider par Fab :** version Android 0.2.1 via Actions #39644183018 (success), fichier .apk non compressé dans `temp/`.
+- Maintien du lecteur officiel en boucle `track.loop=true`, sans modification du fichier musical ni des préférences de volume. La présence de la boucle dans le code est confirmée, mais la qualité du raccord ne peut être certifiée sans écoute de toute la piste.
+- Aucun merge `main` ni Release officielle, prochain essai humain : palier 20 000 et gains simultanés sur Samsung.

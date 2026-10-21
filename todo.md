@@ -138,3 +138,9 @@
 - [ ] Exécuter tests Node et Gradle GitHub Actions, valider capture Chromium, vérifier fichier `temp/PartouTetris-v0.2.1-debug.apk` brut.
 - [ ] Vérifier lisibilité au niveau 5 avec couronnes remplies, petits écrans et double tactile sur Samsung.
 - [ ] Écouter boucle de musique officielle MP3 sur Samsung pour certifier que le raccord est inaudible.
+
+### PT-014 — Livraison automatisée vérifiée
+- [x] Run GitHub Actions **#39644183018 = success** : tests Node (dont placement des annonces), Gradle, génération APK brute.
+- [x] APK directe **`temp/PartouTetris-v0.2.1-debug.apk`**, 8 783 364 octets, blob Git SHA `227577f65bdd14fd61996d22e7c5deca160d6b07` (confirmé sur branche).
+- [x] Aperçu portrait Chromium actuel `design/rendu-jeu-apercu.jpg` inspecté : aucune annonce au centre au repos, interface intacte.
+- [ ] Test Samsung avec franchissement de 20 000 points et combos pour vérifier l'effet *en situation* ; continuité perceptive de la boucle MP3 à écouter.
