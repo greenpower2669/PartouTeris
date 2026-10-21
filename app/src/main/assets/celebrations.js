@@ -57,6 +57,7 @@ class Festival {
    // PT-014: gains are displayed ONLY within the existing scoreboard.
    // Never create flying text on top of a block, the Moon or a satellite.
    if(!this.gainHost)return;
+   this.gainHost.classList?.remove("penalty");
    this.gainHost.textContent="GAIN +"+event.gained.toLocaleString("fr-FR")+
      (event.multiplier>1?" ×"+event.multiplier:"");
    this.gainHost.hidden=false;
@@ -110,6 +111,16 @@ class Festival {
  handle(event){
    if(!event)return;
    if(event.type==="points"&&event.reason==="placement")this.floatScore(event);
+   else if(event.type==="destroy"){
+     if(this.gainHost){
+       this.gainHost.textContent="MALUS −"+event.penalty.toLocaleString("fr-FR")+
+         " ×"+event.multiplier;
+       this.gainHost.classList?.add("penalty");
+       this.gainHost.hidden=false;
+       if(this.gainTimer)clearTimeout(this.gainTimer);
+       this.gainTimer=setTimeout(()=>{this.gainHost.hidden=true;this.gainTimer=null;},2100);
+     }
+   }
    else if(event.type==="ring"||event.type==="milestone")this.show(event);
  }
 }

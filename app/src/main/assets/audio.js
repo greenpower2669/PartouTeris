@@ -171,6 +171,10 @@
         this.tone(1720,now+.068,.14,.064,"sawtooth",this.effects,205);
         this.noise(now+.114,.055,.052,this.effects);
         this.tone(165,now+.13,.13,.12,"triangle",this.effects,81);
+      } else if(kind==="destroy"){
+        this.tone(560,now,.11,.13,"sawtooth",this.effects,128);
+        this.noise(now+.04,.20,.10,this.effects);
+        this.tone(130,now+.08,.23,.14,"triangle",this.effects,55);
       } else if(kind==="gameover"){
         for(let i=0;i<4;i++)this.tone(380*Math.pow(.81,i),now+i*.20,.30,.21,"sawtooth",this.effects);
       }
