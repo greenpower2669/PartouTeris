@@ -175,3 +175,13 @@
 - [x] Correction d'effondrement Flex du titre (`flex:0 0 auto`), agrandissement du mot titre et meilleure taille de score.
 - [ ] Tester réellement l'esthétique et la lisibilité avec Fab sur SM-A576B, notamment en cours de partie avec score > 10 000 et top 3 rempli.
 - [ ] Valider l'audio MP3 réel et le comportement multitouch en conditions Samsung ; `main` inchangée.
+
+## PT-017 — Vitesse ×10 et approche depuis Terre (21/10/2026)
+- [x] Comprendre l'ancienne accélération ×5, limitée à une seule marche par frame.
+- [x] Accélération ×10 au deuxième doigt après 420 ms, et bouton de chute rapide ; boucles d'étages bornées en 8 passages max par frame pour ne pas perdre la vitesse en fin de partie.
+- [x] Conserver tap bref pour rotation. Pendant approche spatiale : rotations autorisées, translation interdite (y compris kick de rotation). Translations rétablies à la première couronne lunaire.
+- [x] Étendre trajet orbital de quatre à cinq étapes, ralentissement modéré de la phase spatiale (.72 → .82 du temps normal).
+- [x] Projeter les blocs par code Canvas depuis la Terre vers chacun des quatre fronts, sans changer leur angle/secteur de collision, avec flammes arrière et taille croissante.
+- [x] Ajouter tests accélération moteur, comportement de rotation, déplacement, projection depuis la Terre et quatre directions.
+- [ ] CI GitHub Actions / APK brute v0.2.4 et capture Chromium.
+- [ ] Test tactile réel sur SM-A576B : ×10 et relâchement, rotation en espace, arrivée dirigée, accessibilité et collisions.

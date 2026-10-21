@@ -77,3 +77,13 @@ test('Satellite craft show gold triangular hulls and cyan propulsion rings',()=>
  assert.match(src,/rgba\(41,210,249/);
  assert.doesNotMatch(src,/pyramid\(cx[+-]/);
 });
+
+test('PT-017 Earth entry visuals are independent of the lunar collider',()=>{
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ assert.match(art,/spacePiece\(\{position,cells/);
+ assert.match(html,/projectEarthApproach\(/);
+ assert.match(html,/p\.radius>=RINGS/);
+ assert.match(html,/art\.spacePiece\(/);
+ assert.match(html,/<script src="arrival.js"><\/script>/);
+});

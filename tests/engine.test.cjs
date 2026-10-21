@@ -212,7 +212,7 @@ test('Laser respects paused or ended game and never rewrites existing board',()=
 
 test('Spawn begins four real orbital steps beyond the filled ring',()=>{
  const {SPACE_STEPS}=require('../app/src/main/assets/engine.js');
- assert.equal(SPACE_STEPS,4);
+ assert.equal(SPACE_STEPS,5);
  const g=new Game(()=>0);
  assert.ok(g.pieces.every(p=>p.radius===RINGS+SPACE_STEPS));
  assert.ok(g.pieces.every(p=>g.canPlace(p)));
@@ -220,8 +220,46 @@ test('Spawn begins four real orbital steps beyond the filled ring',()=>{
 test('Outer space flight continues for several steps before reaching the grid',()=>{
  const {SPACE_STEPS}=require('../app/src/main/assets/engine.js');
  const g=new Game(()=>0),p=g.pieces[0];
- for(let i=0;i<31;i++)g.step(.12); // 3.72 seconds > 3.6-second orbital step
+ for(let i=0;i<35;i++)g.step(.12); // 4.2 seconds > 5 * .82-second orbital step
  assert.equal(p.radius,RINGS+SPACE_STEPS-1);
  assert.equal(g.board.flat().filter(x=>x!==-1).length,0);
  assert.equal(g.over,false);
+});
+
+test('PT-017: second-finger boost multiplies fall by ten including multiple steps/frame',()=>{
+ const {BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR}=require('../app/src/main/assets/engine.js');
+ assert.equal(BOOST_MULTIPLIER,10);
+ assert.equal(SPACE_INTERVAL_FACTOR,.82);
+ const normal=new Game(()=>0),fast=new Game(()=>0);
+ const lane=0;
+ normal.pieces[lane].radius=8;fast.pieces[lane].radius=8;
+ normal.fall[lane]=0;fast.fall[lane]=0;
+ fast.boost(lane,true);
+ for(let i=0;i<10;i++){normal.step(.1);fast.step(.1);}
+ assert.equal(normal.pieces[lane].radius,8);
+ assert.equal(fast.pieces[lane].radius,6); // 10s simulated falling over 1s real
+ fast.boost(lane,false);
+ const r=fast.pieces[lane].radius;
+ for(let i=0;i<10;i++)fast.step(.1);
+ assert.ok(fast.pieces[lane].radius>=r-1);
+});
+test('PT-017: space pieces rotate without lateral movement, lunar pieces can move',()=>{
+ const g=new Game(()=>0);const p=g.pieces[0];
+ const initial=p.angle,initialRot=p.rot;
+ p.type=2;
+ assert.equal(g.shift(0,1),false);
+ assert.equal(g.rotate(0),true);
+ assert.equal(p.angle,initial);assert.notEqual(p.rot,initialRot);
+ const shot=g.laser(0,p.angle+2);
+ assert.ok(shot);assert.equal(shot.moved,false);
+ p.radius=9;
+ assert.equal(g.shift(0,1),true);assert.equal(p.angle,initial+1);
+});
+test('PT-017: held fast-drop crosses multiple lunar rows even with the shortest interval',()=>{
+ const g=new Game(()=>0),p=g.pieces[0];p.radius=8;
+ g.level=15;g.baseFallSeconds=2;g.boost(0,true);
+ const from=p.radius;
+ g.step(.12);
+ assert.ok(p.radius<=from-1);
+ assert.ok(g.fall[0]<g.fallInterval());
 });

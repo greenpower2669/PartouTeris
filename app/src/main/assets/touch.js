@@ -12,7 +12,7 @@
       this.onBoost=onBoost;
       this.grip=null;
       this.boostActive=false;
-      this.holdDuration=420; // long press requires a clear delay after quick tap
+      this.holdDuration=420; // 420ms starts a ten-times-speed fall; tap remains rotate
       this.longTapTravel=26;
       this.taps=new Map();
       this.tapDistance=26;  // tolerance in CSS pixels

@@ -43,3 +43,5 @@
 - PT-015 : libellé « MEILLEUR SCORE DE PHARAONITE » et pseudo par défaut « Tous3nKamion » modifiable. Migration à la lecture de l'ancienne valeur par défaut « PHARAON » sans modifier les lignes de records du classement ni les noms personnalisés.
 
 - PT-016 : la bannière devient une composition **HTML/CSS/DOM vivant**, pas une image. `hud-pt016.css` ajoute tétriminos CSS néon, titre métal or, O = mini-lune CSS, cadre techno cyan et or, score courant brillant, meilleure valeur Pharaonite cyan, rangées top3 et pseudo inchangés. `mountMoonWordmark()` conserve libellé accessible ; `updateHud()` actualise `#bestScoreValue`. Portrait borné par `computePortraitLayout()`.
+
+- PT-017 : accélération authentique ×10 après 420 ms deuxième doigt (ou bouton CHUTE), boucle de transitions de rayon multi-étapes (max huit/frame) compatible FPS/higher levels. Espace rallongé 5 marches à facteur de durée .82, rotation seule / pas de glissement. Arrivée graphique via `arrival.js` depuis le haut de la Terre jusqu'aux quatre portes lunaire et `Artist.spacePiece()`. Rayon/collisions toujours pilotés par `Game`.

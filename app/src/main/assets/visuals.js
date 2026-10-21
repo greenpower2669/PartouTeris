@@ -250,6 +250,34 @@ class Artist {
     }
     c.restore();
   }
+  // PT-017: pieces travel visually FROM Earth TO their own lunar front.
+  // Canvas-only projection, not new physics and not another collision layer.
+  spacePiece({position,cells,angle,color,time=0,reduced=false,size=11}){
+    if(!position)return;
+    const c=this.ctx,{x,y,launch,progress,scale}=position;
+    const dx=x-launch.x,dy=y-launch.y,travel=Math.hypot(dx,dy)||1;
+    const ux=dx/travel,uy=dy/travel;
+    const s=Math.max(6,Math.min(14,size*1.2))*scale;
+    const palette=shadeFor(color);
+    c.save();
+    // Small warm plasma tail, behind the oncoming cluster.
+    c.shadowBlur=reduced?2:10;c.shadowColor="#ff6a1f";
+    const trail=reduced?8:13+12*progress;
+    const gradient=c.createLinearGradient(x,y,x-ux*trail,y-uy*trail);
+    gradient.addColorStop(0,"#fff4af");gradient.addColorStop(.4,"#ff8b30");
+    gradient.addColorStop(1,"rgba(242,67,21,0)");
+    c.lineWidth=Math.max(2,s*.45);c.strokeStyle=gradient;
+    c.beginPath();c.moveTo(x,y);
+    c.lineTo(x-ux*trail,y-uy*trail);c.stroke();
+    c.shadowColor=color;c.shadowBlur=reduced?1:9;
+    for(const [da,dr] of cells){
+      const px=x+da*s,py=y+dr*s;
+      c.fillStyle=palette[1];c.fillRect(px-s*.45,py-s*.45,s*.91,s*.91);
+      c.strokeStyle=palette[0];c.lineWidth=1;c.strokeRect(px-s*.45,py-s*.45,s*.91,s*.91);
+      c.fillStyle="rgba(255,255,255,.45)";c.fillRect(px-s*.30,py-s*.30,s*.35,Math.max(.8,s*.09));
+    }
+    c.restore();
+  }
   // Hot wreckage approaches radially from space, flame tails outward.
   // Purely visual: it never changes gravity or creates collisions in flight.
   incoming({cx,cy,inner,stepR,angle,radial,time=0,reduced=false}) {

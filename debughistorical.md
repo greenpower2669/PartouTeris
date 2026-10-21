@@ -128,3 +128,9 @@
 - Premier rendu CI #39654253505 : succès technique mais bandeau masqué par effondrement Flex (tous enfants absolus) ; correctif `flex:0 0 auto` CI #39654800396 succès, visuel visible ; taille titre et score augmentée.
 - Run final **#39655192888 success**, screenshot `design/rendu-jeu-apercu.jpg` inspecté : titre or lisible, mini-lune, tétriminos lumineux, scoreboard intact ; plateau et commandes restent exposés.
 - `temp/PartouTetris-v0.2.3-debug.apk` brute 8 787 418 octets (Git blob SHA `d634edadaa9f9f46661b44b1c3838f69255055bd`). Confirmation tactile Android réelle et fidélité esthétique finale à recueillir auprès de Fab.
+
+## PT-017 — Descente et distance de la phase spatiale (21/10/2026)
+- Diagnostic : `Game.step()` cumulait `dt*(boost?5:1)` et ne consommait **qu'un** intervalle/frame, donc la descente freinait artificiellement malgré un appui long.
+- Correction : `BOOST_MULTIPLIER=10`, consommation répétée (cap 8 pour éviter les cycles infinis et ne pas booster le nouveau bloc spawn). Deuxième doigt toujours 420 ms/tap bref inchangé ; nouveau libellé CHUTE ×10.
+- Phase espace : 4→5 marches, multiplicateur intervalle .72→.82, `shift` refusé (y compris après laser), `rotate` sans kick angulaire.
+- Affichage : pièce extra-lunaire dessinée avec projection de Terre vers la porte polaire (art.spacePiece) ; aucun changement des collisions, ni de la sauvegarde. CI et visionnage Android à valider.

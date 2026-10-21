@@ -1,6 +1,6 @@
 (function (root) {
   "use strict";
-  const SECTORS = 48, RINGS = 10, LANES = 4, SPACE_STEPS = 4, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
+  const SECTORS = 48, RINGS = 10, LANES = 4, SPACE_STEPS = 5, BOOST_MULTIPLIER=10, SPACE_INTERVAL_FACTOR=.82, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
   const FORMS = [
     [[-1,0],[0,0],[1,0],[2,0]],
     [[0,0],[1,0],[0,1],[1,1]],
@@ -69,6 +69,9 @@
     shift(lane,delta) {
       const p=this.pieces[lane];
       if(this.over||this.paused||!p) return false;
+      // PT-017: the space phase is an approach corridor, not a playable
+      // lateral lane. Rotation remains enabled there.
+      if(p.radius>=RINGS)return false;
       const a=mod(p.angle+Math.sign(delta),SECTORS);
       if(!delta||!this.canPlace(p,a,p.radius,p.rot)) return false;
       p.angle=a; return true;
@@ -78,7 +81,8 @@
       if(this.over||this.paused||!p) return false;
       if(p.type===1) return true;
       const rot=mod(p.rot+1,4);
-      for(const kick of [0,-1,1,-2,2]) {
+      // A rotation in space must never secretly shift the locked direction.
+      for(const kick of p.radius>=RINGS?[0]:[0,-1,1,-2,2]) {
         if(this.canPlace(p,mod(p.angle+kick,SECTORS),p.radius,rot)) {
           p.angle=mod(p.angle+kick,SECTORS); p.rot=rot; this.events.push({type:'rotate',lane}); return true;
         }
@@ -188,21 +192,30 @@
       let didLock=false;
       for(let lane=0;lane<LANES;lane++) {
         let p=this.pieces[lane];
-        this.fall[lane]+=dt*(p&&p.boost?5:1);
-        // Space arrival is clearly visible, without slowing the entire session too much.
-        const laneInterval=p.radius>=RINGS?interval*.72:interval;
-        if(this.fall[lane]>=laneInterval) {
+        if(!p)continue;
+        this.fall[lane]+=dt*(p.boost?BOOST_MULTIPLIER:1);
+        // A longer Earth-to-Moon approach (5 stages at 82% of the interval).
+        // A bounded while loop makes ×10 exact, even at high levels / 60fps.
+        for(let moves=0;moves<8;moves++){
+          p=this.pieces[lane];
+          const laneInterval=p.radius>=RINGS?interval*SPACE_INTERVAL_FACTOR:interval;
+          if(this.fall[lane]<laneInterval)break;
           this.fall[lane]-=laneInterval;
-          if(this.canPlace(p,p.angle,p.radius-1,p.rot)) p.radius--;
-          else { didLock=this.lock(lane)||didLock; }
-          if(this.over) break;
+          if(this.canPlace(p,p.angle,p.radius-1,p.rot))p.radius--;
+          else{
+            didLock=this.lock(lane)||didLock;
+            // Never accelerate the freshly spawned replacement this frame.
+            break;
+          }
+          if(this.over)break;
         }
+        if(this.over)break;
       }
       if(didLock&&!this.over) this.clearRings();
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);

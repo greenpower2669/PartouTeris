@@ -130,3 +130,9 @@
 ### PT-016 — Validation technique
 - **Livré pour essai** sur `feature/lunar-four-fronts-001` : Gradle v0.2.3, APK directe non ZIP `temp/PartouTetris-v0.2.3-debug.apk` et capture Chromium `design/rendu-jeu-apercu.jpg`, GitHub Actions #39655192888 success.
 - Décor du bandeau 100 % HTML/CSS ; le jeu lui-même et les scores restent dynamiques. `main` n'a pas été fusionnée ni publiée. Attendre feu vert de Fab avant Release/AAB.
+
+## PT-017 — Boost franc ×10 et arrivée depuis la Terre (21 octobre 2026)
+- Demande Fab : deuxième doigt maintenu → descente **dix fois plus rapide** et réellement fluide comme dans Tetris, rotation au tap court inchangée ; bouton CHUTE de même puissance.
+- Annonce spatiale plus longue (cinq étapes au lieu de quatre, phase légèrement ralentie) ; dans l'espace on peut **tourner mais pas déplacer latéralement**, la prise et l'orientation sont conservées à l'entrée des couronnes.
+- Trajectoires graphiques depuis la Terre au premier plan vers quatre directions d'arrivée autour de la Lune ; le visuel 3D simulé n'affecte ni la position logique du moteur ni le contact des blocs.
+- Préserver quatre fronts, music loop, nouveaux HUD PT-016, pseudo Tous3nKamion, scores/records et package Android. Cible 0.2.4 sur `feature/lunar-four-fronts-001` ; ne pas fusionner `main`.

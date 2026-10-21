@@ -1,12 +1,12 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Prototype Android 0.2.3 — PT-014 : annonces hors plateau, musique officielle
+## Prototype Android 0.2.4 — PT-014 : annonces hors plateau, musique officielle
 
 **Branche :** `feature/lunar-four-fronts-001` — `main` conservée intacte.
 
 ### 📲 APK Android direct (sans ZIP)
 
-**[Télécharger PartouTetris-v0.2.3-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.3-debug.apk)**
+**[Télécharger PartouTetris-v0.2.4-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.4-debug.apk)**
 
 APK debug compilé par [GitHub Actions](https://github.com/greenpower2669/PartouTetris/actions), directement installable sur Android ; AAB de publication seulement après validation de Fab.
 
@@ -40,3 +40,6 @@ Le titre du classement est désormais « MEILLEUR SCORE DE PHARAONITE ». Le pse
 
 ### PT-016 — Bannière futuriste vivante
 Le bandeau supérieur est entièrement codé en CSS/DOM : tétriminos lumineux, titre doré avec O lunaire cyan, châssis sci-fi néon et meilleure marque de Pharaonite cyan. Ce n'est **pas** une capture ni une texture statique : score, record, pseudo, annonces et podium se mettent à jour en jeu. Module : `app/src/main/assets/hud-pt016.css`. Aucun changement du gameplay, des commandes ou de la musique.
+
+### PT-017 — Contrôle Tetris ×10 et approche des quatre fronts
+Un appui long (420 ms) avec le second doigt ou le bouton « ⇣ ×10 » accélère réellement la chute par dix, y compris si plusieurs rangs sont parcourus entre deux frames. Un tap court continue à pivoter. En espace, les pièces descendent de la direction visuelle de la Terre vers chaque porte lunaire en **cinq** étapes ; leur rotation est possible mais la translation attend l'entrée dans le plateau. Le score, la musique, le pseudo et la sauvegarde existants sont conservés.

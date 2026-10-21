@@ -45,3 +45,6 @@
 - PT-015 : `leaderboard.js` DEFAULT_NICKNAME « Tous3nKamion », migration conditionnelle `raw.name === "PHARAON"`; clés `KEY`/`PREVIOUS_RECORD` et `scores` inchangées. `index.html` label Pharaonite, pseudo au HUD et placeholder ; `tests/leaderboard.test.cjs` vérifie migration sans pertes.
 
 - PT-016 : `app/src/main/assets/hud-pt016.css` = couche CSS premium (formes, lumières, tétriminos, mini-lune, cadre, score et record sans image). `index.html` conserve la marque texte HTML et installe le O lunaire via `mountMoonWordmark()` ; nouveau nœud `#bestScoreValue` alimenté à chaque frame par `Math.max(record, leaderboard.best())`. `tests/pt016-branding.test.cjs` vérifie la séparation données/rendu et les quatre objets décoratifs. Version 0.2.3.
+
+- PT-017 : `engine.js` BOOST_MULTIPLIER=10, SPACE_STEPS=5, SPACE_INTERVAL_FACTOR=.82, `step` traite plusieurs rangs/frame puis sort lors du verrouillage ; `shift` bloqué tant que radius>=RINGS et `rotate` sans wall-kick dans l'espace.
+- `arrival.js` exporte `projectEarthApproach` (projection Terre → entrée front, interpolation 0..1), chargée par `index.html`; `visuals.js` `Artist.spacePiece` dessine cellules et flammes pendant phase extra-lunaire, avant de passer au Canvas polaire dans les couronnes. Tests `arrival.test.cjs` et engine.
