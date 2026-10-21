@@ -30,8 +30,9 @@ test('Landing ghost stops at lunar surface',()=>{
   const g=new Game(()=>0);
   assert.equal(g.ghost(g.pieces[0]),0);
 });
-test('Rotations and tangential moves remain legal',()=>{
+test('Rotations and tangential moves remain legal once inside the lunar board',()=>{
   const g=new Game(()=>0);const p=g.pieces[0];
+  p.radius=9; // Tangential motion deliberately blocked during space flight.
   assert.equal(g.shift(0,1),true);assert.equal(p.angle,1);
   assert.equal(g.rotate(0),true);assert.equal(p.rot,1);
 });
