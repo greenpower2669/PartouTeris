@@ -93,3 +93,5 @@
 - Statut CI 0.2.0 et install Android : **à vérifier** avant de confirmer une APK finale.
 
 - PT-013 : une miniature GitHub CI a permis d'examiner la charte authentique : Terre occupante massive, titre or centré et cinq commandes sur une rangée. La refonte Terre/horizon correspondante a passé CI #39627108353 ; le rendu écran reste à comparer et valider sur Android.
+
+- PT-013 capture headless Chromium 412x915 obtenue, `design/rendu-jeu-apercu.jpg` : deux écarts avérés malgré CI verte : scoreboard étroit à cause du max-width de `#hud .scoreboard` et LASER flottant recouvrant partiellement consignes. Correctifs : scoreboard forcé width/max-width 100%, bouton LASER intégré au panneau d'aide avec pointer-events réactivés uniquement pour lui. Nouveau contrôle sur image CI requis.

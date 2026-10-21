@@ -115,3 +115,6 @@
 - [x] #39627108353 : tests Node, Android Gradle et APK brut 0.2.0 vérifiés après reprise du modèle Terre/horizon.
 - [x] Aperçu de la véritable charte graphique généré et inspecté ; correction des proportions terre et disposition 5 boutons.
 - [ ] Contrôler capture du rendu réel par Chromium CI (si disponible), puis test visuel/tactile/sonore sur Samsung.
+
+- [x] Capturer le vrai rendu Chromium ; détecter HUD score tronqué et laser sur consignes ; correctifs DOM/CSS appliqués.
+- [ ] Vérifier le nouvel aperçu Chromium après correction du panneau de score, du bouton laser et de l'aide tactile.

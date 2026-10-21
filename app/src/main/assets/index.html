@@ -202,6 +202,20 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 #buttons #laserButton{grid-column:auto;position:absolute;right:7px;bottom:calc(100% + 9px);
   min-height:36px;width:clamp(82px,23vw,115px);font-size:12px;z-index:5;box-shadow:0 0 11px #55eaff8a}
 @media(max-height:690px){#hud .brand-title{font-size:18px}#buttons button{min-height:42px}#buttons #laserButton{min-height:30px}}
+
+/* PT-013 visual QA: full-width scoreboard and unobstructed embedded laser. */
+#hud .scoreboard{display:block;width:100%;max-width:100%;min-width:0;flex:0 0 auto}
+#hud .scoreline{width:100%}
+#hud .highscores{width:100%}
+#tip{pointer-events:auto;grid-template-columns:minmax(0,1fr) minmax(0,1fr) clamp(69px,20vw,88px);align-items:center}
+#tip .gesture{pointer-events:none;overflow-wrap:anywhere}
+#tip #laserButton{position:static;grid-column:3;width:100%;height:auto;min-height:43px;
+ font-size:clamp(10px,2.4vw,13px);padding:6px 2px;border:1px solid #75eaff;
+ background:linear-gradient(150deg,#185d83,#102d4a);box-shadow:inset 0 1px #bcf8ff8c,0 0 10px #55d9fc7c;
+ white-space:normal}
+#tip #laserButton[aria-pressed="true"]{background:linear-gradient(160deg,#228da2,#0a617e);box-shadow:0 0 16px #77f1ffbb}
+@media(max-width:360px){#tip{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 60px;gap:3px;padding:4px 5px}
+ #tip .hand{font-size:15px}#tip #laserButton{font-size:9px;min-height:41px}}
 </style></head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
 <div id="scoreBurst" aria-hidden="true"></div>
@@ -219,8 +233,8 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
   </div>
 </div>
 <div id="controlDeck">
-<div id="tip"><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = accélérer</span></span></div>
-<div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="laserButton" aria-label="Activer le mode laser pour orienter les pièces" aria-pressed="false">⚡ LASER</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
+<div id="tip"><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = accélérer</span></span><button id="laserButton" aria-label="Activer le mode laser pour orienter les pièces" aria-pressed="false">⚡ LASER</button></div>
+<div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
 <h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique officielle PartouTetris.</p>
