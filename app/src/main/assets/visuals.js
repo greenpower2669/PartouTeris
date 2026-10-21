@@ -94,7 +94,7 @@ class Artist {
       c.beginPath();c.moveTo(x-r*.72,y-r*.2);
       c.bezierCurveTo(x-r*.5,y-r*.88,x+r*.10,y-r*.39,x-r*.25,y-r*.03);
       c.bezierCurveTo(x-r*.57,y+r*.28,x-r*.12,y+r*.57,x-r*.32,y+r*.81);
-      c.bezierCurveTo(x-r*.85,y+r*.37,x-r*.84,y,y-r*.18);c.fill();
+      c.bezierCurveTo(x-r*.85,y+r*.37,x-r*.84,y,x-r*.72,y-r*.20);c.fill();
       c.fillStyle="#62b98c";c.beginPath();c.moveTo(x+r*.20,y-r*.72);
       c.bezierCurveTo(x+r*.85,y-r*.59,x+r*.96,y+r*.16,x+r*.41,y+r*.31);
       c.lineTo(x+r*.27,y+r*.75);
