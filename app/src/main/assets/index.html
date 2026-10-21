@@ -266,6 +266,8 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 /* PT-015: compact leaderboard label, preserving the score row proportions. */
 #hud .highscore-title>span:first-child{font-size:clamp(9px,2.35vw,12px);letter-spacing:.015em}
 @media(max-width:375px){#pointFeed{max-width:47%;font-size:clamp(8px,2.1vw,11px)}}
+#hud #pointFeed.penalty{color:#ffb4b1;border-color:#f36c7c;
+ background:linear-gradient(100deg,#5b233bdc,#1b203de8)}
 </style>
 <link rel="stylesheet" href="hud-pt016.css">
 </head><body>
@@ -291,11 +293,11 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
   </div>
 </div>
 <div id="controlDeck">
-<div id="tip"><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = chute ×10</span></span><button id="laserButton" aria-label="Activer le mode laser pour orienter les pièces" aria-pressed="false">⚡ LASER</button></div>
+<div id="tip"><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = chute ×10</span></span><button id="laserButton" aria-label="LASER : toucher un débris pour pivoter ; maintenir une brique posée 1,3 seconde pour la détruire contre un malus" aria-pressed="false">⚡ LASER</button></div>
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée dix fois">⇣ ×10</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
-<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour une descente ×10. Dans l’espace : rotation uniquement ; guidage possible dès la zone lunaire.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique officielle PartouTetris.</p>
+<h1>🌙 Les Pharaons de la Lune</h1><p>Laser : touche brièvement une pièce volante pour la pivoter ; sur une brique posée, maintiens 1,3 seconde pour la détruire avec un malus croissant. Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour une descente ×10. Dans l’espace : rotation uniquement ; guidage possible dès la zone lunaire.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique officielle PartouTetris.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
 <p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -325,7 +327,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script>
 (function(){
 "use strict";
-const {Game,SECTORS,RINGS,LANES,COLORS,cellsOf,mod,SPACE_STEPS,SPACE_INTERVAL_FACTOR}=window.PartouEngine;
+const {Game,SECTORS,RINGS,LANES,COLORS,cellsOf,mod,SPACE_STEPS,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS}=window.PartouEngine;
 const canvas=document.getElementById("screen"),ctx=canvas.getContext("2d");
 const art=new window.PartouVisuals.Artist(ctx);
 // PT-016 — authentic coded HUD. The crated blue moon replaces the O of the
@@ -369,7 +371,7 @@ function renderPodium(){
   });
 }
 renderPodium();
-let scoreSaved=false,laserMode=false,lastLaserAt=0;
+let scoreSaved=false,laserMode=false,lastLaserAt=0,laserTarget=null;
 let laserShots=[];
 const laserButton=document.getElementById("laserButton");
 function updateLaserMode(){
@@ -433,7 +435,8 @@ function wedge(s,r,color,opacity=1,stroke=true){
   art.cell({cx,cy,inner,stepR,sector:s,ring:r,color,opacity,stroke});
 }
 function backdrop(){
-  art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash,earth});
+  art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash,earth,
+    time:performance.now()/1000,reduced:reducedCelebrations.checked});
 }
 function moon(){art.moon({cx,cy,inner});}
 function pieces(){
@@ -516,6 +519,19 @@ function frame(time){
     if(ev.type==="milestone")sound.cue("milestone");
     else if(ev.type!=="points")sound.cue(ev.type,ev.count);
   }
+  if(laserTarget){
+    if(!laserMode||game.paused||game.over||
+       game.board[laserTarget.ring][laserTarget.sector]===-1){
+      laserTarget=null;
+    }else if(time-laserTarget.startedAt>=LOCKED_LASER_HOLD_MS){
+      const target=laserTarget;laserTarget=null;lastLaserAt=time;
+      if(game.destroyLockedCell(target.sector,target.ring)){
+        laserShots.push({to:target.to,at:time});
+        sound.cue("destroy");
+        if(navigator.vibrate)navigator.vibrate([22,34,55]);
+      }
+    }
+  }
   sound.tick(game.paused||game.over,game.level);
   if(game.cleared!==before){previousCleared=game.cleared;if(navigator.vibrate)navigator.vibrate(40);}
   backdrop();
@@ -529,6 +545,11 @@ function frame(time){
      if(elapsed<112)art.charge({from,progress:elapsed/112,reduced:reducedCelebrations.checked});
      if(elapsed>=52)art.laser({from,to:shot.to,life:1-(elapsed-52)/428,reduced:reducedCelebrations.checked});
    }
+  if(laserTarget){
+    const progress=Math.max(0,Math.min(1,(time-laserTarget.startedAt)/LOCKED_LASER_HOLD_MS));
+    for(const from of emitters)
+      art.laserDrill({from,to:laserTarget.to,progress,reduced:reducedCelebrations.checked});
+  }
   updateHud();requestAnimationFrame(frame);
 }
 function fromEvent(e){
@@ -561,20 +582,46 @@ function nearestLaserPiece(pos){
   let nearest=-1,distance=Infinity;
   for(const p of game.pieces){
     if(!p)continue;
-    const r=inner+Math.min(p.radius,10)*stepR+Math.max(0,p.radius-10)*stepR*.58+stepR*.36;
-    const [x,y]=point(rad(p.angle+.5),r);
+    let x,y;
+    if(p.radius>=RINGS){
+      const spot=window.PartouArrival.projectEarthApproach({
+        earth,cx,cy,outer,sector:p.angle,lane:p.lane,radial:p.radius,
+        rings:RINGS,spaceSteps:SPACE_STEPS,
+        stepFraction:Math.min(1,game.fall[p.lane]/(game.fallInterval()*SPACE_INTERVAL_FACTOR))
+      });
+      if(!spot)continue;
+      ({x,y}=spot);
+    }else{
+      const r=inner+Math.min(p.radius,10)*stepR+Math.max(0,p.radius-10)*stepR*.58+stepR*.36;
+      [x,y]=point(rad(p.angle+.5),r);
+    }
     const d=Math.hypot(pos.x-x,pos.y-y);
     if(d<distance){distance=d;nearest=p.lane;}
   }
-  return distance<=Math.max(43,Math.min(64,scale*.34))?nearest:-1;
+  return distance<=Math.max(29,Math.min(47,scale*.25))?nearest:-1;
+}
+function lockedLaserCell(pos){
+  const ring=Math.floor((pos.distance-inner)/stepR);
+  const sector=Math.floor(pos.angle);
+  if(!Number.isInteger(sector)||!Number.isInteger(ring)||
+     ring<0||ring>=RINGS||sector<0||sector>=SECTORS||
+     game.board[ring][sector]===-1)return null;
+  const [x,y]=point(rad(sector+.5),inner+(ring+.5)*stepR);
+  return {ring,sector,to:{x,y}};
 }
 canvas.addEventListener("pointerdown",e=>{
   e.preventDefault();if(game.over||game.paused)return;
   if(sound.enabled)sound.start();
   if(laserMode){
-    const now=performance.now();
+    const now=performance.now(),pos=fromEvent(e);
+    const fixed=lockedLaserCell(pos);
+    if(fixed){
+      laserTarget={...fixed,id:e.pointerId,startX:pos.x,startY:pos.y,startedAt:now};
+      canvas.setPointerCapture(e.pointerId);
+      return;
+    }
     if(now-lastLaserAt<420)return;
-    const pos=fromEvent(e),lane=nearestLaserPiece(pos);
+    const lane=nearestLaserPiece(pos);
     if(lane<0)return;
     const shot=game.laser(lane,pos.angle);
     if(!shot)return;
@@ -590,19 +637,29 @@ canvas.addEventListener("pointerdown",e=>{
 canvas.addEventListener("pointermove",e=>{
   if(game.over||game.paused)return;
   e.preventDefault();
+  if(laserMode){
+    if(laserTarget&&laserTarget.id===e.pointerId){
+      const p=fromEvent(e);
+      if(Math.hypot(p.x-laserTarget.startX,p.y-laserTarget.startY)>23)laserTarget=null;
+    }
+    return;
+  }
   hands.move(touchInfo(e));
 });
 canvas.addEventListener("pointerup",e=>{
   e.preventDefault();
+  if(laserMode){if(laserTarget?.id===e.pointerId)laserTarget=null;return;}
   hands.up(touchInfo(e));
 });
 canvas.addEventListener("pointercancel",e=>{
-  e.preventDefault();hands.cancel(touchInfo(e));
+  e.preventDefault();
+  if(laserMode){if(laserTarget?.id===e.pointerId)laserTarget=null;return;}
+  hands.cancel(touchInfo(e));
 });
-window.addEventListener("blur",()=>hands.reset());
+window.addEventListener("blur",()=>{hands.reset();laserTarget=null;});
 laserButton.addEventListener("click",()=>{
   if(!started||game.over)return;
-  hands.reset();laserMode=!laserMode;updateLaserMode();
+  hands.reset();laserTarget=null;laserMode=!laserMode;updateLaserMode();
 });
 updateLaserMode();
 nickname.addEventListener("change",()=>{
@@ -613,7 +670,7 @@ document.getElementById("turn").addEventListener("click",()=>{if(sound.enabled)s
 document.getElementById("pause").addEventListener("click",()=>{
   if(!started||game.over||settingsOpen)return;
   if(sound.enabled)sound.start();
-  hands.reset();game.paused=!game.paused;lastTime=0;
+  hands.reset();laserTarget=null;game.paused=!game.paused;lastTime=0;
 });
 document.getElementById("start").addEventListener("click",()=>{
   started=true;game.paused=false;lastTime=0;
@@ -656,11 +713,11 @@ const fast=document.getElementById("fast");
 fast.addEventListener("pointerdown",e=>{e.preventDefault();fast.setPointerCapture(e.pointerId);game.boost(selected,true);});
 for(const name of ["pointerup","pointercancel","lostpointercapture"])fast.addEventListener(name,()=>game.boost(selected,false));
 document.getElementById("again").addEventListener("click",()=>{
-  hands.reset();festival.reset();game.reset();scoreSaved=false;laserMode=false;laserShots=[];updateLaserMode();
+  hands.reset();festival.reset();game.reset();scoreSaved=false;laserMode=false;laserTarget=null;laserShots=[];updateLaserMode();
   ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
   if(sound.enabled)sound.start();
 });
-document.addEventListener("visibilitychange",()=>{if(document.hidden){hands.reset();game.paused=true;lastTime=0;}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hands.reset();laserTarget=null;game.paused=true;lastTime=0;}});
 window.addEventListener("keydown",e=>{
  if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();game.paused=!game.paused;}
  if(e.key==="ArrowLeft"&&game.shift(selected,-1))sound.cue("move");
