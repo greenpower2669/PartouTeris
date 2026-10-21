@@ -122,3 +122,9 @@
 - Préserver impérativement l'espace de plateau par layout mesuré DOM et éviter tout modèle statique impossible à actualiser.
 
 - PT-016 CI #39654253505 success mais capture Chrome révèle un bug de rendu : la marque est écrasée à hauteur quasi nulle. Cause CSS : ancien `flex:1 1 66%` en contexte colonne, alors que tous les enfants de la marque sont désormais absolus => taille intrinsèque zéro ; `height` ne fixe pas la base flexible. Correctif `flex:0 0 auto` et min-height adaptatif. Nouvelle capture nécessaire avant livraison.
+
+## PT-016 — Livraison en CODE, CI et examen visuel (21/10/2026)
+- Correction du bandeau finale v0.2.3 : HTML/CSS/JS sans image plaquée, score et record dynamiques, titre gold PART🌕UTETRIS et quatre tétriminos CSS.
+- Premier rendu CI #39654253505 : succès technique mais bandeau masqué par effondrement Flex (tous enfants absolus) ; correctif `flex:0 0 auto` CI #39654800396 succès, visuel visible ; taille titre et score augmentée.
+- Run final **#39655192888 success**, screenshot `design/rendu-jeu-apercu.jpg` inspecté : titre or lisible, mini-lune, tétriminos lumineux, scoreboard intact ; plateau et commandes restent exposés.
+- `temp/PartouTetris-v0.2.3-debug.apk` brute 8 787 418 octets (Git blob SHA `d634edadaa9f9f46661b44b1c3838f69255055bd`). Confirmation tactile Android réelle et fidélité esthétique finale à recueillir auprès de Fab.

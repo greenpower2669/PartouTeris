@@ -126,3 +126,7 @@
 - **Contrat : aucun visuel généré plaqué en fond.** Construire le bandeau en HTML/CSS/DOM, chiffres, pseudo, records toujours dynamiques et sauvegardes inchangées. Ne pas dégrader la zone jouable en portrait ni chevaucher les annonces PT-014.
 - Le titre reste accessible sous sa chaîne d'origine, le O visible est une sphère lunaire à cratères dessinée en CSS, 4 tétriminos lumineux sont composés de cellules CSS, les panneaux affichent le score vivant et la meilleure valeur Pharaonite.
 - Branche de travail `feature/lunar-four-fronts-001`, cible Android 0.2.3, CI et photo comparative à valider, aucune fusion de main.
+
+### PT-016 — Validation technique
+- **Livré pour essai** sur `feature/lunar-four-fronts-001` : Gradle v0.2.3, APK directe non ZIP `temp/PartouTetris-v0.2.3-debug.apk` et capture Chromium `design/rendu-jeu-apercu.jpg`, GitHub Actions #39655192888 success.
+- Décor du bandeau 100 % HTML/CSS ; le jeu lui-même et les scores restent dynamiques. `main` n'a pas été fusionnée ni publiée. Attendre feu vert de Fab avant Release/AAB.

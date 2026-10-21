@@ -167,3 +167,11 @@
 - [ ] Valider tous les tests Node, GitHub Actions Gradle et fichier `temp/PartouTetris-v0.2.3-debug.apk`.
 - [ ] Examiner le rendu Chromium de 0.2.3 et ajuster si chevauchement ou réduction du plateau.
 - [ ] Essai réel SM-A576B Android 16 avant publication, `main` intacte.
+
+### PT-016 — Vérification finale (21/10/2026)
+- [x] Build GitHub Actions [#39655192888](https://github.com/greenpower2669/PartouTetris/actions/runs/39655192888) réussi : tests Node + Gradle et capture portrait Chromium.
+- [x] APK brute vérifiée : `temp/PartouTetris-v0.2.3-debug.apk`, 8 787 418 octets (Git blob SHA `d634edadaa9f9f46661b44b1c3838f69255055bd`).
+- [x] Capture `design/rendu-jeu-apercu.jpg` inspectée : quatre tétriminos néon, titre or avec O-Lune agrandi, panneau score et meilleur score Pharaonite visibles, anneaux lunaires et boutons libres.
+- [x] Correction d'effondrement Flex du titre (`flex:0 0 auto`), agrandissement du mot titre et meilleure taille de score.
+- [ ] Tester réellement l'esthétique et la lisibilité avec Fab sur SM-A576B, notamment en cours de partie avec score > 10 000 et top 3 rempli.
+- [ ] Valider l'audio MP3 réel et le comportement multitouch en conditions Samsung ; `main` inchangée.
