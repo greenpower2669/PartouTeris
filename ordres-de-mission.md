@@ -51,4 +51,4 @@
 - Référence auditée : Block-Boost (fireworks.mjs, result-celebration.mjs, disco-sprites.mjs) ; principes des scènes bornées et seuils de 1 000 points.
 - Code 0.1.5 : +40 points à chaque pose valable, score réel de couronnes et combos, gains flottants ; bulles/projecteurs, disco, feux d'artifice, fanfare originale et option visuelle douce.
 - Préserver la licence, les sauvegardes, le tactile, le portrait et les sons existants. Aucun média privé de Djipie transféré.
-- Statut : code ajouté sur branche de travail ; build GitHub et validation téléphone attendus.
+- Statut : code et build CI #39521425766 vérifiés, APK 0.1.5 non compressée présente sur branche ; validation téléphone attendue.

@@ -47,3 +47,5 @@
 - Correctif : points calculés uniquement à la pose solide (+40), combo de couronnes réelles, palier 1000 détecté une seule fois même en cas de jackpot.
 - Scènes inspirées de Block Boost, mais synthèse graphique/sonore autonome ; pas de fichiers audio privés.
 - Animation limitée, option douce, pas de stroboscope et overlay pointer-events:none. Tests et rendu réel sur Samsung à confirmer.
+
+- Livraison 0.1.5 vérifiée : GitHub Actions #39521425766 success (tests et Gradle), fichier brut temp/PartouTeris-v0.1.5-debug.apk : 31 036 octets. Aucune fusion main ; démonstration visuelle et audio réelle à vérifier sur téléphone.

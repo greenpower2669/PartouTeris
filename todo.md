@@ -55,4 +55,5 @@
 - [x] Fanfare WebAudio indépendante du fond musical, mode visuel doux.
 - [x] Préserver portrait, quatre chutes, tactile 2 mains, sauvegardes.
 - [x] Ajouter tests des scores, seuils et animations.
-- [ ] Vérifier CI/APK directe 0.1.5 ; tester réellement sur Android 16.
+- [x] CI GitHub Actions #39521425766 verte (tests Node et compilation Android), APK directe 0.1.5 vérifiée dans temp/ (31 036 octets).
+- [ ] Tester l'affichage des scores, des animations et des sons sur Samsung SM-A576B Android 16.
