@@ -1,4 +1,4 @@
-# Débogage — PartouTeris
+# Débogage — PartouTetris
 ## PT-001, 20/10/2026
 - Dépôt neuf, seuls README et LICENSE présents lors de l'audit.
 - Problèmes à vérifier en conditions réelles : maniabilité sur écran tactile Android, collisions au raccord 0°/360°, simultanéité de plusieurs contacts, comportement de WebView Android 16, performance Canvas et signature APK debug.
@@ -17,7 +17,7 @@
 - CI premier essai 0.1.1 : 14 tests / 15, échec d'un ancien test qui attendait une chute après seulement 1,08 s. Contrat modifié : 5 s/étage ; test corrigé pour vérifier l'absence de chute à 1,08 s et une chute après 5 s. Ce n'était pas une panne moteur.
 
 - Correction complémentaire : un toucher ne doit pas remettre l'horloge musicale à zéro ; test mock WebAudio ajouté.
-- CI finale 0.1.1 #39509803472 : tests Node et build Android réussis, fichier `temp/PartouTeris-v0.1.1-debug.apk` confirmé (20 206 octets). Un build intermédiaire a échoué uniquement lors du push de l'APK à cause de builds parallèles ; le dernier a réussi.
+- CI finale 0.1.1 #39509803472 : tests Node et build Android réussis, fichier `temp/PartouTetris-v0.1.1-debug.apk` confirmé (20 206 octets). Un build intermédiaire a échoué uniquement lors du push de l'APK à cause de builds parallèles ; le dernier a réussi.
 - Audio réel sur téléphone toujours **à valider**, pas de conclusion tirée du simple build.
 
 ## PT-004 — Retour ergonomique, 21/10/2026
@@ -25,7 +25,7 @@
 - Changement : `touch.js` garde le doigt primaire responsable de la prise et donne aux taps rapides d'un autre doigt la seule commande de rotation. Un contact secondaire ne sélectionne plus un autre front. Les gestes secondaires glissés, longs ou annulés ne pivotent pas ; si la prise se termine avant le tap, celui-ci est annulé.
 - À vérifier sur téléphone : double tactile WebView Samsung, sensibilité des 26 px / 360 ms, possibilité de manipuler les quatre cadrans sur écran paysage.
 
-- Vérification livraison PT-004 : GitHub Actions #39513900116 réussie, compilation Android et tests Node verts ; `temp/PartouTeris-v0.1.2-debug.apk` confirmée (21 283 octets). Essai humain non encore effectué.
+- Vérification livraison PT-004 : GitHub Actions #39513900116 réussie, compilation Android et tests Node verts ; `temp/PartouTetris-v0.1.2-debug.apk` confirmée (21 283 octets). Essai humain non encore effectué.
 
 ## PT-005/PT-006 — 21/10/2026
 - Bug rapporté par Fab : les pièces sous parachute se bloquent mutuellement **en l'air** ; cause confirmée par lecture : `canPlace()` comparait chaque case aux quatre pièces actives, ce qui gelait leur descente.
@@ -33,14 +33,14 @@
 - Visuel : rendu Canvas initial trop minimal (petite Lune, arcs unis, parachute filaire) ; remplacé par art procédural hors ligne, cratères/pyramides ombrés, cellules réfléchissantes et HUD métallique.
 - Tests CI et performances/ergonomie Android réelles restent à vérifier.
 
-- Preuve technique PT-005/PT-006 : GitHub Actions #39517259972 réussie (tests Node, compilation Android, copie Git du fichier). APK `temp/PartouTeris-v0.1.3-debug.apk` vérifiée, 25 278 octets. Les rendus sur appareil ne sont pas encore observés.
+- Preuve technique PT-005/PT-006 : GitHub Actions #39517259972 réussie (tests Node, compilation Android, copie Git du fichier). APK `temp/PartouTetris-v0.1.3-debug.apk` vérifiée, 25 278 octets. Les rendus sur appareil ne sont pas encore observés.
 
 ## PT-007 — Capture paysage 0.1.3 (21/10/2026)
 - Problème constaté sur la capture fournie : plateau immense en paysage, fond du cercle caché sous les cinq boutons horizontaux ; pyramides posées sur la Lune alors que Fab les veut près du titre.
 - Résolution : portrait Android forcé, mise en page HUD/cercle/commandes en trois zones avec bornes calculées depuis les rectangles DOM. Pyramides en icône SVG près du titre, cratères lunaires laissés libres.
 - Risques à confirmer sur Samsung : taille réelle des boutons, zones tactiles et disponibilité de l'espace pour les quatre voiles en portrait.
 
-- CI PT-007 : run #39518335994 **success**, tests Node, build Android et publication APK brute de 26 736 octets dans `temp/PartouTeris-v0.1.4-debug.apk`. Aucune fusion `main` ; capture réelle du mode portrait en attente.
+- CI PT-007 : run #39518335994 **success**, tests Node, build Android et publication APK brute de 26 736 octets dans `temp/PartouTetris-v0.1.4-debug.apk`. Aucune fusion `main` ; capture réelle du mode portrait en attente.
 
 ## PT-008 — Récompenses (21 octobre 2026)
 - Lacune 0.1.4 : aucun score au placement ; célébrations trop rares.
@@ -48,4 +48,11 @@
 - Scènes inspirées de Block Boost, mais synthèse graphique/sonore autonome ; pas de fichiers audio privés.
 - Animation limitée, option douce, pas de stroboscope et overlay pointer-events:none. Tests et rendu réel sur Samsung à confirmer.
 
-- Livraison 0.1.5 vérifiée : GitHub Actions #39521425766 success (tests et Gradle), fichier brut temp/PartouTeris-v0.1.5-debug.apk : 31 036 octets. Aucune fusion main ; démonstration visuelle et audio réelle à vérifier sur téléphone.
+- Livraison 0.1.5 vérifiée : GitHub Actions #39521425766 success (tests et Gradle), fichier brut temp/PartouTetris-v0.1.5-debug.apk : 31 036 octets. Aucune fusion main ; démonstration visuelle et audio réelle à vérifier sur téléphone.
+
+## PT-009 — 21 octobre 2026
+- Renommage confirmé du dépôt PartouTeris vers **PartouTetris**, avec correction du titre, de l'APK et de la documentation. Package Android com.greenpower2669.partouteris non modifié pour maintenir l'installation/sauvegarde.
+- Nouvelle règle score : proximité du centre + contacts avec cases verrouillées préexistantes (distinctes), 2 → ×2, 3 → ×3 ; aucun bonus artificiel pour cellules nouvelles ni Lune elle-même.
+- Tactile : tap secondaire < 360ms tourne ; appui secondaire stable ≥420ms accélère et n'entraîne pas de rotation ; test d'annulation au relâchement.
+- Visuel : Terre plus grande dans espace sous Lune, particules / faisceau sortant de la Terre, non interceptant, préférence effets doux conservée.
+- Tests et compilation 0.1.6 à contrôler avant d'annoncer une APK.

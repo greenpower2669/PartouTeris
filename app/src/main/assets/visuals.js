@@ -57,7 +57,7 @@ class Artist {
     x.lineWidth=r*.025;x.strokeStyle="#fff6d089";x.beginPath();x.arc(cx,cy,r-2,3.0,5.25);x.stroke();
     return c;
   }
-  backdrop({W,H,cx,cy,inner,outer,stepR,sectors,flash=0}){
+  backdrop({W,H,cx,cy,inner,outer,stepR,sectors,flash=0,earth=null}){
     const c=this.ctx;
     const deep=c.createRadialGradient(cx,cy,inner*.4,cx,cy,Math.max(W,H)*.74);
     deep.addColorStop(0,"#1c284a");deep.addColorStop(.38,"#080f26");deep.addColorStop(1,"#020512");
@@ -77,20 +77,39 @@ class Artist {
         c.beginPath();c.moveTo(x-4,y);c.lineTo(x+4,y);c.moveTo(x,y-4);c.lineTo(x,y+4);c.stroke();
       }
     }
-    // A small Earth raises the stakes, but never hides the puzzle.
-    const er=Math.min(H*.084,W*.052);
-    const ex=W*.90,ey=H*.77;
-    if(Math.hypot(ex-cx,ey-cy)>outer+er*.7){
-      c.save();c.shadowColor="#2fa1ff";c.shadowBlur=16;
-      let g=c.createRadialGradient(ex-er*.38,ey-er*.4,2,ex,ey,er);
-      g.addColorStop(0,"#ccefff");g.addColorStop(.47,"#328fc9");g.addColorStop(1,"#071e53");
-      c.fillStyle=g;c.beginPath();c.arc(ex,ey,er,0,TAU);c.fill();c.restore();
-      c.save();c.beginPath();c.arc(ex,ey,er*.97,0,TAU);c.clip();
-      c.fillStyle="#679d84b8";c.beginPath();c.ellipse(ex-er*.16,ey,er*.40,er*.21,-.5,0,TAU);c.fill();
-      c.beginPath();c.ellipse(ex+er*.39,ey-er*.33,er*.2,er*.37,.5,0,TAU);c.fill();
+    // Large reserved Earth below the ring: the source of all celebrations.
+    if(earth&&earth.r>3){
+      const {x,y,r}=earth;
+      c.save();
+      const aura=c.createRadialGradient(x,y,r*.7,x,y,r*1.8);
+      aura.addColorStop(0,"rgba(91,182,255,.28)");aura.addColorStop(1,"rgba(31,111,231,0)");
+      c.fillStyle=aura;c.beginPath();c.arc(x,y,r*1.8,0,TAU);c.fill();
+      c.shadowColor="#60b7ff";c.shadowBlur=r*.5;
+      const ocean=c.createRadialGradient(x-r*.4,y-r*.48,r*.05,x,y,r*1.2);
+      ocean.addColorStop(0,"#f0fcff");ocean.addColorStop(.25,"#72e1f1");
+      ocean.addColorStop(.60,"#1475ba");ocean.addColorStop(1,"#0a2155");
+      c.fillStyle=ocean;c.beginPath();c.arc(x,y,r,0,TAU);c.fill();c.restore();
+      c.save();c.beginPath();c.arc(x,y,r*.96,0,TAU);c.clip();
+      c.fillStyle="#65c89c";
+      c.beginPath();c.moveTo(x-r*.72,y-r*.2);
+      c.bezierCurveTo(x-r*.5,y-r*.88,x+r*.10,y-r*.39,x-r*.25,y-r*.03);
+      c.bezierCurveTo(x-r*.57,y+r*.28,x-r*.12,y+r*.57,x-r*.32,y+r*.81);
+      c.bezierCurveTo(x-r*.85,y+r*.37,x-r*.84,y,y-r*.18);c.fill();
+      c.fillStyle="#62b98c";c.beginPath();c.moveTo(x+r*.20,y-r*.72);
+      c.bezierCurveTo(x+r*.85,y-r*.59,x+r*.96,y+r*.16,x+r*.41,y+r*.31);
+      c.lineTo(x+r*.27,y+r*.75);
+      c.bezierCurveTo(x-r*.04,y+r*.37,x-r*.03,y-r*.22,x+r*.20,y-r*.72);c.fill();
+      c.strokeStyle="rgba(244,250,255,.55)";c.lineWidth=Math.max(1,r*.055);
+      for(const yy of [-.38,.08,.52]){
+        c.beginPath();c.moveTo(x-r*.86,y+r*yy);
+        c.bezierCurveTo(x-r*.31,y+r*(yy-.2),x+r*.37,y+r*(yy+.12),x+r*.8,y+r*yy);c.stroke();
+      }
       c.restore();
-      c.font="600 "+Math.max(10,Math.min(14,H*.037))+"px system-ui";
-      c.textAlign="center";c.fillStyle="#d0e6fd88";c.fillText("TERRE",ex,ey+er+16);
+      c.strokeStyle="#daedff9a";c.lineWidth=1.5;
+      c.beginPath();c.arc(x,y,r*1.01,-2.35,-.5);c.stroke();
+      c.textAlign="center";c.fillStyle="#cee9ff";
+      c.font="700 "+Math.max(10,Math.min(13,r*.32))+"px system-ui";
+      c.fillText("TERRE",x,y+r+Math.max(10,r*.25));
     }
     // Gold-tech temple orbital machinery, restrained grid for clarity.
     c.save();c.shadowColor="#edb35d";c.shadowBlur=flash>0?16:5;

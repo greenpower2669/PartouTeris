@@ -27,7 +27,7 @@ function chooseScene(event){
 class Festival {
  constructor(element,{reduced=()=>false}={}){
    this.root=element;this.reduced=reduced;this.scene=null;this.priority=0;this.timer=null;
-   this.pos={cx:0,cy:0,outer:1,inner:0,stepR:1};
+   this.pos={cx:0,cy:0,outer:1,inner:0,stepR:1,earth:{x:0,y:0,r:1}};
    this.root.setAttribute("aria-hidden","true");
  }
  position(p){
@@ -36,6 +36,10 @@ class Festival {
    this.root.style.setProperty("--fx-x",cx+"px");
    this.root.style.setProperty("--fx-y",cy+"px");
    this.root.style.setProperty("--fx-r",outer+"px");
+   const e=this.pos.earth||{x:cx,y:cy,r:1};
+   this.root.style.setProperty("--earth-x",e.x+"px");
+   this.root.style.setProperty("--earth-y",e.y+"px");
+   this.root.style.setProperty("--earth-r",e.r+"px");
  }
  stop(){
    if(this.timer)clearTimeout(this.timer);
@@ -59,8 +63,12 @@ class Festival {
    const amount=kind==="fireworks"?25:kind==="disco"?26:18;
    for(let i=0;i<amount;i++){
      const spark=document.createElement("i");
-     spark.style.setProperty("--px",(8+(i*43)%84)+"%");
-     spark.style.setProperty("--py",(14+(i*31)%65)+"%");
+     const {cx,cy,outer,earth}=this.pos;
+     const e=earth||{x:cx,y:cy};
+     const theta=i*2.399963;
+     const dist=outer*(.25+.62*((i*17)%23)/22);
+     spark.style.setProperty("--tx",(cx+Math.cos(theta)*dist-e.x).toFixed(1)+"px");
+     spark.style.setProperty("--ty",(cy+Math.sin(theta)*dist-e.y).toFixed(1)+"px");
      spark.style.setProperty("--delay",(i*71%1300)+"ms");
      spark.style.setProperty("--color",COLORS[i%COLORS.length]);
      spark.style.setProperty("--size",(kind==="bubbles"?9+i%5*5:3+i%4*2)+"px");
@@ -71,9 +79,13 @@ class Festival {
      const tiles=document.createElement("div");tiles.className="fx-mirror-tiles";
      ball.appendChild(tiles);box.appendChild(ball);
    }
-   if(kind==="disco"||kind==="bubbles")for(let i=0;i<5;i++){
-     const beam=document.createElement("div");beam.className="fx-spot";
-     beam.style.setProperty("--index",String(i));box.appendChild(beam);
+   if(kind==="disco"||kind==="bubbles"||kind==="fireworks"){
+     const {cx,cy,earth}=this.pos,e=earth||{x:cx,y:cy};
+     const dx=cx-e.x,dy=cy-e.y;
+     const beam=document.createElement("div");beam.className="fx-earth-beam";
+     beam.style.setProperty("--beam-length",Math.hypot(dx,dy)+"px");
+     beam.style.setProperty("--beam-angle",Math.atan2(-dx,dy)+"rad");
+     box.appendChild(beam);
    }
    this.root.appendChild(box);
  }

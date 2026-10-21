@@ -32,3 +32,14 @@ test('Reduced-motion support disables visually active particles',()=>{
   assert.match(html,/prefers-reduced-motion:reduce/);
   assert.match(html,/\.fx-reduced \.fx-burst/);
 });
+
+test('Earth is the origin for festival sparks and beams, not the Moon itself',()=>{
+ const fx=fs.readFileSync('app/src/main/assets/celebrations.js','utf8');
+ const scene=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ assert.match(fx,/--earth-x/);assert.match(fx,/--earth-y/);
+ assert.match(fx,/--tx/);assert.match(fx,/fx-earth-beam/);
+ assert.match(scene,/@keyframes earthSpark/);
+ assert.match(art,/earth=null/);
+ assert.match(scene,/festival\.position\(\{cx,cy,outer,inner,stepR,earth\}\)/);
+});

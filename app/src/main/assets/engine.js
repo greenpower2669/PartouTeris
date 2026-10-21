@@ -109,6 +109,27 @@
       }
       return null; // material has reached the orbital limit
     }
+    // Neighbours mean distinct already-settled cells, not cells of the
+    // new tetromino itself. Polar adjacency wraps across sector 47 → 0.
+    placementReward(blocks) {
+      const current=new Set(blocks.map(([a,r])=>r+":"+a));
+      const neighbourCells=new Set();
+      let radialSum=0;
+      for(const [a,r] of blocks) {
+        radialSum+=r;
+        for(const [na,nr] of [[mod(a-1,SECTORS),r],[mod(a+1,SECTORS),r],[a,r-1],[a,r+1]]) {
+          if(nr<0||nr>=RINGS)continue; // The Moon is ground, not another block.
+          const key=nr+":"+na;
+          if(!current.has(key)&&this.board[nr][na]!==-1)neighbourCells.add(key);
+        }
+      }
+      const contacts=neighbourCells.size;
+      const meanRadius=radialSum/blocks.length;
+      const centerBonus=Math.max(0,Math.round((RINGS-1-meanRadius)*12));
+      const base=PLACEMENT_POINTS+centerBonus;
+      const multiplier=Math.max(1,contacts);
+      return {points:base*multiplier,base,centerBonus,contacts,multiplier};
+    }
     lock(lane) {
       const p=this.pieces[lane];
       if(!p || this.over) return false;
@@ -116,10 +137,12 @@
       if(radius===null){
         this.over=true;this.events.push({type:'gameover',lane});return false;
       }
-      for(const [a,r] of cellsOf(p,p.angle,radius,p.rot)) this.board[r][a]=lane;
+      const blocks=cellsOf(p,p.angle,radius,p.rot);
+      const reward=this.placementReward(blocks); // BEFORE committing this piece
+      for(const [a,r] of blocks) this.board[r][a]=lane;
       this.placements++;
       this.events.push({type:'lock',lane,angle:p.angle,radius});
-      this.award(PLACEMENT_POINTS,'placement',{lane,angle:p.angle,radius});
+      this.award(reward.points,'placement',{lane,angle:p.angle,radius,...reward});
       this.pieces[lane]=null;
       this.spawn(lane);
       return true;

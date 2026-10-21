@@ -1,19 +1,26 @@
-# PartouTeris — Les Pharaons de la Lune
+# 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Android 0.1.5 : points et célébrations façon Block Boost
+**Nom officiel : PartouTetris** (dépôt corrigé par le propriétaire le 21 octobre 2026).
 
-- +40 points par pièce Tetris réellement posée. Score et record locaux préservés.
-- Couronne 360 degrés : 480 × nombre de couronnes au carré × niveau, plus 100 points par combo consécutif au-delà du premier.
-- Une couronne : bulles, cinq projecteurs, texte et points gagnés.
-- Double couronne : boule à facettes, bulles, spots, vraie récompense affichée.
-- Chaque tranche de 1 000 points : feux d'artifice de session bornés à 5,6 secondes et mini-fanfare WebAudio entièrement originale, sans interruption brutale de la musique.
-- Une grosse récompense qui traverse plusieurs tranches ne multiplie pas artificiellement les scènes.
-- Effets visuels doux réglables, en respectant la préférence système d'animations réduites. Les célébrations ne capturent jamais les doigts.
+## Android 0.1.6 — Terre plus grande, points stratégiques, deuxième doigt accélérateur
 
-Restent intacts : mode portrait fixe, trois pyramides à côté du titre, quatre chutes simultanées non bloquantes, commandes droite/gauche, vitesse réglable et jeu hors ligne.
+- **Une Terre plus grosse**, en bas de l'écran portrait, avec continents, nuages et atmosphère, dans un espace réservé qui ne couvre pas les blocs. Les bulles, feux d'artifice, faisceaux et éclats festifs **partent visuellement de la Terre vers la Lune**, en respectant le mode effets doux.
+- Chaque pièce posée rapporte **40 points + 12 points par cran moyen plus proche du centre** (profondeur géodésique : 0 au bord de la Lune, 9 à l'extérieur). Une pose proche de la Lune vaut davantage.
+- Contacts avec **d'autres cellules déjà posées** : **2 contacts = ×2**, **3 = ×3**, **4 = ×4**, etc. Un contact = ×1 ; on compte les cases distinctes, pas la pièce elle-même ni le sol lunaire. Continuité d'angle à 360 degrés.
+- Les points sont calculés **après détermination de la position d'atterrissage mais avant d'écrire la nouvelle pièce**. Aucun bonus pour une pièce qui déborde.
+- Affichage flottant de la récompense effective (par exemple « +284 ×2 ») et son de connexion quand le bonus est supérieur à ×1. Les bonus de couronnes et célébrations tous les 1 000 points sont conservés.
+- **Deuxième doigt :** tap bref = pivoter de 90 degrés, **appui long stable 420 ms** = chute accélérée tant qu'il reste appuyé. La main principale peut toujours guider la pièce sans lâcher. Au relâchement, retour immédiat à la vitesse habituelle. Le glissement radial de la main droite et le bouton CHUTE restent fonctionnels.
+- Conservation des quatre fronts, du mode portrait fixe, des pyramides en haut et des enregistrements locaux.
 
-### Livraison APK directe
-Lien après validation de la compilation : https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.5-debug.apk
+### Installation sur Android
 
-Tests : node --test tests/*.test.cjs ; gradle :app:assembleDebug.
-Package provisoire com.greenpower2669.partouteris, branche feature/lunar-four-fronts-001, jamais de fusion main sans validation.
+**APK brute, sans ZIP**, après validation GitHub Actions :
+
+[PartouTetris 0.1.6 — APK](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.1.6-debug.apk)
+
+### Développement et précautions
+
+- Branche : `feature/lunar-four-fronts-001`, aucune fusion dans `main` sans validation explicite.
+- Package technique `com.greenpower2669.partouteris` **volontairement conservé** pour que les installations/mémoires précédentes restent compatibles malgré le nom corrigé.
+- Identifiants JavaScript internes `PartouEngine`, `PartouTouch`, etc. également conservés pour éviter une régression.
+- Tests : `node --test tests/*.test.cjs` ; Android : `gradle :app:assembleDebug`.

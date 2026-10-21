@@ -61,3 +61,47 @@ test('Rotation targets the newly grabbed piece after a release',()=>{
   c.down(p(3,0,40,80,35));c.up(p(3,0,40,80,95));
   assert.deepEqual(e.filter(x=>x[0]==='rotate'),[['rotate',1]]);
 });
+
+test('Second finger long hold accelerates selected right-hand piece, without rotation',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,5,240,90,0,90));
+ c.down(p(2,18,50,85,20,110));
+ c.tick(400);assert.equal(e.some(x=>x[0]==='boost'&&x[2]===true),false);
+ c.tick(442);assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,true]);
+ c.up(p(2,18,50,85,900,110));
+ assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,false]);
+ assert.equal(e.filter(x=>x[0]==='rotate').length,0);
+ assert.equal(c.isGripping(),true);
+});
+test('Quick left tap still rotates and never starts boost',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,4,250,90,0));c.down(p(2,18,30,100,50));
+ c.tick(210);c.up(p(2,18,30,100,230));
+ assert.deepEqual(e.filter(x=>x[0]==='rotate'),[['rotate',0]]);
+ assert.equal(e.some(x=>x[0]==='boost'&&x[2]===true),false);
+});
+test('Moving the second finger past tolerance cancels its long hold',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,4,250,90,0));c.down(p(2,18,30,100,10));
+ c.move(p(2,18,100,100,80));
+ c.tick(1000);
+ assert.equal(e.some(x=>x[0]==='boost'&&x[2]===true),false);
+ c.up(p(2,18,100,100,1200));
+ assert.equal(e.some(x=>x[0]==='rotate'),false);
+});
+test('Ending primary grip while secondary held instantly cancels fast drop',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,4,250,90,0));c.down(p(2,18,30,100,30));
+ c.tick(520);c.up(p(1,4,250,90,540));
+ assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,false]);
+ c.up(p(2,18,30,100,600));
+ assert.equal(e.some(x=>x[0]==='rotate'),false);
+});
+test('Releasing held finger while grip is inward-dragged keeps acceleration',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,4,250,90,0,90));c.move(p(1,4,250,90,20,50));
+ c.down(p(2,18,30,100,30));c.tick(550);c.up(p(2,18,30,100,600));
+ assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,true]);
+ c.up(p(1,4,250,90,610));
+ assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,false]);
+});

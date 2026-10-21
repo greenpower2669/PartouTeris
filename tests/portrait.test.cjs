@@ -14,7 +14,7 @@ test('Title owns pyramid emblem; lunar surface no longer paints three pyramids',
   const html=load('app/src/main/assets/index.html');
   const visual=load('app/src/main/assets/visuals.js');
   assert.match(html,/<svg class="pyramids-mark"/);
-  assert.match(html,/class="brand-title">PARTOUTERIS/);
+  assert.match(html,/class="brand-title">PARTOUTETRIS/);
   assert.doesNotMatch(visual,/pyramid\(cx[+-]/);
 });
 test('Portrait 320, 360, 412, 480 width: lunar board never overlaps header or controls',()=>{

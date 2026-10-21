@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>PartouTeris — Les Pharaons de la Lune</title>
+<title>PartouTetris — Les Pharaons de la Lune</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box}html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;background:#060d1c;color:#eaf6ff;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -103,6 +103,35 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 @media(prefers-reduced-motion:reduce){#scoreBurst .fx-burst{display:none}#scoreBurst .fx-banner,#scoreBurst .fx-float{animation:none}}
 #scoreBurst.fx-reduced .fx-burst,#scoreBurst.fx-reduced .fx-float{display:none}
 #scoreBurst.fx-reduced .fx-banner{animation:none}
+
+/* PT-009: celebrations launched from the enlarged Earth below the Moon. */
+#scoreBurst .fx-burst i{left:var(--earth-x);top:var(--earth-y);opacity:0}
+#scoreBurst .fx-fireworks i,#scoreBurst .fx-disco i{animation:earthSpark 2.2s ease-out var(--delay) both}
+#scoreBurst .fx-bubbles i{animation:earthBubble 2.8s ease-out var(--delay) both}
+@keyframes earthSpark{
+  0%{opacity:.9;transform:translate(0,0) scale(.4)}
+  56%{opacity:1;transform:translate(var(--tx),var(--ty)) scale(.6)}
+  85%{opacity:.8;transform:translate(var(--tx),var(--ty)) scale(2)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(5.5)}
+}
+@keyframes earthBubble{
+  0%{opacity:.7;transform:translate(0,0) scale(.35)}
+  65%{opacity:.85;transform:translate(var(--tx),var(--ty)) scale(1)}
+  100%{opacity:0;transform:translate(var(--tx),calc(var(--ty) - 33px)) scale(1.4)}
+}
+#scoreBurst .fx-earth-beam{
+  position:absolute;left:var(--earth-x);top:var(--earth-y);
+  height:var(--beam-length);width:15px;transform-origin:top center;
+  background:linear-gradient(180deg,#89d6ff9f,#e4c3874e 55%,transparent);
+  filter:blur(2px);
+  clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);
+  transform:translateX(-50%) rotate(var(--beam-angle));
+  animation:earthBeam 2.3s ease-in-out both;pointer-events:none;
+}
+@keyframes earthBeam{0%{opacity:0}24%{opacity:.66}84%{opacity:.31}100%{opacity:0}}
+#scoreBurst .fx-mirrorball{left:calc(var(--earth-x) - 31px);top:calc(var(--earth-y) - var(--earth-r) - 62px)}
+@media(prefers-reduced-motion:reduce){#scoreBurst .fx-earth-beam{display:none}}
+#scoreBurst.fx-reduced .fx-earth-beam{display:none}
 </style></head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
 <div id="scoreBurst" aria-hidden="true"></div>
@@ -116,16 +145,16 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
       <path d="M3 56 L22 23 L39 56 M32 59 L58 5 L83 59 M65 54 L80 29 L95 54" fill="none" stroke="#ffe7a6" stroke-width="1.8"/>
       <path d="M41 40 H74 M37 49 H79" stroke="#f9dd9c" stroke-opacity=".48" stroke-width="1"/>
     </svg>
-    <div class="brand-copy"><strong class="brand-title">PARTOUTERIS</strong><small id="stats">Score 0 · Record 0</small></div>
+    <div class="brand-copy"><strong class="brand-title">PARTOUTETRIS</strong><small id="stats">Score 0 · Record 0</small></div>
   </div>
   <div class="right scoreboard"><strong id="level">Niveau 1</strong><small id="rings">Couronnes 0 · 4 fronts</small></div>
 </div>
 <div id="controlDeck">
-<div id="tip">✋ Main droite : attrape et glisse. ☝️ Main gauche : tapote pour pivoter sans lâcher.</div>
+<div id="tip">✋ Droite : guide la pièce. ☝️ Gauche : tap = pivoter ; appui long = chute rapide.</div>
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
-<h1>🌙 Les Pharaons de la Lune</h1><p>✋ Main droite : attrape et déplace une pièce. ☝️ Main gauche : tapote l'écran pour la faire pivoter, même pendant la prise.</p><p>Quatre fronts simultanés, vitesse réglable et musique électronique originale.</p>
+<h1>🌙 Les Pharaons de la Lune</h1><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Quatre fronts simultanés, vitesse réglable et musique électronique originale.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
 <p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -185,7 +214,7 @@ function updateSliders(){
 }
 updateSliders();updateAudioLabel();game.paused=true;
 let record=0;try{record=+(localStorage.getItem("partouteris-record")||0)}catch(e){}
-let W=1,H=1,dpr=1,cx=0,cy=0,scale=1,inner=0,outer=0,stepR=0;
+let W=1,H=1,dpr=1,cx=0,cy=0,scale=1,inner=0,outer=0,stepR=0,earth=null;
 let selected=0,lastTime=0,previousCleared=0;
 const stars=[];
 let seed=91;function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
@@ -196,8 +225,8 @@ function resize(){
   canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(dpr,0,0,dpr,0,0);
   const headerBottom=document.getElementById("hud").getBoundingClientRect().bottom;
   const controlsTop=document.getElementById("controlDeck").getBoundingClientRect().top;
-  ({cx,cy,scale,inner,outer,stepR}=window.PartouLayout.computePortraitLayout({width:W,height:H,headerBottom,controlsTop}));
-  festival.position({cx,cy,outer,inner,stepR});
+  ({cx,cy,scale,inner,outer,stepR,earth}=window.PartouLayout.computePortraitLayout({width:W,height:H,headerBottom,controlsTop}));
+  festival.position({cx,cy,outer,inner,stepR,earth});
 }
 window.addEventListener("resize",resize);resize();
 const TAU=Math.PI*2;
@@ -207,7 +236,7 @@ function wedge(s,r,color,opacity=1,stroke=true){
   art.cell({cx,cy,inner,stepR,sector:s,ring:r,color,opacity,stroke});
 }
 function backdrop(){
-  art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash});
+  art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash,earth});
 }
 function moon(){art.moon({cx,cy,inner});}
 function parachute(p){
@@ -252,6 +281,7 @@ function updateHud(){
 }
 function frame(time){
   const dt=lastTime?Math.min(.1,(time-lastTime)/1000):0;lastTime=time;
+  if(!game.paused&&!game.over)hands.tick(time);
   const before=game.cleared;game.step(dt);
   for(const ev of game.drainEvents()){
     festival.handle(ev);

@@ -1,7 +1,7 @@
-# Ordres de mission — PartouTeris
+# Ordres de mission — PartouTetris
 
 ## IMMUTABLE / À PRÉSERVER
-- Dépôt canonique : `greenpower2669/PartouTeris` (orthographe vérifiée sur GitHub).
+- Dépôt canonique : `greenpower2669/PartouTetris` (orthographe vérifiée sur GitHub).
 - Licence MIT existante préservée.
 - Ne jamais fusionner `main` ni publier une Release définitive sans l'accord explicite de Fab.
 - Fournir une APK Android directe, non enfermée dans un ZIP, et prévoir distinctement un AAB pour une future publication.
@@ -52,3 +52,16 @@
 - Code 0.1.5 : +40 points à chaque pose valable, score réel de couronnes et combos, gains flottants ; bulles/projecteurs, disco, feux d'artifice, fanfare originale et option visuelle douce.
 - Préserver la licence, les sauvegardes, le tactile, le portrait et les sons existants. Aucun média privé de Djipie transféré.
 - Statut : code et build CI #39521425766 vérifiés, APK 0.1.5 non compressée présente sur branche ; validation téléphone attendue.
+
+## IMMUTABLE — Correction officielle de nom (21 octobre 2026)
+- Fab confirme : « J ai corrigé le nomnc est PartouTetris ».
+- **Dépôt et appellation officiels : `greenpower2669/PartouTetris`**, APK, title Android, en-tête graphique, README, Actions et documentation doivent utiliser ce nom.
+- L'ancien nom « PartouTeris » est abandonné pour la présentation ; on préserve le package interne `com.greenpower2669.partouteris` afin de ne pas perdre sauvegardes et compatibilité des APK précédentes.
+- N'effectuer aucun renommage du package Android ou des clés localStorage sans accord et migration explicite.
+
+## PT-009 — Terre source des festivités, profondeur, contacts, appui long du deuxième doigt
+- Demande Fab : « des célébration devrait venir se la terre que devrait aussibêtre plus grosse » ; « plus il les bloque se pose au centre plus il font des points et plus ils sont en contact avec s autre block aussi 2 autre bloc bonus fois 2 ainsi se suite le deuxieme doigt appuis long accélère la dézcente ».
+- Scoring : 40 points de base + 12 × proximité radiale moyenne vers la Lune, multiplicateur ×N à partir de N=2 cellules déjà posées distinctes en contact radial ou tangentiel. Un contact = ×1. Contacts évalués avant placement ; pas de bonus avec la nouvelle pièce elle-même.
+- Gestes : doigt primaire guide ; deuxième doigt tap court = rotation ; maintien stable ≥420 ms = chute rapide, retour à normal au relâchement, aucune rotation lors du maintien.
+- Visuel : Terre plus grosse, place réservée sous le cercle en portrait ; faisceau, bulles et particules sortent de la Terre vers la Lune ; accessibilité préservée.
+- Statut : code et tests PT-009 prévus dans la 0.1.6, valider CI + test visuel Samsung avant clôture.

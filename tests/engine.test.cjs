@@ -119,8 +119,8 @@ test('Each truly landed tetromino earns 40 points (not just full rings)',()=>{
  const g=new Game(()=>0);
  g.pieces[0]={lane:0,type:1,angle:6,radius:0,rot:0,boost:false};
  assert.equal(g.lock(0),true);
- assert.equal(g.score,40);assert.equal(g.placements,1);
- assert.deepEqual(g.drainEvents().filter(e=>e.type==='points').map(e=>[e.reason,e.gained]),[['placement',40]]);
+ assert.equal(g.score,142);assert.equal(g.placements,1);
+ assert.deepEqual(g.drainEvents().filter(e=>e.type==='points').map(e=>[e.reason,e.gained]),[['placement',142]]);
 });
 test('Overflow gives no points or placement credit',()=>{
  const g=new Game(()=>0);g.pieces[0].radius=11;
@@ -147,4 +147,41 @@ test('Huge jackpot emits only one bounded milestone notice',()=>{
 test('New game resets session points but retains chosen slow fall speed',()=>{
  const g=new Game(()=>0);g.setBaseFallSeconds(7.5);g.award(200,'test');g.placements=3;g.reset();
  assert.equal(g.score,0);assert.equal(g.placements,0);assert.equal(g.baseFallSeconds,7.5);
+});
+
+test('Each orbital layer nearer Moon increases landing score by 12 per cell-row',()=>{
+ const g=new Game(()=>0);
+ const near=g.placementReward([[4,0],[5,0],[4,1],[5,1]]);
+ const far=g.placementReward([[4,7],[5,7],[4,8],[5,8]]);
+ assert.equal(near.base,142);assert.equal(far.base,58);
+ assert.ok(near.points>far.points);
+});
+test('Exactly two *distinct pre-existing cells* contacting piece yield x2, three x3',()=>{
+ const g=new Game(()=>0),cells=[[5,3],[6,3],[5,4],[6,4]];
+ const original=g.placementReward(cells);
+ g.board[3][4]=0;g.board[4][7]=1;
+ const two=g.placementReward(cells);
+ assert.equal(two.contacts,2);assert.equal(two.multiplier,2);assert.equal(two.points,2*original.base);
+ g.board[2][5]=2;
+ const three=g.placementReward(cells);
+ assert.equal(three.contacts,3);assert.equal(three.multiplier,3);
+ assert.equal(three.points,3*original.base);
+});
+test('Self-neighbours, Moon ground and wrapping boundary never fabricate contact score',()=>{
+ const g=new Game(()=>0),cells=[[47,0],[0,0],[47,1],[0,1]];
+ assert.equal(g.placementReward(cells).contacts,0);
+ g.board[0][46]=1;
+ assert.equal(g.placementReward(cells).contacts,1);
+ g.board[0][1]=1;
+ assert.equal(g.placementReward(cells).contacts,2);
+ assert.equal(g.placementReward(cells).multiplier,2);
+});
+test('Placement bonus is based on final resolved resting radius, not airborne height',()=>{
+ const g=new Game(()=>0);
+ g.pieces[0]={lane:0,type:1,angle:5,radius:0,rot:0,boost:false};
+ const first=g.placementReward([[5,0],[6,0],[5,1],[6,1]]);
+ assert.equal(g.lock(0),true);
+ const ev=g.drainEvents().find(e=>e.type==='points');
+ assert.equal(ev.gained,first.points);
+ assert.equal(ev.contacts,0);assert.equal(ev.centerBonus,102);
 });

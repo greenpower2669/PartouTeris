@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTeris 0.1.5
+# Contrat de gameplay — PartouTetris 0.1.6
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
@@ -16,3 +16,8 @@
 
 - PT-008 : award centralise vrais points et franchissements de 1000. +40 par verrouillage réussi ; gain couronne 480*n²*niveau + 100 par combo répété ; aucune récompense sur game-over.
 - Festival : couronne simple bulles et 5 projecteurs ; double couronne boule à facettes et bulles ; paliers 1000 feux pendant au plus 5,6s et mini-fanfare WebAudio. Gains de pose flottants sans scène envahissante ; effets doux enregistrés et overlay transparent aux touches.
+
+- NOM OFFICIEL : PartouTetris ; ancien dépôt PartouTeris renommé. Package interne com.greenpower2669.partouteris maintenu afin de préserver record et réglages Android.
+- PT-009 : proximité du centre = base 40 + arrondi((9 - moyenne des rayons des 4 cellules) × 12). Contacts distincts avec cellules verrouillées préexistantes sur voisins polaires → 2 cases : ×2, 3 : ×3, etc., x1 pour 0 ou 1. Gain évalué avant l'écriture des blocs.
+- Deuxième doigt : appui long stable 420ms = accélération de la pièce tenue, relâchement = retour normal ; tap court garde rotation à 90°. Le déplacement radial du premier doigt reste disponible.
+- Terre agrandie avec position réservée sous Lune ; célébrations Block Boost réorientées de la Terre vers l'orbite ; animations douces et cinq boutons maintenus.
