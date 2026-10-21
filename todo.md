@@ -118,3 +118,5 @@
 
 - [x] Capturer le vrai rendu Chromium ; détecter HUD score tronqué et laser sur consignes ; correctifs DOM/CSS appliqués.
 - [ ] Vérifier le nouvel aperçu Chromium après correction du panneau de score, du bouton laser et de l'aide tactile.
+
+- [x] Corriger assertion PT-013 inutilement échouée à cause d'une échappement dans la regex du test ; relancer CI et vérifier capture actualisée.

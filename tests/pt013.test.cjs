@@ -50,10 +50,9 @@ test('PT-013 Earth enlarges without changing gameplay and satellites follow its 
 test('PT-013 real browser QA: score takes full width and laser never overlaps help',()=>{
  const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
  assert.ok(html.includes('#hud .scoreboard{display:block;width:100%;max-width:100%;'));
- const help=html.match(/<div id="tip">([\\s\\S]*?)<\/div>/);
- assert.ok(help);
- assert.ok(help[1].includes('id="laserButton"'));
- const dock=html.match(/<div id="buttons">([\\s\\S]*?)<\/div>/);
- assert.ok(dock && !dock[1].includes('id="laserButton"'));
+ const help=html.split('<div id="tip">')[1]?.split('</div>')[0];
+ assert.ok(help&&help.includes('id="laserButton"'));
+ const dock=html.split('<div id="buttons">')[1]?.split('</div>')[0];
+ assert.ok(dock&&!dock.includes('id="laserButton"'));
  assert.ok(html.includes('#tip{pointer-events:auto;grid-template-columns:'));
 });
