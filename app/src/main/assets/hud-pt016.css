@@ -15,7 +15,7 @@
  box-shadow:inset 0 1px #fff2b88f,inset 0 -2px #25b9ee6b,
     0 0 0 1px #042d4d,0 0 18px #22ccff4a,0 4px 15px #000a;
 }
-#hud .brand{height:clamp(64px,8.35vh,78px);padding:0 5px;
+#hud .brand{flex:0 0 auto;min-height:64px;height:clamp(64px,8.35vh,78px);padding:0 5px;
  border-radius:12px 12px 9px 9px;
 }
 #hud .brand::before,#hud .scoreboard::before{
@@ -151,7 +151,7 @@
 #hud #scoreAnnouncement{bottom:5px;height:clamp(20px,3vh,34px)}
 #hud #scoreAnnouncement .fx-banner{font-size:clamp(11px,3.25vw,16px)}
 @media(max-width:360px){
- #hud .brand{height:64px}
+ #hud .brand{flex:none;min-height:64px;height:64px}
  #hud .brand-copy{inset:25px 3px 1px}
  #hud .brand-title{font-size:clamp(21px,6.45vw,25px)}
  #hud .brand-minos{gap:7px}
@@ -160,7 +160,7 @@
  #hud #scoreTotal{font-size:clamp(32px,10vw,40px)}
 }
 @media(max-height:690px){
- #hud .brand{height:58px}
+ #hud .brand{flex:none;min-height:58px;height:58px}
  #hud .brand-copy{inset:21px 3px 0}
  #hud .brand-title{font-size:clamp(20px,5.6vw,27px)}
  #hud .brand-minos{height:19px}

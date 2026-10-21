@@ -41,3 +41,8 @@ test('PT-016 module is pure CSS and scripts remain syntactically valid',()=>{
  assert.doesNotMatch(css,/url\s*\(/);
  assert.doesNotMatch(css,/position\s*:\s*fixed/);
 });
+
+test('PT-016 title cabinet cannot collapse when decorative children use absolute positioning',()=>{
+ assert.match(css,/#hud \.brand\{flex:0 0 auto;min-height:64px;height:clamp/);
+ assert.match(css,/#hud \.brand-copy\{[\s\S]*?position:absolute/);
+});

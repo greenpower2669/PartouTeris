@@ -120,3 +120,5 @@
 - La demande « Notre bannière est triste, tu peux faire comme celle-là ? » concerne le **HUD intégré dans le logiciel**, et non une image générée. Fab corrige explicitement « Non, en code ^^ » après proposition d'image.
 - Solution : composition CSS sans asset externe `hud-pt016.css`, vraie typographie dorée et tranches de néon, quatre tétriminos construits chacun de quatre carrés HTML, mini-Lune CSS dans le O à l'exécution, score, pseudo et meilleur score reliés aux données.
 - Préserver impérativement l'espace de plateau par layout mesuré DOM et éviter tout modèle statique impossible à actualiser.
+
+- PT-016 CI #39654253505 success mais capture Chrome révèle un bug de rendu : la marque est écrasée à hauteur quasi nulle. Cause CSS : ancien `flex:1 1 66%` en contexte colonne, alors que tous les enfants de la marque sont désormais absolus => taille intrinsèque zéro ; `height` ne fixe pas la base flexible. Correctif `flex:0 0 auto` et min-height adaptatif. Nouvelle capture nécessaire avant livraison.
