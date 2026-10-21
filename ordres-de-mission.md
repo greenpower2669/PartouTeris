@@ -87,4 +87,4 @@
 - Phase spatiale de quatre rayons au-delà des dix couronnes : blocs incandescents **sans parachute** ; zone de dix couronnes : petites voiles de stabilisation cyan/or, transparentes, accessoires purement graphiques.
 - Inspiration visuelle obligatoire : **icône officielle PartouTetris** (bleu, cyan néon, or, pyramides) + visuel récent de pharaons futuristes, Terre et pyramides-satellites. Satellites modélisés en forme de pyramides dorées avec anneaux et moteurs cyan. Aucun nouveau dessin généré, exclusivement code Canvas Android.
 - **Interdit de dessiner des pyramides sur la surface lunaire.** Conserver textures/cratères et tous les contrôles, sauvegardes, scores, vitesse, musique.
-- Travaux v0.1.9 dans `feature/lunar-four-fronts-001` ; aucun merge main/release définitive. Valider CI puis téléphone avant clôture.
+- Travaux v0.1.9 dans `feature/lunar-four-fronts-001` ; aucun merge main/release définitive. GitHub Actions #39594087561 et APK 0.1.9 vérifiées ; test visuel/tactile sur téléphone toujours en attente.

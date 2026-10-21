@@ -82,3 +82,5 @@
 - Ancien test « No parachutes » est remplacé par tests sur la règle r<10 ; logique des collisions inchangée. Petite voile cyan/or à fils discrets, sans capsule massive.
 - Les satellites rectangulaires du prototype ne représentaient pas suffisamment les deux dernières références : remplacés par **pyramides-satellites dorées**, anneaux de propulsion cyan. Orbits fines ajoutées autour de la Terre ; aucun objet pyramidal ajouté à la Lune.
 - À valider : cohérence visuelle sur petit écran Samsung Android 16, non-obstruction des blocs, phonophobie/contrastes ; CI et APK en attente.
+
+- PT-012 : validation technique GitHub Actions #39594087561 **success** (tests Node, Android Gradle, artifact et push de l'APK directe). Fichier `temp/PartouTetris-v0.1.9-debug.apk` présent, 48 461 octets. `main` non fusionnée ; ressenti esthétique et commandes sur Samsung à valider.

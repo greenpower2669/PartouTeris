@@ -96,5 +96,5 @@
 - [x] Ajouter orbites cyan/or autour de la Terre, sans pyramide sur la Lune.
 - [x] Préserver flammes hors zone, collisions, lasers, score, highscore, tactile et musique.
 - [x] Tests Node sur transition des deux phases et intégration des trois satellites pyramidaux.
-- [ ] Tests GitHub Actions et APK 0.1.9 directe à vérifier.
+- [x] GitHub Actions #39594087561 : tests Node, compilation Android et publication APK brutes réussis. Fichier direct vérifié `temp/PartouTetris-v0.1.9-debug.apk` (48 461 octets).
 - [ ] Essai réel SM-A576B : élégance, taille et visibilité des voiles, trois lasers satellites, nouvelles lumières.
