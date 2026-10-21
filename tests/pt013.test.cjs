@@ -33,3 +33,16 @@ test('PT-013 composite visuals remain dynamically separated from game controls',
  assert.ok(art.includes('for(let tick=0;tick<96;tick++)'));
  assert.ok(!html.includes('charte-officielle.png'));
 });
+
+test('PT-013 Earth enlarges without changing gameplay and satellites follow its horizon',()=>{
+ const {computePortraitLayout}=require('../app/src/main/assets/layout.js');
+ const {Artist}=require('../app/src/main/assets/visuals.js');
+ const l=computePortraitLayout({width:360,height:780,headerBottom:125,controlsTop:594});
+ assert.ok(l.earth.r>130,'Earth is now a major lower-viewport element');
+ assert.ok(l.earth.y-l.earth.r>l.cy+l.outer-35,'Earth begins near the ring');
+ const points=Artist.prototype.satelliteOrigins.call({}, {earth:l.earth,W:360,H:780});
+ assert.equal(points.length,3);
+ assert.ok(points[0].x<points[1].x&&points[1].x<points[2].x);
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ assert.ok(html.includes('repeat(5,minmax(0,1fr))'));
+});

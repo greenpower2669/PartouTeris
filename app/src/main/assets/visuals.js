@@ -25,6 +25,58 @@ class Artist {
     const rand=rng(72841);this.stars=[];
     for(let i=0;i<170;i++)this.stars.push({x:rand(),y:rand(),r:.25+rand()*1.25,a:.24+rand()*.6});
     this.moonTexture=this.makeMoonTexture();
+    this.earthTexture=this.makeEarthTexture();
+  }
+  makeEarthTexture(){
+    // Prebaked once per launch: textured Earth remains one draw call per frame.
+    // Deterministic cloud/ocean/land fractals avoid network or bulky third-party assets.
+    const size=480, el=document.createElement("canvas");el.width=size;el.height=size;
+    const c=el.getContext("2d"),pixels=c.createImageData(size,size),out=pixels.data;
+    const hash=(x,y)=>{
+      let h=(Math.imul(x,374761393)^Math.imul(y,668265263))|0;
+      h=Math.imul(h^(h>>>13),1274126177);
+      return ((h^(h>>>16))>>>0)/4294967295;
+    };
+    const smooth=t=>t*t*(3-2*t);
+    const noise=(u,v)=>{
+      const x=Math.floor(u),y=Math.floor(v),fx=smooth(u-x),fy=smooth(v-y);
+      const a=hash(x,y)*(1-fx)+hash(x+1,y)*fx;
+      const b=hash(x,y+1)*(1-fx)+hash(x+1,y+1)*fx;
+      return a*(1-fy)+b*fy;
+    };
+    const clamp=v=>Math.max(0,Math.min(255,Math.round(v)));
+    for(let yy=0;yy<size;yy++)for(let xx=0;xx<size;xx++){
+      const x=(xx+.5-size/2)/(size*.478),y=(yy+.5-size/2)/(size*.478);
+      const d=x*x+y*y;if(d>1)continue;
+      const rim=Math.sqrt(Math.max(0,1-d));
+      const lon=x/(.6+.4*rim),lat=y/(.6+.4*rim);
+      const landNoise=.52*noise(lon*3+4,lat*3+8)
+        +.29*noise(lon*9+7,lat*9+2)+.19*noise(lon*26+6,lat*26+11);
+      const isLand=landNoise>.53;
+      const terrain=Math.max(0,Math.min(1,(landNoise-.51)*6));
+      const clouds=Math.max(0,(noise(lon*18+13,lat*16+37)*.67+
+        noise(lon*42+40,lat*40+5)*.33-.63)*2.8);
+      const oceanVariation=noise(lon*17+1,lat*15+4);
+      const light=Math.max(.22,Math.min(1.1,.56-.30*x-.37*y+.23*rim));
+      const cloudAlpha=Math.min(.67,clouds*.78);
+      let R=isLand?43+terrain*62:7+oceanVariation*24;
+      let G=isLand?88+terrain*63:62+oceanVariation*47;
+      let B=isLand?61+terrain*18:133+oceanVariation*91;
+      const city=isLand&&light<.58&&noise(lon*108+1,lat*98+2)>.78;
+      if(city){R+=110;G+=70;B+=7;}
+      R=(R*(1-cloudAlpha)+225*cloudAlpha)*light;
+      G=(G*(1-cloudAlpha)+241*cloudAlpha)*light;
+      B=(B*(1-cloudAlpha)+249*cloudAlpha)*light;
+      // Thin pale atmosphere at grazing angles, like the illuminated rim.
+      const atmosphere=Math.pow(1-rim,4)*.52;
+      const k=(yy*size+xx)*4;
+      out[k]=clamp(R*(1-atmosphere)+126*atmosphere);
+      out[k+1]=clamp(G*(1-atmosphere)+221*atmosphere);
+      out[k+2]=clamp(B*(1-atmosphere)+255*atmosphere);
+      out[k+3]=255;
+    }
+    c.putImageData(pixels,0,0);
+    return el;
   }
   makeMoonTexture(){
     const size=640,c=document.createElement("canvas");c.width=size;c.height=size;
@@ -89,39 +141,21 @@ class Artist {
         c.beginPath();c.moveTo(x-4,y);c.lineTo(x+4,y);c.moveTo(x,y-4);c.lineTo(x,y+4);c.stroke();
       }
     }
-    // Large reserved Earth below the ring: the source of all celebrations.
+    // Earth is large and decorative; touch remains delegated to the orbital canvas.
     if(earth&&earth.r>3){
       const {x,y,r}=earth;
       c.save();
-      const aura=c.createRadialGradient(x,y,r*.7,x,y,r*1.8);
-      aura.addColorStop(0,"rgba(91,182,255,.28)");aura.addColorStop(1,"rgba(31,111,231,0)");
-      c.fillStyle=aura;c.beginPath();c.arc(x,y,r*1.8,0,TAU);c.fill();
-      c.shadowColor="#60b7ff";c.shadowBlur=r*.5;
-      const ocean=c.createRadialGradient(x-r*.4,y-r*.48,r*.05,x,y,r*1.2);
-      ocean.addColorStop(0,"#f0fcff");ocean.addColorStop(.25,"#72e1f1");
-      ocean.addColorStop(.60,"#1475ba");ocean.addColorStop(1,"#0a2155");
-      c.fillStyle=ocean;c.beginPath();c.arc(x,y,r,0,TAU);c.fill();c.restore();
-      c.save();c.beginPath();c.arc(x,y,r*.96,0,TAU);c.clip();
-      c.fillStyle="#65c89c";
-      c.beginPath();c.moveTo(x-r*.72,y-r*.2);
-      c.bezierCurveTo(x-r*.5,y-r*.88,x+r*.10,y-r*.39,x-r*.25,y-r*.03);
-      c.bezierCurveTo(x-r*.57,y+r*.28,x-r*.12,y+r*.57,x-r*.32,y+r*.81);
-      c.bezierCurveTo(x-r*.85,y+r*.37,x-r*.84,y,x-r*.72,y-r*.20);c.fill();
-      c.fillStyle="#62b98c";c.beginPath();c.moveTo(x+r*.20,y-r*.72);
-      c.bezierCurveTo(x+r*.85,y-r*.59,x+r*.96,y+r*.16,x+r*.41,y+r*.31);
-      c.lineTo(x+r*.27,y+r*.75);
-      c.bezierCurveTo(x-r*.04,y+r*.37,x-r*.03,y-r*.22,x+r*.20,y-r*.72);c.fill();
-      c.strokeStyle="rgba(244,250,255,.55)";c.lineWidth=Math.max(1,r*.055);
-      for(const yy of [-.38,.08,.52]){
-        c.beginPath();c.moveTo(x-r*.86,y+r*yy);
-        c.bezierCurveTo(x-r*.31,y+r*(yy-.2),x+r*.37,y+r*(yy+.12),x+r*.8,y+r*yy);c.stroke();
-      }
+      const aura=c.createRadialGradient(x,y,r*.78,x,y,r*1.28);
+      aura.addColorStop(0,"rgba(84,196,255,.10)");
+      aura.addColorStop(.67,"rgba(58,150,245,.34)");
+      aura.addColorStop(1,"rgba(42,98,221,0)");
+      c.fillStyle=aura;c.beginPath();c.arc(x,y,r*1.28,0,TAU);c.fill();
+      c.shadowColor="#67d8ff";c.shadowBlur=r*.22;
+      c.drawImage(this.earthTexture,x-r,y-r,r*2,r*2);
+      c.shadowBlur=0;
+      c.strokeStyle="rgba(161,229,255,.80)";c.lineWidth=Math.max(2,r*.014);
+      c.beginPath();c.arc(x,y,r*.965,Math.PI*1.08,Math.PI*1.91);c.stroke();
       c.restore();
-      c.strokeStyle="#daedff9a";c.lineWidth=1.5;
-      c.beginPath();c.arc(x,y,r*1.01,-2.35,-.5);c.stroke();
-      c.textAlign="center";c.fillStyle="#cee9ff";
-      c.font="700 "+Math.max(10,Math.min(13,r*.32))+"px system-ui";
-      c.fillText("TERRE",x,y+r+Math.max(10,r*.25));
     }
     // Low-contrast cyan/gold orbital halos around Earth, inspired by the
     // official PT icon and the user's pyramid-satellite defence illustration.
@@ -314,9 +348,10 @@ class Artist {
     if(!earth)return [];
     const {x,y,r}=earth;
     const points=[
-      {x:x-1.86*r,y:y-.62*r},
-      {x:x-.44*r,y:y-1.48*r},
-      {x:x+1.17*r,y:y-.84*r}
+      // Three pyramid satellites along Earth's bright horizon: left, front, right.
+      {x:x-.72*r,y:y-.93*r},
+      {x:x,y:y-.30*r},
+      {x:x+.72*r,y:y-.93*r}
     ];
     return points.map(p=>({x:Math.max(17,Math.min(W-17,p.x)),y:Math.max(14,Math.min(H-17,p.y))}));
   }

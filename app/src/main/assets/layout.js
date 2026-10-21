@@ -13,7 +13,10 @@
     const free=Math.max(0,span-2*outer);
     const lift=Math.min(earthR,free*.26);
     const cx=W*.5,cy=(top+lower)*.5-lift;
-    const earth={x:W*.78,y:cy+outer+(lower-(cy+outer))*.51,r:earthR};
+    // PT-013: a giant Earth on the lower horizon, independent of the lunar board.
+    // Its radius adapts to short screens so the playfield is still visible.
+    const globeR=Math.max(earthR,Math.min(W*.57,Math.max(35,Number(controlsTop)-cy-outer)+W*.19));
+    const earth={x:W*.5,y:Math.min(H+W*.08,Number(controlsTop)+W*.10),r:globeR};
     const scale=outer/.98;
     const inner=scale*.34;
     return {cx,cy,scale,outer,inner,stepR:(outer-inner)/10,top,lower,earth};
