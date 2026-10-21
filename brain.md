@@ -32,3 +32,6 @@
 
 - PT-012 : deux phases strictes. r ≥ RINGS (10) = espace avec flammes, aucun parachute. r dans [0,9] = petite voile de stabilisation semi-transparente, simple dessin derrière la pièce, sans physique. Aucun parachute n'affecte la gravité.
 - Direction esthétique définie par l'icône officielle PT et l'illustration des Pharaonites : or et cyan, anneaux lumineux, satellites **pyramidaux** avec noyau cyan, Terre orbitale. La Lune reste naturelle et sans pyramides.
+
+- PT-013 / 0.2.0 : référence visuelle canonique copiée sans altération dans `design/charte-officielle.png`, rendu toujours dynamique Canvas et DOM indépendant, panneaux/titre or et cyan renforcés, aides gestes main droite (maintenir/guider) + main gauche (tap 90°, maintien boost). Laser multi-émetteurs accompagné d'une charge Canvas.
+- Musique officielle MP3 locale, boucle HTMLAudioElement après interaction, niveau *0,58 du volume musique réglé ; thème WebAudio original strictement secours sans superposition. FX laser synthétique à phases courtes. Audio Djipie privé non copié sans licences individuelles vérifiées.

@@ -84,3 +84,10 @@
 - À valider : cohérence visuelle sur petit écran Samsung Android 16, non-obstruction des blocs, phonophobie/contrastes ; CI et APK en attente.
 
 - PT-012 : validation technique GitHub Actions #39594087561 **success** (tests Node, Android Gradle, artifact et push de l'APK directe). Fichier `temp/PartouTetris-v0.1.9-debug.apk` présent, 48 461 octets. `main` non fusionnée ; ressenti esthétique et commandes sur Samsung à valider.
+
+## PT-013 — Première intégration officielle 0.2.0 (21/10/2026)
+- Image PNG (2,6 Mio) et musique MP3 (8,7 Mio) déjà déposées sur `main`. Le canal de consultation du contenu binaire n'a pas permis de visualiser le PNG ni d'écouter le MP3 directement. Import fiable par référence de leurs blobs SHA Git exacts dans la branche de travail ; aucun réupload, aucune modification de `main`.
+- Référence graphique non directement visible pendant cette session : fidélité fine non vérifiée visuellement. Conservé comme source entière sans l'utiliser comme image plaquée sur le Canvas. Interface et cadrans améliorés par code indépendant ; comparaison avec Fab indispensable.
+- Audio : HTMLAudioElement local en boucle après un geste, fallback WebAudio seulement en cas de fichier/lecture indisponible ; joindre une lecture réelle sur Samsung pour contrôler latence, gap à la boucle et niveau de fond.
+- Sons Djipie : index consultés, nombreuses sources privées, droits unitaires/identité de provenance insuffisamment vérifiés ; aucun son préexistant copié en public. Laser synthétique construit en couches, non assimilé abusivement à des prises sonores réalistes certifiées.
+- Statut CI 0.2.0 et install Android : **à vérifier** avant de confirmer une APK finale.

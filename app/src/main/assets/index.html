@@ -167,6 +167,26 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
  #hud .scoreline{min-height:35px}#hud #scoreTotal{font-size:27px}
  #hud .highscores>span{padding:2px 4px}
 }
+
+/* PT-013 golden pharaonic cabinet, all interactive objects independent */
+#hud .brand{border:1px solid #ebd08c;border-radius:13px;background:linear-gradient(160deg,#284766f0,#0d1930f6 63%,#312c2ce9);box-shadow:inset 0 2px #fff5c452,0 0 14px #53cbf847,0 6px 12px #0009}
+#hud .brand-title{color:#ffe0a1;background:linear-gradient(180deg,#fffad7,#f3c577 43%,#a96d32 65%,#ffe6ac);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:1000;letter-spacing:.04em;filter:drop-shadow(0 2px 1px #000e) drop-shadow(0 0 5px #e8bd7a88)}
+#hud .pyramids-mark{width:40px;height:38px;border:1px solid #ffd38a6b;border-radius:9px;box-shadow:0 0 8px #59ccef36}
+#hud .scoreboard{border-radius:13px;border-color:#ffe1a0be;background:linear-gradient(150deg,#194366f0,#0a1c36ed 63%,#292d3be8);box-shadow:inset 0 2px #ffe0a65a,0 0 15px #d2b56d2c,0 5px 12px #0008}
+#hud #scoreTotal{color:#ffe9b7;text-shadow:0 0 5px #ffd3829b,0 0 17px #e2a55867,0 2px 2px #000;letter-spacing:.01em}
+#hud .scoreline>span:first-child{color:#93ecfc;text-shadow:0 0 7px #48cfedc4}
+#hud .highscores>span{border-color:#a7b9d27f;background:linear-gradient(130deg,#3046609c,#0c2442a6)}
+#controlDeck{gap:6px}
+#tip{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-width:100%;width:100%;font-size:clamp(10px,2.7vw,13px);line-height:1.25;border:1px solid #d0b07896;border-radius:12px;background:linear-gradient(140deg,#123756ed,#071b32ee);box-shadow:inset 0 1px #fbdc9864,0 0 14px #55c6ef2b;padding:7px 9px}
+#tip .gesture{display:flex;gap:6px;align-items:center;color:#e6eff9}
+#tip .hand{font-size:19px;filter:drop-shadow(0 0 4px #71dbfa8c)}
+#tip b{color:#8fecff}#tip .gesture:nth-child(2) b{color:#ffdc98}
+#buttons button{border-radius:11px;border:1px solid #e6be74c2;background:linear-gradient(155deg,#2c637be8,#112e4bee 43%,#132438ed 68%,#523f32db);box-shadow:inset 0 2px #ffffff3a,inset 0 -2px #0b1520b0,0 0 10px #72dbec2f,0 3px 8px #0009;color:#fff4df}
+#buttons button:active{background:linear-gradient(145deg,#3a8194,#204163)}
+#laserButton[aria-pressed="true"]{background:linear-gradient(155deg,#176889,#1c869c,#112f50);color:#f4ffff;border-color:#91efff;box-shadow:0 0 16px #5edcff8a}
+#startPanel,#settingsPanel,#alert{background:linear-gradient(145deg,#11324bf8,#071327fa);box-shadow:inset 0 2px #f5d58f6c,0 0 32px #53bcf63b,0 15px 45px #000c}
+#pointFeed{border:1px solid #f0d38790;border-left:3px solid #e3b66c;background:linear-gradient(90deg,#183558e2,#081d33b9)}
+@media(max-height:690px){#tip{padding:4px 6px;font-size:10px}#tip .hand{font-size:16px}#buttons button{min-height:39px}}
 </style></head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
 <div id="scoreBurst" aria-hidden="true"></div>
@@ -184,11 +204,11 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
   </div>
 </div>
 <div id="controlDeck">
-<div id="tip">✋ Droite : guide la pièce. ☝️ Gauche : tap = pivoter ; appui long = chute rapide.</div>
+<div id="tip"><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = accélérer</span></span></div>
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée">⇣ CHUTE</button><button id="laserButton" aria-label="Activer le mode laser pour orienter les pièces" aria-pressed="false">⚡ LASER</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
-<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique originale.</p>
+<h1>🌙 Les Pharaons de la Lune</h1><p>Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour accélérer.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique officielle PartouTetris.</p>
 <button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
 <p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -372,8 +392,11 @@ function frame(time){
   laserShots=laserShots.filter(shot=>time-shot.at<480);
   // Three Earth defence satellites independently converge on each target.
   const emitters=art.satellites({earth,W,H,time:time/1000,reduced:reducedCelebrations.checked});
-  for(const shot of laserShots)for(const from of emitters)
-    art.laser({from,to:shot.to,life:1-(time-shot.at)/480,reduced:reducedCelebrations.checked});
+  for(const shot of laserShots)for(const from of emitters){
+     const elapsed=time-shot.at;
+     if(elapsed<112)art.charge({from,progress:elapsed/112,reduced:reducedCelebrations.checked});
+     if(elapsed>=52)art.laser({from,to:shot.to,life:1-(elapsed-52)/428,reduced:reducedCelebrations.checked});
+   }
   updateHud();requestAnimationFrame(frame);
 }
 function fromEvent(e){

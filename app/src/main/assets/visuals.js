@@ -72,6 +72,14 @@ class Artist {
       g.addColorStop(0,"rgba("+col+",.21)");g.addColorStop(1,"rgba("+col+",0)");
       c.fillStyle=g;c.fillRect(xx*W-R,yy*H-R,R*2,R*2);
     }
+    // Nebula depth in the existing Canvas: no flattened screenshot overlay.
+    for(const [px,py,rx,ry,col] of [[.08,.40,.31,.27,"32,110,174"],[.94,.58,.39,.33,"124,69,153"]]){
+      c.save();c.translate(px*W,py*H);c.scale(rx*W,ry*H);
+      const mist=c.createRadialGradient(0,0,0,0,0,1);
+      mist.addColorStop(0,"rgba("+col+",.17)");
+      mist.addColorStop(1,"rgba("+col+",0)");
+      c.fillStyle=mist;c.beginPath();c.arc(0,0,1,0,TAU);c.fill();c.restore();
+    }
     for(let i=0;i<this.stars.length;i++){
       const s=this.stars[i];const x=s.x*W,y=s.y*H;
       c.fillStyle=i%7===0?"rgba(251,222,155,"+s.a+")":"rgba(207,232,255,"+s.a+")";
@@ -139,6 +147,16 @@ class Artist {
     for(let r=0;r<=Math.round((outer-inner)/stepR);r++){
       c.beginPath();c.arc(cx,cy,inner+r*stepR,0,TAU);c.stroke();
     }
+    // Detailed gold/cyan dial ticks follow the user's concentric visual grammar.
+    c.strokeStyle="rgba(111,228,250,.64)";c.lineWidth=1.6;
+    c.beginPath();c.arc(cx,cy,outer-3,0,TAU);c.stroke();
+    for(let tick=0;tick<96;tick++){
+      const a=-Math.PI/2+tick*TAU/96;
+      const big=tick%24===0,mid=tick%6===0;
+      const p0=position(cx,cy,outer+5,a),p1=position(cx,cy,outer+(big?15:mid?11:8),a);
+      c.strokeStyle=big?"#fbe1a2":mid?"rgba(116,231,252,.76)":"rgba(204,174,123,.34)";
+      c.lineWidth=big?1.8:.9;c.beginPath();c.moveTo(...p0);c.lineTo(...p1);c.stroke();
+    }
     const len=outer-inner;
     for(let a=0;a<sectors;a++){
       const theta=-Math.PI/2+a*TAU/sectors;
@@ -165,6 +183,9 @@ class Artist {
     c.fillStyle="#9edaff22";c.beginPath();c.arc(cx,cy,r*1.08,0,TAU);c.fill();
     c.restore();
     c.drawImage(this.moonTexture,cx-r,cy-r,r*2,r*2);
+    c.save();c.strokeStyle="rgba(127,223,245,.46)";c.lineWidth=Math.max(1,r*.017);
+    c.shadowColor="#74d5fc";c.shadowBlur=Math.max(4,r*.10);
+    c.beginPath();c.arc(cx,cy,r*1.018,0,TAU);c.stroke();c.restore();
     c.lineWidth=Math.max(1.5,r*.032);c.strokeStyle="#f8d28b99";
     c.beginPath();c.arc(cx,cy,r,3.5,5.55);c.stroke();
   }
@@ -226,6 +247,16 @@ class Artist {
     }
     c.restore();
   }
+  charge({from,progress=0,reduced=false}){
+    if(!from)return;
+    const c=this.ctx,p=Math.max(0,Math.min(1,progress));
+    c.save();c.globalAlpha=1-p*.3;
+    c.strokeStyle="#ffd595";c.lineWidth=1.4;c.shadowColor="#76ecff";
+    c.shadowBlur=reduced?2:9+6*p;
+    c.beginPath();c.arc(from.x,from.y,3+8*p,0,TAU);c.stroke();
+    c.fillStyle="#f6ffff";c.beginPath();c.arc(from.x,from.y,2+2*p,0,TAU);c.fill();
+    c.restore();
+  }
   laser({from,to,life=1,color="#7df5ff",reduced=false}){
     if(!from||!to)return;
     const c=this.ctx,k=Math.max(0,Math.min(1,life));
@@ -238,6 +269,13 @@ class Artist {
     if(!reduced){
       c.strokeStyle=color;c.lineWidth=2.6;
       c.beginPath();c.arc(to.x,to.y,10+(1-k)*19,0,TAU);c.stroke();
+    }
+    if(!reduced){
+      const dx=to.x-from.x,dy=to.y-from.y;
+      c.fillStyle="rgba(247,255,255,.94)";c.shadowColor=color;c.shadowBlur=9;
+      for(const t of [.29,.62,.91]){
+        c.beginPath();c.arc(from.x+dx*t,from.y+dy*t,1.3+1.4*(1-k),0,TAU);c.fill();
+      }
     }
     c.restore();
   }

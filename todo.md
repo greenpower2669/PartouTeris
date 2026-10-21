@@ -98,3 +98,16 @@
 - [x] Tests Node sur transition des deux phases et intégration des trois satellites pyramidaux.
 - [x] GitHub Actions #39594087561 : tests Node, compilation Android et publication APK brutes réussis. Fichier direct vérifié `temp/PartouTetris-v0.1.9-debug.apk` (48 461 octets).
 - [ ] Essai réel SM-A576B : élégance, taille et visibilité des voiles, trois lasers satellites, nouvelles lumières.
+
+## PT-013 — Charte, musique, lasers (0.2.0)
+- [x] Lire les mémoires, auditer les commandes, la branche, le packaging et la médiathèque Djipie.
+- [x] Copier par objet Git exact la charte officielle dans `design/charte-officielle.png`, indépendamment de l'interface.
+- [x] Intégrer par objet Git le MP3 officiel dans les assets Android, mettre les volumes/mute/boucle et le secours audio exclusif.
+- [x] Refiner les panneaux/titre/score avec or et cyan, rendre l'aide droite/gauche compacte et lisible, préserver toutes les commandes.
+- [x] Ajouter la charge lumineuse des satellites et un effet laser à plusieurs phases ; sans média privé.
+- [x] Mettre version Android et noms d'APK 0.2.0, ajouter des tests de ressources et de rendu.
+- [ ] Vérifier GitHub Actions, tests Node, construction et dépôt direct `temp/PartouTetris-v0.2.0-debug.apk`.
+- [ ] Valider visuellement l'APK sur Samsung avec le PNG officiel (charte non directement prévisualisable via l'API binaire ici) ; ajuster textures, Terre, Lune, satellites et HUD si nécessaire.
+- [ ] Écouter le MP3 en entier et vérifier sa boucle sans blanc perceptible. Valider les effets laser avec Fab.
+- [ ] Examiner provenance et droits de chaque son Djipie avant éventuelle intégration individuelle au dépôt public ; aucun son privé automatiquement redistribué.
+- [ ] Préserver `main`, package, données locales, et publier Release/AAB uniquement après accord de Fab.

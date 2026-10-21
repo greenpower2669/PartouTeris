@@ -88,3 +88,10 @@
 - Inspiration visuelle obligatoire : **icône officielle PartouTetris** (bleu, cyan néon, or, pyramides) + visuel récent de pharaons futuristes, Terre et pyramides-satellites. Satellites modélisés en forme de pyramides dorées avec anneaux et moteurs cyan. Aucun nouveau dessin généré, exclusivement code Canvas Android.
 - **Interdit de dessiner des pyramides sur la surface lunaire.** Conserver textures/cratères et tous les contrôles, sauvegardes, scores, vitesse, musique.
 - Travaux v0.1.9 dans `feature/lunar-four-fronts-001` ; aucun merge main/release définitive. GitHub Actions #39594087561 et APK 0.1.9 vérifiées ; test visuel/tactile sur téléphone toujours en attente.
+
+## PT-013 — Refonte fidèle, musique officielle et Djipie (21/10/2026)
+- Source du design : le PNG déposé sur `main` par Fab, désormais copié à l'identique dans `design/charte-officielle.png` sur la branche de travail. Référence esthétique absolue. Ne pas l'aplatir en fond masquant les commandes.
+- UI : titre doré, panneaux cadrés or/cyan, score large, aide gestuelle compacte correcte et commandes existantes conservées. Lune géologique sans pyramides, blocs sur quatre fronts, Terre et satellites-pyramides indépendants, lasers convergents.
+- Audio : le MP3 `musique PartouTetris .mp3` de `main` est importé byte-identical comme `official-theme.mp3` ; lecture déclenchée au toucher, boucle et volume paramétrable. Synthèse originale en secours ; laser synthétique étagé activation/charge/tir/impact.
+- Djipie : sources des catégories audio consultées ; droits des fichiers individuels non confirmés pour publication publique, donc **aucune copie des sons privés**.
+- Livraison attendue : APK brute v0.2.0 sous `temp/`, branche `feature/lunar-four-fronts-001` uniquement, `main` inchangée. État : développé sur branche ; tests CI et fidélité visuelle réelle à valider, aucune fusion/release.

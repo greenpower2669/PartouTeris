@@ -10,7 +10,7 @@ test('PT-013 official soundtrack URL is separate from synthesis fallback',()=>{
 });
 test('PT-013 official music and design remain offline, immutable reference assets',()=>{
  const mp3=fs.readFileSync('app/src/main/assets/official-theme.mp3');
- assert.equal(mp3.subarray(0,3).toString('latin1'),'ID3');
+ assert.ok(mp3.subarray(0,3).toString('latin1')==='ID3' || (mp3[0]===255&&(mp3[1]&224)===224));
  assert.ok(mp3.length>1000000);
  const png=fs.readFileSync('design/charte-officielle.png');
  assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
@@ -22,4 +22,14 @@ test('PT-013 offline UI does not request external streaming',()=>{
  assert.ok(audio.includes('official-theme.mp3'));
  assert.ok(!audio.includes('http://')&&!audio.includes('https://'));
  assert.ok(html.includes('PARTOUTETRIS'));
+});
+
+test('PT-013 composite visuals remain dynamically separated from game controls',()=>{
+ const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+ const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ assert.ok(html.includes('class="gesture"'));
+ assert.ok(html.includes('art.charge('));
+ assert.ok(art.includes('charge({from'));
+ assert.ok(art.includes('for(let tick=0;tick<96;tick++)'));
+ assert.ok(!html.includes('charte-officielle.png'));
 });
