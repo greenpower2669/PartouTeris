@@ -14,10 +14,33 @@
       this.beat=0;
       this.nextBeat=0;
       this.lastCue=-1;
-      this.supported=!!(root.AudioContext || root.webkitAudioContext);
+      this.lastLaserCue=-1;
+      // PT-013: soundtrack from Fab, packaged locally with the app.
+      // The synthesized theme remains a fallback and never overlaps the MP3.
+      this.official=null;
+      this.officialFailed=false;
+      this.officialUrl="official-theme.mp3";
+      this.supported=!!(root.Audio || root.AudioContext || root.webkitAudioContext);
     }
     start() {
       if(!this.supported)return false;
+      // Create/play only after a trusted tap or button activation.
+      if(root.Audio && !this.official && !this.officialFailed){
+        try {
+          const track=this.official=new root.Audio(this.officialUrl);
+          track.loop=true;track.preload="auto";
+          track.volume=this.enabled?this.musicVolume*.58:0;
+          track.addEventListener("error",()=>{this.officialFailed=true;this.official=null;this.nextBeat=0;});
+        } catch(e){this.officialFailed=true;this.official=null;}
+      }
+      if(this.official && this.enabled && this.official.paused){
+        try{
+          const pending=this.official.play();
+          if(pending&&typeof pending.catch==="function")
+            pending.catch(()=>{this.officialFailed=true;this.official=null;this.nextBeat=0;});
+        }catch(e){this.officialFailed=true;this.official=null;}
+      }
+      if(!(root.AudioContext||root.webkitAudioContext))return !!this.official;
       try {
         if(!this.context) {
           const Context=root.AudioContext||root.webkitAudioContext;
@@ -38,11 +61,12 @@
           this.nextBeat=0;
         }
         return true;
-      } catch(e) {this.supported=false;return false;}
+      } catch(e) {this.supported=!!this.official;return !!this.official;}
     }
     setVolumes(music, effects) {
       this.musicVolume=Math.max(0,Math.min(1,Number(music)||0));
       this.effectsVolume=Math.max(0,Math.min(1,Number(effects)||0));
+      if(this.official) this.official.volume=this.enabled?this.musicVolume*.58:0;
       if(this.context) {
         this.music.gain.setTargetAtTime(this.enabled?this.musicVolume:0,this.context.currentTime,.03);
         this.effects.gain.setTargetAtTime(this.enabled?this.effectsVolume:0,this.context.currentTime,.03);
@@ -51,6 +75,7 @@
     setEnabled(enabled) {
       this.enabled=!!enabled;
       this.setVolumes(this.musicVolume,this.effectsVolume);
+      if(!this.enabled&&this.official)this.official.pause();
       if(this.enabled && this.context)this.nextBeat=0;
     }
     tone(freq,start,duration,peak,voice="triangle",bus=this.music,glide=null) {
@@ -95,8 +120,13 @@
     }
     tick(paused=false,level=1) {
       const c=this.context;
+      if(paused){
+        if(this.official&&!this.official.paused)this.official.pause();
+        this.nextBeat=0;return;
+      }
+      // Native MP3 loop has priority over the synthesized backing track.
+      if(this.official&&!this.officialFailed)return;
       if(!c||!this.enabled||c.state!=="running")return;
-      if(paused){this.nextBeat=0;return;}
       const quarter=60/(104+Math.min(level-1,12)*2);
       const half=quarter/2;
       const now=c.currentTime;
@@ -132,8 +162,15 @@
           if(i%2===0)this.tone(melody[i]/2,now+i*.19,.27,.048,"sine",this.effects);
         }
       } else if(kind==="laser"){
-        this.tone(950,now,.16,.13,"sawtooth",this.effects,330);
-        this.tone(410,now+.055,.19,.07,"sine",this.effects,190);
+        // Three closely timed stages: emitter wake-up, plasma ignition,
+        // beam travel and a short metallic impact; peak levels kept bounded.
+        if(now-this.lastLaserCue<.16)return;
+        this.lastLaserCue=now;
+        this.tone(1270,now,.045,.044,"sine",this.effects,840);
+        this.tone(360,now+.024,.14,.078,"sawtooth",this.effects,1010);
+        this.tone(1720,now+.068,.14,.064,"sawtooth",this.effects,205);
+        this.noise(now+.114,.055,.052,this.effects);
+        this.tone(165,now+.13,.13,.12,"triangle",this.effects,81);
       } else if(kind==="gameover"){
         for(let i=0;i<4;i++)this.tone(380*Math.pow(.81,i),now+i*.20,.30,.21,"sawtooth",this.effects);
       }
