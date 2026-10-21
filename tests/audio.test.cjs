@@ -44,3 +44,10 @@ test('Repeated touch does not restart a playing melody',()=>{
 test('Milestone fanfare is safe without an audio context',()=>{
   const s=new Soundtrack();assert.doesNotThrow(()=>s.cue('milestone'));
 });
+
+test('Laser audio works safely when context is unavailable or muted',()=>{
+ const s=new Soundtrack();
+ assert.doesNotThrow(()=>s.cue('laser'));
+ s.setEnabled(false);
+ assert.doesNotThrow(()=>s.cue('laser'));
+});

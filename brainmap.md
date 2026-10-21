@@ -26,3 +26,6 @@
 - NOM : PartouTetris (dépôt greenpower2669/PartouTetris) ; garder ancien package Android interne com.greenpower2669.partouteris.
 - PT-009 `engine.js` -> placementReward() contacts polaires distincts, rayon moyen, xN ; `touch.js` -> tick(), 420ms deuxième doigt, boosts combinés ; `layout.js` -> Terre agrandie réservée, `visuals.js` -> Terre plus belle, `celebrations.js` + `index.html` -> origine terrestre des particules/faisceaux.
 - Tests PT-009 `tests/engine.test.cjs`, `tests/touch.test.cjs`, `tests/portrait.test.cjs`, `tests/celebrations.test.cjs`.
+
+- PT-010 : `app/src/main/assets/leaderboard.js` localStorage pseudo/records (ancienne clé record conservée), top 10 persisté, top 3 affiché, assainissement des noms ; `tests/leaderboard.test.cjs`.
+- PT-010 : `index.html` HUD score sur largeur, podium sous score, pointFeed bas, formulaire pseudo, bouton de mode LASER, visée de pièce et tir rendu en Canvas ; `engine.js` `laser()` pour impact réorientant avec vérifications de collision ; `visuals.js` `incoming()` flammes et `laser()` faisceau Terre-pièce ; `audio.js` effet laser, `celebrations.js` points flottants en bas.

@@ -58,3 +58,10 @@
 - Tests et compilation 0.1.6 à contrôler avant d'annoncer une APK.
 
 - CI et sortie finales : GitHub Actions #39573299164 success (tests Node, Android, dépôt APK directe). Fichier temp/PartouTetris-v0.1.6-debug.apk 33 060 octets. Correctif supplémentaire : 6 coordonnées aux appels Bézier de la Terre pour éviter une exception Canvas au rendu. main non fusionnée ; vérification sur téléphone encore nécessaire.
+
+## PT-010 — Score, leaderboard, pseudo et lasers (21/10/2026)
+- Observation : manque de hiérarchie du score en tête et petits gains de points couvrant les pièces au lieu de s'afficher en bas.
+- Modifications : affichage score plein bandeau, podium top 3 local, pseudo paramétrable et sauvegardé, migration du record individuel historique ; aucun service externe.
+- Débris en flammes : nouvel effet procédural limité à la phase haute de chute ; aucune collision ni vitesse modifiée.
+- Lasers : sélection de la cible proche seulement lorsque mode laser activé ; rotation 90° et poussée d'un secteur en cas de visée latérale, respect strict des blocs verrouillés ; son et faisceau Canvas depuis la Terre ; cooldown 420 ms.
+- Tests intégration, performances et gestes Android réels nécessaires avant validation finale.

@@ -43,3 +43,9 @@ test('Earth is the origin for festival sparks and beams, not the Moon itself',()
  assert.match(art,/earth=null/);
  assert.match(scene,/festival\.position\(\{cx,cy,outer,inner,stepR,earth\}\)/);
 });
+
+test('Live points now appear below the Moon instead of covering falling pieces',()=>{
+ const file=fs.readFileSync('app/src/main/assets/celebrations.js','utf8');
+ assert.match(file,/free band BELOW the lunar board/);
+ assert.match(file,/cy\+outer\+33/);
+});

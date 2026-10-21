@@ -66,3 +66,14 @@
 - [x] Couvrir les nouveaux comportements par tests Node, sans désactiver les tests précédents.
 - [x] CI GitHub Actions #39573299164 réussie après correction Bézier des continents ; tests Node + build Android, APK 0.1.6 brute vérifiée, 33 060 octets.
 - [ ] Tester physiquement sur Samsung SM-A576B Android 16 : taille Terre, audio, récompenses, gestes 2 doigts.
+
+## PT-010 — Android 0.1.7
+- [x] Déplacer gains flottants et panneau du dernier gain dans la bande libre sous la Lune.
+- [x] Grand score en haut sur toute la largeur, trois meilleurs scores immédiatement dessous.
+- [x] Local highscore top 10 avec migration de l'ancien record et pseudo éditable en options.
+- [x] Traînées de flammes sur les quatre débris entrants, tout en conservant les voiles.
+- [x] Tir laser depuis Terre vers une pièce, rotation et éventuelle correction tangentielle si collision libre ; mode explicite.
+- [x] Sons laser et respect du mode visuel doux ; anciens contrôles préservés.
+- [x] Tests Node pour pseudo, classement, collisions laser et interfaces.
+- [ ] Vérifier CI et existence effective APK 0.1.7 directement téléchargeable non ZIP.
+- [ ] Tester intuitivité lasers, lisibilité haut/bas et sensation des flammes sur SM-A576B Android 16.

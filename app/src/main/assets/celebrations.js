@@ -48,12 +48,13 @@ class Festival {
  reset(){this.stop();}
  floatScore(event){
    if(this.reduced()||this.root.querySelectorAll(".fx-float").length>=7)return;
-   const {cx,cy,inner,stepR}=this.pos;
-   const t=-Math.PI/2+(event.angle+.5)*Math.PI*2/48;
-   const rr=inner+(Math.max(0,Math.min(9,event.radius))+.5)*stepR;
+   // Points earned appear in the free band BELOW the lunar board.
+   const {cx,cy,outer,earth}=this.pos;
+   const y=Math.min((earth?.y||cy+outer+25)-7,cy+outer+33);
+   const x=cx-outer*.40+((event.lane||0)%2)*17;
    const node=document.createElement("span");
-   node.className="fx-float";node.textContent="+"+event.gained;
-   node.style.left=(cx+Math.cos(t)*rr)+"px";node.style.top=(cy+Math.sin(t)*rr)+"px";
+   node.className="fx-float";node.textContent="+"+event.gained+(event.multiplier>1?" ×"+event.multiplier:"");
+   node.style.left=x+"px";node.style.top=y+"px";
    this.root.appendChild(node);
    setTimeout(()=>node.remove(),920);
  }

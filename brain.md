@@ -1,4 +1,4 @@
-# Contrat de gameplay — PartouTetris 0.1.6
+# Contrat de gameplay — PartouTetris 0.1.7
 - Monde égyptien futuriste : sauver la Terre en supprimant des anneaux de débris sur la Lune.
 - Four fronts : quatre pièces simultanées; les trois autres continuent quand l'une est manipulée.
 - Jeu logique : 48 secteurs continus modulo 48, 10 couronnes radiales, 7 tétriminos, rotations par pas de 90°, tangentiel, chute au centre, collisions, silhouette fantôme.
@@ -21,3 +21,7 @@
 - PT-009 : proximité du centre = base 40 + arrondi((9 - moyenne des rayons des 4 cellules) × 12). Contacts distincts avec cellules verrouillées préexistantes sur voisins polaires → 2 cases : ×2, 3 : ×3, etc., x1 pour 0 ou 1. Gain évalué avant l'écriture des blocs.
 - Deuxième doigt : appui long stable 420ms = accélération de la pièce tenue, relâchement = retour normal ; tap court garde rotation à 90°. Le déplacement radial du premier doigt reste disponible.
 - Terre agrandie avec position réservée sous Lune ; célébrations Block Boost réorientées de la Terre vers l'orbite ; animations douces et cinq boutons maintenus.
+
+- PT-010 : HUD score géant sur toute la largeur, local top 3 sous le score, bonus de pose dans la bande libre sous la Lune. Pseudo modifiable localement (16 caractères), protection contre HTML et remplacement du seul meilleur record par top 10 local sans perte de l'ancien score.
+- PT-010 : blocs entrants possèdent traînées de flammes dessinées en Canvas, purement visuelles ; mode Laser explicite : tap sur une pièce → rayon Terre-pièce, rotation 90° et recul tangentiel opposé au côté visé si libre. Collisions solides inchangées ; gestes droit/gauche restent actifs hors mode laser.
+- Le package et les anciennes clés localStorage doivent rester inchangés pour éviter une perte de progression.

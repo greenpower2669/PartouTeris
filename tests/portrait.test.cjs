@@ -37,3 +37,20 @@ test('Portrait UI has two-row buttons in a dedicated dock, with four independent
   assert.match(html,/computePortraitLayout\(/);
   assert.match(html,/labels=\["N","E","S","O"\]/);
 });
+
+test('Full-width header presents the big score above the local podium',()=>{
+ const html=load('app/src/main/assets/index.html');
+ assert.match(html,/id="scoreTotal"/);
+ assert.match(html,/id="highscores"/);
+ assert.match(html,/#hud\{display:flex;flex-direction:column/);
+ assert.match(html,/#hud #scoreTotal/);
+ assert.match(html,/id="nickname"/);
+ assert.match(html,/id="pointFeed"/);
+});
+test('Portrait deck retains existing buttons and introduces a laser button',()=>{
+ const html=load('app/src/main/assets/index.html');
+ assert.match(html,/id="laserButton"/);
+ assert.match(html,/aria-pressed="false"/);
+ assert.match(html,/#turn,#fast,#laserButton\{grid-column:span 2\}/);
+ assert.match(html,/nearestLaserPiece\(/);
+});

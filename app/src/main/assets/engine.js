@@ -85,6 +85,20 @@
       }
       return false;
     }
+    // A laser fired at the middle turns a piece, while a side hit also
+    // nudges it tangentially AWAY from the impact. Solid blocks still win.
+    laser(lane,impactSector) {
+      const p=this.pieces[lane];
+      if(this.over||this.paused||!p||!Number.isFinite(impactSector))return null;
+      const rel=mod(impactSector-p.angle+SECTORS/2,SECTORS)-SECTORS/2;
+      const nudge=Math.abs(rel)>.75?-Math.sign(rel):0;
+      const moved=nudge?this.shift(lane,nudge):false;
+      const rotated=this.rotate(lane);
+      if(!rotated&&!moved)return null;
+      const data={type:'laser',lane,angle:p.angle,radius:p.radius,moved,rotated,impactSector};
+      this.events.push(data);
+      return data;
+    }
     boost(lane,value) {
       if(this.pieces[lane]) this.pieces[lane].boost=!!value;
     }

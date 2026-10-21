@@ -185,3 +185,27 @@ test('Placement bonus is based on final resolved resting radius, not airborne he
  assert.equal(ev.gained,first.points);
  assert.equal(ev.contacts,0);assert.equal(ev.centerBonus,102);
 });
+
+test('Laser impacts rotate a valid active piece and emit a laser event',()=>{
+ const g=new Game(()=>0);
+ const p=g.pieces[0];p.type=2;p.radius=8;
+ const oldRot=p.rot;
+ const shot=g.laser(0,p.angle);
+ assert.ok(shot);assert.equal(p.rot,(oldRot+1)%4);
+ assert.equal(g.drainEvents().filter(x=>x.type==='laser').length,1);
+});
+test('Side laser impact nudges tangentially away from impact and rotates',()=>{
+ const g=new Game(()=>0);
+ const p=g.pieces[0];p.type=2;p.radius=8;
+ const start=p.angle;
+ const shot=g.laser(0,start+2);
+ assert.ok(shot);assert.equal(p.angle,47);
+ assert.equal(shot.moved,true);
+ assert.equal(p.rot,1);
+});
+test('Laser respects paused or ended game and never rewrites existing board',()=>{
+ const g=new Game(()=>0);const board=g.board.map(r=>r.slice());
+ g.paused=true;assert.equal(g.laser(0,3),null);
+ g.paused=false;g.over=true;assert.equal(g.laser(0,3),null);
+ assert.deepEqual(g.board,board);
+});

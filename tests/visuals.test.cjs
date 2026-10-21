@@ -11,3 +11,11 @@ test('Procedural lunar artist parses as strict JavaScript and is included in gam
   assert.match(html,/art\.cell\(/);
   assert.match(html,/art\.moon\(/);
 });
+
+test('Incoming flaming trails and Earth laser are visual-only Canvas primitives',()=>{
+ const src=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
+ assert.match(src,/incoming\(\{/);
+ assert.match(src,/laser\(\{/);
+ assert.match(src,/radial<4\.5/);
+ assert.match(src,/createLinearGradient/);
+});

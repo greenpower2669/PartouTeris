@@ -131,6 +131,9 @@
           this.tone(melody[i],now+i*.19,.26,.16,"triangle",this.effects);
           if(i%2===0)this.tone(melody[i]/2,now+i*.19,.27,.048,"sine",this.effects);
         }
+      } else if(kind==="laser"){
+        this.tone(950,now,.16,.13,"sawtooth",this.effects,330);
+        this.tone(410,now+.055,.19,.07,"sine",this.effects,190);
       } else if(kind==="gameover"){
         for(let i=0;i<4;i++)this.tone(380*Math.pow(.81,i),now+i*.20,.30,.21,"sawtooth",this.effects);
       }

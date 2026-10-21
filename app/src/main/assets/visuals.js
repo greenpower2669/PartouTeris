@@ -174,6 +174,52 @@ class Artist {
     }
     c.restore();
   }
+  // Hot wreckage approaches radially from space, flame tails outward.
+  // Purely visual: it never changes gravity or creates collisions in flight.
+  incoming({cx,cy,inner,stepR,angle,radial,time=0,reduced=false}) {
+    if(radial<4.5)return;
+    const c=this.ctx;
+    const radius=inner+(radial+1.05)*stepR;
+    const a=-Math.PI/2+(angle+.5)*TAU/48;
+    const ux=Math.cos(a),uy=Math.sin(a);
+    const x=cx+ux*radius,y=cy+uy*radius;
+    const k=Math.max(0,Math.min(1,(radial-4.5)/6.5));
+    const len=(reduced?10:15+Math.min(27,radial*2.3))*k;
+    c.save();c.globalAlpha=Math.max(.05,k*(reduced?.38:.84));
+    c.shadowColor="#ff8227";c.shadowBlur=reduced?3:13;
+    for(let j=0;j<3;j++){
+      const side=(j-1)*(3+2*k);
+      const wave=reduced?0:Math.sin(time*8+j*3+angle*.4)*2.2;
+      const tangentX=-uy,tangentY=ux;
+      const x0=x+side*tangentX,y0=y+side*tangentY;
+      const g=c.createLinearGradient(x0,y0,x0+ux*len,y0+uy*len);
+      g.addColorStop(0,j===1?"#fff0ad":"#ffd36c");
+      g.addColorStop(.4,j===1?"#ff7522":"#e94d1d");
+      g.addColorStop(1,"rgba(160,28,15,0)");
+      c.lineWidth=j===1?5.5*k:3*k;c.strokeStyle=g;
+      c.beginPath();c.moveTo(x0,y0);
+      c.quadraticCurveTo(x0+ux*len*.48+tangentX*wave,
+                         y0+uy*len*.48+tangentY*wave,
+                         x0+ux*len+tangentX*wave*2,
+                         y0+uy*len+tangentY*wave*2);c.stroke();
+    }
+    c.restore();
+  }
+  laser({from,to,life=1,color="#7df5ff",reduced=false}){
+    if(!from||!to)return;
+    const c=this.ctx,k=Math.max(0,Math.min(1,life));
+    c.save();c.globalAlpha=k;
+    c.strokeStyle=color;c.shadowColor=color;c.shadowBlur=reduced?3:16;
+    c.lineWidth=reduced?2:3.5;c.lineCap="round";
+    c.beginPath();c.moveTo(from.x,from.y);c.lineTo(to.x,to.y);c.stroke();
+    c.shadowBlur=0;c.strokeStyle="#fffad1";c.lineWidth=1.2;
+    c.beginPath();c.moveTo(from.x,from.y);c.lineTo(to.x,to.y);c.stroke();
+    if(!reduced){
+      c.strokeStyle=color;c.lineWidth=2.6;
+      c.beginPath();c.arc(to.x,to.y,10+(1-k)*19,0,TAU);c.stroke();
+    }
+    c.restore();
+  }
   parachute({x,y,angle,color,size=18,time=0}){
     const c=this.ctx;
     c.save();c.translate(x,y);c.rotate(angle+Math.PI/2);

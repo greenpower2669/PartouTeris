@@ -65,3 +65,11 @@
 - Gestes : doigt primaire guide ; deuxième doigt tap court = rotation ; maintien stable ≥420 ms = chute rapide, retour à normal au relâchement, aucune rotation lors du maintien.
 - Visuel : Terre plus grosse, place réservée sous le cercle en portrait ; faisceau, bulles et particules sortent de la Terre vers la Lune ; accessibilité préservée.
 - Statut : code PT-009 et APK 0.1.6 compilés avec succès en CI #39573299164 ; test visuel/multitactile Samsung toujours à faire.
+
+## PT-010 — Score, meilleurs scores, pseudo, rentrées enflammées et tirs laser (21/10/2026)
+- **Demande Fab :** afficher les points gagnés plus bas ; rendre les débris arrivant de l'espace en flammes ; donner la possibilité de tirer au laser pour orienter les pièces ; en haut, score occupant toute la largeur, avec meilleurs scores en dessous ; réglage d'un pseudo.
+- **Scoring inchangé :** points de proximité + contacts et combos conservés. Afficher les gains bas sans recouvrir la Lune ; bandeau supérieur affiche grand score et podium 3 local.
+- **Classement :** garder l'ancienne valeur de record (`partouteris-record`) lors de l'introduction du classement local à pseudo modifiable; ne pas perdre les sauvegardes.
+- **Laser :** mode explicite par bouton, viser/toucher une pièce volante proche de la trajectoire ; rotation + poussée tangentielle opposée au côté touché si possible ; pas de traversée des blocs fixes, pas d'interruption du contrôle standard lorsqu'on désactive le mode. Son/trace depuis Terre, cadence raisonnable.
+- **Entrée en flammes :** simple présentation Canvas, non liée à collision physique ou à un temps de chute différent ; mouvement réduit honoré.
+- **Statut :** code et tests PT-010 en 0.1.7 ; CI et vérification humaine Samsung en attente.
