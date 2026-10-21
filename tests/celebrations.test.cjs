@@ -44,10 +44,11 @@ test('Earth is the origin for festival sparks and beams, not the Moon itself',()
  assert.match(scene,/festival\.position\(\{cx,cy,outer,inner,stepR,earth\}\)/);
 });
 
-test('Live points now appear below the Moon instead of covering falling pieces',()=>{
+test('PT-014 supersedes old below-lunar-board placement: scores remain entirely inside the HUD',()=>{
  const file=fs.readFileSync('app/src/main/assets/celebrations.js','utf8');
- assert.match(file,/free band BELOW the lunar board/);
- assert.match(file,/cy\+outer\+33/);
+ assert.match(file,/this\.gainHost\.textContent/);
+ assert.doesNotMatch(file,/free band BELOW the lunar board/);
+ assert.doesNotMatch(file,/cy\+outer\+33/);
 });
 
 test('PT-014 score announcements are in the HUD instead of the lunar grid',()=>{
