@@ -49,3 +49,39 @@ test('Live points now appear below the Moon instead of covering falling pieces',
  assert.match(file,/free band BELOW the lunar board/);
  assert.match(file,/cy\+outer\+33/);
 });
+
+test('PT-014 score announcements are in the HUD instead of the lunar grid',()=>{
+  const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
+  const src=fs.readFileSync('app/src/main/assets/celebrations.js','utf8');
+  const hud=html.split('<div id="hud">')[1]?.split('<div id="controlDeck">')[0];
+  assert.ok(hud?.includes('id="pointFeed"'));
+  assert.ok(hud?.includes('id="scoreAnnouncement"'));
+  assert.match(html,/#hud \.scoreboard\{position:relative;overflow:hidden\}/);
+  assert.match(html,/#pointFeed\[hidden\]\{display:none!important\}/);
+  assert.match(src,/this\.bannerHost\.appendChild\(banner\)/);
+  assert.doesNotMatch(src,/this\.root\.appendChild\(banner\)/);
+  assert.doesNotMatch(src,/cy\+outer\+33/);
+  assert.doesNotMatch(html,/pointFeed\.style\.top=/);
+});
+
+test('PT-014 short gains and important milestones use independent slots',()=>{
+  const {Festival}=require('../app/src/main/assets/celebrations.js');
+  const element=()=>({children:[],style:{setProperty(){}},setAttribute(){},
+    appendChild(node){this.children.push(node);},replaceChildren(){this.children=[];}});
+  const fxRoot=element(),banner=element(),gain={textContent:'',hidden:true};
+  const oldDocument=global.document;
+  global.document={createElement:tag=>({tag,textContent:'',className:'',
+    children:[],appendChild(x){this.children.push(x);}})};
+  try{
+    const f=new Festival(fxRoot,{bannerHost:banner,gainHost:gain,reduced:()=>true});
+    f.floatScore({gained:484,multiplier:4});
+    assert.equal(gain.textContent,'GAIN +484 ×4');
+    assert.equal(gain.hidden,false);
+    f.show({type:'milestone',reached:20000,upto:20000});
+    assert.equal(banner.children.length,1);
+    assert.equal(fxRoot.children.length,0);
+    assert.match(banner.children[0].children[0].textContent,/20.000 POINTS/);
+    f.reset();
+    assert.equal(banner.children.length,0);assert.equal(gain.hidden,true);
+  }finally{if(oldDocument===undefined)delete global.document;else global.document=oldDocument;}
+});

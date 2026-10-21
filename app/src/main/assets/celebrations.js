@@ -25,8 +25,9 @@ function chooseScene(event){
  return null;
 }
 class Festival {
- constructor(element,{reduced=()=>false}={}){
-   this.root=element;this.reduced=reduced;this.scene=null;this.priority=0;this.timer=null;
+ constructor(element,{reduced=()=>false,bannerHost=null,gainHost=null}={}){
+   this.root=element;this.reduced=reduced;this.bannerHost=bannerHost;this.gainHost=gainHost;
+   this.scene=null;this.priority=0;this.timer=null;this.gainTimer=null;
    this.pos={cx:0,cy:0,outer:1,inner:0,stepR:1,earth:{x:0,y:0,r:1}};
    this.root.setAttribute("aria-hidden","true");
  }
@@ -44,19 +45,23 @@ class Festival {
  stop(){
    if(this.timer)clearTimeout(this.timer);
    this.timer=null;this.scene=null;this.priority=0;this.root.replaceChildren();
+   if(this.bannerHost)this.bannerHost.replaceChildren();
  }
- reset(){this.stop();}
+ reset(){
+   this.stop();
+   if(this.gainTimer)clearTimeout(this.gainTimer);
+   this.gainTimer=null;
+   if(this.gainHost){this.gainHost.textContent="";this.gainHost.hidden=true;}
+ }
  floatScore(event){
-   if(this.reduced()||this.root.querySelectorAll(".fx-float").length>=7)return;
-   // Points earned appear in the free band BELOW the lunar board.
-   const {cx,cy,outer,earth}=this.pos;
-   const y=Math.min((earth?.y||cy+outer+25)-7,cy+outer+33);
-   const x=cx-outer*.40+((event.lane||0)%2)*17;
-   const node=document.createElement("span");
-   node.className="fx-float";node.textContent="+"+event.gained+(event.multiplier>1?" ×"+event.multiplier:"");
-   node.style.left=x+"px";node.style.top=y+"px";
-   this.root.appendChild(node);
-   setTimeout(()=>node.remove(),920);
+   // PT-014: gains are displayed ONLY within the existing scoreboard.
+   // Never create flying text on top of a block, the Moon or a satellite.
+   if(!this.gainHost)return;
+   this.gainHost.textContent="GAIN +"+event.gained.toLocaleString("fr-FR")+
+     (event.multiplier>1?" ×"+event.multiplier:"");
+   this.gainHost.hidden=false;
+   if(this.gainTimer)clearTimeout(this.gainTimer);
+   this.gainTimer=setTimeout(()=>{this.gainHost.hidden=true;this.gainTimer=null;},1600);
  }
  particles(kind){
    if(this.reduced())return;
@@ -97,7 +102,8 @@ class Festival {
    const banner=document.createElement("div");banner.className="fx-banner fx-banner-"+scene.kind;
    const title=document.createElement("strong");title.textContent=scene.title;banner.appendChild(title);
    if(scene.subtitle){const small=document.createElement("small");small.textContent=scene.subtitle;banner.appendChild(small);}
-   this.root.appendChild(banner);
+   // Overlay the high-score row INSIDE the HUD, never the circular board.
+   if(this.bannerHost)this.bannerHost.appendChild(banner);
    this.particles(scene.kind);
    this.timer=setTimeout(()=>this.stop(),this.reduced()?1400:scene.duration);
  }

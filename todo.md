@@ -129,3 +129,12 @@
 - [ ] Écoute réelle du MP3 complet et de sa jonction en boucle, latence et sons laser sur Android 16 ; aucun test matériel humain effectué ici.
 - [ ] Définir une sélection Djipie dont provenance et licence sont vérifiées individuellement puis intégrer uniquement ces sons autorisés (aucun son privé recopié actuellement).
 - [ ] Vérifier visuellement, tactilement et en performance l'APK sur Samsung SM-A576B. AAB de publication et merge main non autorisés avant validation.
+
+## PT-014 — Correction annonces de score (21/10/2026)
+- [x] Auditer screenshot et identifier `#scoreBurst .fx-banner`, `floatScore` et `#pointFeed` comme trois sources de recouvrement.
+- [x] Annonces de palier/couronne uniquement dans le HUD supérieur, sans changer sa hauteur ; cacher le podium au lieu du plateau pendant la scène.
+- [x] Gains ordinaires dans la ligne du classement en haut, petite bulle courte, aucune création de textes flottants sur la Lune.
+- [x] Tests de confinement et simultanéité ajoutés, identité Android et paramètres préservés ; version cible 0.2.1.
+- [ ] Exécuter tests Node et Gradle GitHub Actions, valider capture Chromium, vérifier fichier `temp/PartouTetris-v0.2.1-debug.apk` brut.
+- [ ] Vérifier lisibilité au niveau 5 avec couronnes remplies, petits écrans et double tactile sur Samsung.
+- [ ] Écouter boucle de musique officielle MP3 sur Samsung pour certifier que le raccord est inaudible.

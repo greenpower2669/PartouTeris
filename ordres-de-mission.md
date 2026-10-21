@@ -99,3 +99,10 @@
 ### PT-013 — État technique (21 octobre 2026)
 - **Livré sur branche, à valider par Fab :** APK 0.2.0 directe, #39628651992 success, accès via `temp/PartouTetris-v0.2.0-debug.apk`.
 - **Non clos :** fidélité fine à la charte officielle ; écoute et boucle musicale sur Samsung ; sons Djipie privés soumis à preuve de droits ; contrôle tactile réel. Aucune fusion `main`, aucune Release et aucun AAB de publication.
+
+## PT-014 — Annonces de score hors plateau (21 octobre 2026)
+- **Retour Fab, capture Android 0.2.0 :** le bandeau « 20 000 POINTS ! » au centre cache des couronnes et des pièces ; le bandeau « GAIN +484 ×4 » cache une partie de la vue.
+- **Commande explicite « Ok go » :** faire apparaître ces messages **en haut ou en bas, jamais sur le plateau**. Conserver tous les effets, le scoring, les commandes et la musique.
+- **Implémentation v0.2.1 :** bannière de célébration dans le panneau score supérieur, remplaçant uniquement le classement pendant l'événement ; petit gain compact sur la ligne « meilleurs scores », sans reflow du HUD. Les animations de particules subsistent sans obstacle tactile. Ces annonces disparaissent automatiquement et libèrent le classement.
+- **Musique :** loop HTMLAudioElement (MP3 local officiel), réglages/mute et solution de secours préservés ; raccord sonore réel à tester à l'écoute.
+- **État :** correction codée sur `feature/lunar-four-fronts-001`, CI et contrôle Samsung à vérifier. `main` intacte.
