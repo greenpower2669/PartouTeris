@@ -73,8 +73,39 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
   #controlDeck{gap:5px}
   #tip{padding:5px 9px;font-size:10px}
 }
+
+/* PT-008: Block Boost-style celebrations with no full-screen flashing. */
+#scoreBurst{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;isolation:isolate}
+#scoreBurst .fx-float{position:absolute;transform:translate(-50%,-50%);color:#fff3a6;font:900 clamp(16px,4.4vw,24px) system-ui,sans-serif;text-shadow:0 2px 2px #041327,0 0 8px #efad59;animation:scoreRise .85s ease-out both;white-space:nowrap;pointer-events:none}
+@keyframes scoreRise{0%{opacity:0;transform:translate(-50%,-10%) scale(.7)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-175%) scale(1.13)}}
+#scoreBurst .fx-banner{position:absolute;left:var(--fx-x,50%);top:var(--fx-y,45%);transform:translate(-50%,-50%);width:min(78vw,370px);min-height:66px;padding:10px 13px;background:radial-gradient(ellipse at center,#223951ed,#0d1429e5);border:2px solid #ffe5acb8;border-radius:15px;box-shadow:0 4px 24px #000c,0 0 24px #d29b4f80;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#ffefbc;font-size:clamp(18px,4.6vw,28px);line-height:1.14;text-shadow:0 2px 3px #000;animation:bannerEnter .28s ease-out both}
+#scoreBurst .fx-banner small{display:block;color:#e5f3ff;font-weight:800;font-size:clamp(15px,4vw,21px)}
+#scoreBurst .fx-banner-fireworks{border-color:#83eaf4;box-shadow:0 5px 30px #020615,0 0 20px #75d0e788}
+@keyframes bannerEnter{0%{opacity:0;transform:translate(-50%,-45%) scale(.87)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+#scoreBurst .fx-burst{position:absolute;inset:0;overflow:hidden}
+#scoreBurst .fx-burst i{position:absolute;left:var(--px);top:var(--py);width:var(--size);height:var(--size);background:var(--color);border-radius:50%;box-shadow:0 0 7px var(--color);opacity:0}
+#scoreBurst .fx-bubbles i{border:2px solid #c7faff;background:radial-gradient(circle at 30% 30%,#f7ffffaf,#77cfea33 55%,#918fe149);animation:bubbleFloat 2.7s ease-out var(--delay) both}
+#scoreBurst .fx-disco i{animation:discoPop 1.7s ease-out var(--delay) both}
+#scoreBurst .fx-fireworks i{animation:fireworksPop 2.5s ease-out var(--delay) both}
+@keyframes bubbleFloat{0%{opacity:0;transform:translateY(70px) scale(.5)}23%{opacity:.78}82%{opacity:.60}100%{opacity:0;transform:translateY(-130px) scale(1.4)}}
+@keyframes discoPop{0%{opacity:0;transform:scale(.2) translateY(14px)}20%{opacity:.9}100%{opacity:0;transform:scale(1.6) translateY(-55px)}}
+@keyframes fireworksPop{0%{opacity:0;transform:scale(.1)}15%{opacity:1}45%{opacity:.9;transform:scale(4)}100%{opacity:0;transform:scale(7)}}
+#scoreBurst .fx-mirrorball{position:absolute;left:calc(var(--fx-x) - 31px);top:calc(var(--fx-y) - var(--fx-r) - 18px);width:62px;height:62px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 28% 21%,#fefeff,#a3cff2 25%,#577bab 62%,#192b57 92%);border:2px solid #c6e8ff;box-shadow:0 0 17px #a8cbffa3;perspective:140px}
+#scoreBurst .fx-mirror-tiles{position:absolute;inset:-8px;width:84px;height:78px;background:repeating-linear-gradient(0deg,transparent 0 7px,#172c58a8 7px 8px),repeating-linear-gradient(90deg,#ffffff45 0 8px,#133b6ba3 8px 9px,#f8faffc2 9px 16px);border-radius:50%;opacity:.75;animation:mirrorYaw 2s linear infinite}
+@keyframes mirrorYaw{0%{transform:translateX(-11px) scaleX(.72)}50%{transform:translateX(9px) scaleX(1)}100%{transform:translateX(-11px) scaleX(.72)}}
+#scoreBurst .fx-spot{position:absolute;bottom:calc(50% - var(--fx-r) - 10px);width:clamp(20px,9vw,65px);height:50vh;opacity:.24;pointer-events:none;background:linear-gradient(0deg,#ffeeaf8a,#6adff833 55%,transparent);clip-path:polygon(30% 100%,70% 100%,100% 0%,0% 0%);transform-origin:bottom center;animation:spotSweep 3s ease-in-out infinite alternate}
+#scoreBurst .fx-spot:nth-last-child(5){left:12%;--spot-from:-25deg;--spot-to:-8deg}
+#scoreBurst .fx-spot:nth-last-child(4){left:29%;--spot-from:-12deg;--spot-to:12deg}
+#scoreBurst .fx-spot:nth-last-child(3){left:45%;--spot-from:0deg;--spot-to:10deg}
+#scoreBurst .fx-spot:nth-last-child(2){left:62%;--spot-from:13deg;--spot-to:-10deg}
+#scoreBurst .fx-spot:nth-last-child(1){left:80%;--spot-from:25deg;--spot-to:8deg}
+@keyframes spotSweep{from{transform:rotate(var(--spot-from))}to{transform:rotate(var(--spot-to));opacity:.13}}
+@media(prefers-reduced-motion:reduce){#scoreBurst .fx-burst{display:none}#scoreBurst .fx-banner,#scoreBurst .fx-float{animation:none}}
+#scoreBurst.fx-reduced .fx-burst,#scoreBurst.fx-reduced .fx-float{display:none}
+#scoreBurst.fx-reduced .fx-banner{animation:none}
 </style></head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
+<div id="scoreBurst" aria-hidden="true"></div>
 <div id="hud">
   <div class="brand">
     <svg class="pyramids-mark" viewBox="0 0 96 66" role="img" aria-label="Trois pyramides dorées" xmlns="http://www.w3.org/2000/svg">
@@ -104,8 +135,9 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <p>2 secondes = rapide · 8 secondes = très lent. Le jeu accélère progressivement.</p>
 <label for="musicVolume">Musique : <strong id="musicValue">33 %</strong></label>
 <input id="musicVolume" type="range" min="0" max="100" step="5" value="33">
-<label for="fxVolume">Effets : <strong id="fxValue">75 %</strong></label>
+<label for="fxVolume">Effets sonores : <strong id="fxValue">75 %</strong></label>
 <input id="fxVolume" type="range" min="0" max="100" step="5" value="75">
+<label for="reducedCelebrations"><input id="reducedCelebrations" type="checkbox"> Effets visuels doux (moins de mouvement)</label>
 <button id="optionsClose">VALIDER ✓</button>
 </div>
 <div id="alert"><h1>La Lune déborde !</h1><p id="finalScore"></p><p>La Terre a besoin de toi.</p><button id="again">REJOUER</button></div>
@@ -114,6 +146,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="touch.js"></script>
 <script src="visuals.js"></script>
 <script src="layout.js"></script>
+<script src="celebrations.js"></script>
 <script>
 (function(){
 "use strict";
@@ -122,12 +155,15 @@ const canvas=document.getElementById("screen"),ctx=canvas.getContext("2d");
 const art=new window.PartouVisuals.Artist(ctx);
 const ui={stats:document.getElementById("stats"),level:document.getElementById("level"),rings:document.getElementById("rings"),alert:document.getElementById("alert"),final:document.getElementById("finalScore"),pause:document.getElementById("pause")};
 const game=new Game(),sound=new window.PartouAudio.Soundtrack();
+const reducedCelebrations=document.getElementById("reducedCelebrations");
+const festival=new window.PartouFestival.Festival(document.getElementById("scoreBurst"),{reduced:()=>reducedCelebrations.checked});
 let started=false,settingsOpen=false,pausedBeforeSettings=false;
 const storageKey="partouteris-audio-and-speed-v1";
 function readConfig(){
   try{return JSON.parse(localStorage.getItem(storageKey)||"{}")||{};}catch(e){return {};}
 }
 const settings=readConfig();
+reducedCelebrations.checked=settings.reducedCelebrations!==undefined?!!settings.reducedCelebrations:!!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 const speed=document.getElementById("speed"),musicVolume=document.getElementById("musicVolume"),fxVolume=document.getElementById("fxVolume");
 if(Number.isFinite(+settings.speed)&&settings.speed!==undefined)speed.value=game.setBaseFallSeconds(+settings.speed);
 if(Number.isFinite(+settings.music)&&settings.music!==undefined)musicVolume.value=Math.round(+settings.music*100);
@@ -136,7 +172,7 @@ sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);
 if(settings.enabled===false)sound.setEnabled(false);
 function storeSettings(){
   try{localStorage.setItem(storageKey,JSON.stringify({
-    speed:game.baseFallSeconds,music:sound.musicVolume,effects:sound.effectsVolume,enabled:sound.enabled
+    speed:game.baseFallSeconds,music:sound.musicVolume,effects:sound.effectsVolume,enabled:sound.enabled,reducedCelebrations:reducedCelebrations.checked
   }));}catch(e){}
 }
 function updateAudioLabel(){
@@ -161,6 +197,7 @@ function resize(){
   const headerBottom=document.getElementById("hud").getBoundingClientRect().bottom;
   const controlsTop=document.getElementById("controlDeck").getBoundingClientRect().top;
   ({cx,cy,scale,inner,outer,stepR}=window.PartouLayout.computePortraitLayout({width:W,height:H,headerBottom,controlsTop}));
+  festival.position({cx,cy,outer,inner,stepR});
 }
 window.addEventListener("resize",resize);resize();
 const TAU=Math.PI*2;
@@ -207,16 +244,20 @@ function overlays(){
 }
 function updateHud(){
   if(game.score>record){record=game.score;try{localStorage.setItem("partouteris-record",String(record))}catch(e){}}
-  ui.stats.textContent="Score "+game.score+" · Record "+record;
+  ui.stats.textContent="Score "+game.score.toLocaleString("fr-FR")+" · Record "+record.toLocaleString("fr-FR");
   ui.level.textContent="Niveau "+game.level;
-  ui.rings.textContent="Couronnes "+game.cleared+" · 4 fronts";
+  ui.rings.textContent="Couronnes "+game.cleared+(game.combo>1?" · Combo ×"+game.combo:" · 4 fronts");
   ui.pause.textContent=game.paused?"▶ REPRENDRE":"Ⅱ PAUSE";
   if(game.over){ui.final.textContent="Score : "+game.score+" · Couronnes : "+game.cleared;ui.alert.style.display="block";}
 }
 function frame(time){
   const dt=lastTime?Math.min(.1,(time-lastTime)/1000):0;lastTime=time;
   const before=game.cleared;game.step(dt);
-  for(const ev of game.drainEvents())sound.cue(ev.type,ev.count);
+  for(const ev of game.drainEvents()){
+    festival.handle(ev);
+    if(ev.type==="milestone")sound.cue("milestone");
+    else if(ev.type!=="points")sound.cue(ev.type,ev.count);
+  }
   sound.tick(game.paused||game.over,game.level);
   if(game.cleared!==before){previousCleared=game.cleared;if(navigator.vibrate)navigator.vibrate(40);}
   backdrop();
@@ -304,11 +345,15 @@ musicVolume.addEventListener("input",()=>{
 fxVolume.addEventListener("input",()=>{
   sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);updateSliders();storeSettings();
 });
+reducedCelebrations.addEventListener("change",()=>{
+  festival.root.classList.toggle("fx-reduced",reducedCelebrations.checked);storeSettings();
+});
+festival.root.classList.toggle("fx-reduced",reducedCelebrations.checked);
 const fast=document.getElementById("fast");
 fast.addEventListener("pointerdown",e=>{e.preventDefault();fast.setPointerCapture(e.pointerId);game.boost(selected,true);});
 for(const name of ["pointerup","pointercancel","lostpointercapture"])fast.addEventListener(name,()=>game.boost(selected,false));
 document.getElementById("again").addEventListener("click",()=>{
-  hands.reset();game.reset();ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
+  hands.reset();festival.reset();game.reset();ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
   if(sound.enabled)sound.start();
 });
 document.addEventListener("visibilitychange",()=>{if(document.hidden){hands.reset();game.paused=true;lastTime=0;}});

@@ -1,6 +1,6 @@
 (function (root) {
   "use strict";
-  const SECTORS = 48, RINGS = 10, LANES = 4;
+  const SECTORS = 48, RINGS = 10, LANES = 4, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
   const FORMS = [
     [[-1,0],[0,0],[1,0],[2,0]],
     [[0,0],[1,0],[0,1],[1,1]],
@@ -25,7 +25,7 @@
       this.baseFallSeconds=this.baseFallSeconds||5.0;
       this.events=[];
       this.board = Array.from({length:RINGS},()=>Array(SECTORS).fill(-1));
-      this.score=0; this.cleared=0; this.level=1; this.seconds=0;
+      this.score=0; this.cleared=0; this.level=1; this.seconds=0; this.placements=0;
       this.combo=0; this.flash=0; this.over=false; this.paused=false;
       this.pieces=Array(LANES).fill(null);
       this.fall=Array(LANES).fill(0);
@@ -40,6 +40,18 @@
       return Math.max(.8,this.baseFallSeconds*Math.pow(.92,this.level-1));
     }
     drainEvents(){return this.events.splice(0);}
+    award(points,reason,details={}) {
+      if(!Number.isSafeInteger(points)||points<=0) return 0;
+      const before=this.score;
+      this.score+=points;
+      this.events.push({type:'points',reason,gained:points,total:this.score,...details});
+      const first=Math.floor(before/MILESTONE_STEP)+1;
+      const last=Math.floor(this.score/MILESTONE_STEP);
+      if(last>=first) {
+        this.events.push({type:'milestone',reached:first*MILESTONE_STEP,upto:last*MILESTONE_STEP,total:this.score});
+      }
+      return points;
+    }
     spawn(lane) {
       const type=Math.max(0,Math.min(FORMS.length-1,Math.floor(this.rng()*FORMS.length)));
       this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+1,rot:0,boost:false};
@@ -105,7 +117,9 @@
         this.over=true;this.events.push({type:'gameover',lane});return false;
       }
       for(const [a,r] of cellsOf(p,p.angle,radius,p.rot)) this.board[r][a]=lane;
-      this.events.push({type:'lock',lane});
+      this.placements++;
+      this.events.push({type:'lock',lane,angle:p.angle,radius});
+      this.award(PLACEMENT_POINTS,'placement',{lane,angle:p.angle,radius});
       this.pieces[lane]=null;
       this.spawn(lane);
       return true;
@@ -122,8 +136,9 @@
       if(n){
         this.combo++;
         this.cleared+=n;
-        this.score += 480*n*n*this.level + 100*Math.max(0,this.combo-1);
-        this.flash=1; this.events.push({type:'ring',count:n});
+        const gained=480*n*n*this.level + 100*Math.max(0,this.combo-1);
+        this.flash=1; this.events.push({type:'ring',count:n,gained,combo:this.combo});
+        this.award(gained,'ring',{count:n,combo:this.combo});
       }else this.combo=0;
       return n;
     }
@@ -148,7 +163,7 @@
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,FORMS,COLORS,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);

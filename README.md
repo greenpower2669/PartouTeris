@@ -1,21 +1,19 @@
-# 🌙 PartouTeris — Les Pharaons de la Lune
+# PartouTeris — Les Pharaons de la Lune
 
-## Android 0.1.4 — portrait verrouillé et pyramides en haut
+## Android 0.1.5 : points et célébrations façon Block Boost
 
-**Demande utilisateur :** afficher le jeu en **portrait fixe** et déplacer les pyramides de la surface lunaire près du titre en haut.
+- +40 points par pièce Tetris réellement posée. Score et record locaux préservés.
+- Couronne 360 degrés : 480 × nombre de couronnes au carré × niveau, plus 100 points par combo consécutif au-delà du premier.
+- Une couronne : bulles, cinq projecteurs, texte et points gagnés.
+- Double couronne : boule à facettes, bulles, spots, vraie récompense affichée.
+- Chaque tranche de 1 000 points : feux d'artifice de session bornés à 5,6 secondes et mini-fanfare WebAudio entièrement originale, sans interruption brutale de la musique.
+- Une grosse récompense qui traverse plusieurs tranches ne multiplie pas artificiellement les scènes.
+- Effets visuels doux réglables, en respectant la préférence système d'animations réduites. Les célébrations ne capturent jamais les doigts.
 
-### Interface portrait
-- L'activité Android est verrouillée sur `portrait` (et non `sensorLandscape`). Une demande explicite `SCREEN_ORIENTATION_PORTRAIT` est appliquée au démarrage.
-- Grille et Lune recalculées automatiquement dans la bande libre entre le HUD supérieur et les commandes inférieures ; le plateau ne doit plus passer derrière les boutons.
-- Contrôles toujours disponibles à deux mains, avec cinq boutons répartis sur deux rangées adaptées au téléphone.
-- Instructions courtes dans un panneau distinct au-dessus des boutons ; N/E/S/O abrégés.
-- **Les trois pyramides dorées** sont maintenant une emblème vectorielle à côté du titre `PARTOUTERIS` ; les pyramides ont été retirées de la texture de la Lune, dont les cratères restent visibles.
-- Préserve : quatre chutes simultanées, traversée libre dans les airs, poses solides au sol, vitesse réglable, musique et volumes, records locaux, pause.
+Restent intacts : mode portrait fixe, trois pyramides à côté du titre, quatre chutes simultanées non bloquantes, commandes droite/gauche, vitesse réglable et jeu hors ligne.
 
-### Installation Android
-Fichier APK direct (non ZIP) disponible après compilation :
-[PartouTeris-v0.1.4-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.4-debug.apk)
+### Livraison APK directe
+Lien après validation de la compilation : https://raw.githubusercontent.com/greenpower2669/PartouTeris/feature/lunar-four-fronts-001/temp/PartouTeris-v0.1.5-debug.apk
 
-Package `com.greenpower2669.partouteris` inchangé et provisoire. Branche `feature/lunar-four-fronts-001`, aucune fusion dans `main` sans approbation.
-
-`node --test tests/*.test.cjs` ; `gradle :app:assembleDebug`.
+Tests : node --test tests/*.test.cjs ; gradle :app:assembleDebug.
+Package provisoire com.greenpower2669.partouteris, branche feature/lunar-four-fronts-001, jamais de fusion main sans validation.

@@ -114,3 +114,37 @@ test('Near orbital limit, simultaneous occupied landing produces real game over'
   assert.equal(g.board[8][6],3);
   assert.equal(g.drainEvents().at(-1).type,'gameover');
 });
+
+test('Each truly landed tetromino earns 40 points (not just full rings)',()=>{
+ const g=new Game(()=>0);
+ g.pieces[0]={lane:0,type:1,angle:6,radius:0,rot:0,boost:false};
+ assert.equal(g.lock(0),true);
+ assert.equal(g.score,40);assert.equal(g.placements,1);
+ assert.deepEqual(g.drainEvents().filter(e=>e.type==='points').map(e=>[e.reason,e.gained]),[['placement',40]]);
+});
+test('Overflow gives no points or placement credit',()=>{
+ const g=new Game(()=>0);g.pieces[0].radius=11;
+ assert.equal(g.lock(0),false);assert.equal(g.score,0);assert.equal(g.placements,0);
+});
+test('Ring scores are real; a repeated clearing raises combo by 100',()=>{
+ const g=new Game(()=>0);
+ g.board[0].fill(0);assert.equal(g.clearRings(),1);assert.equal(g.score,480);
+ g.board[0].fill(1);assert.equal(g.clearRings(),1);assert.equal(g.score,1060);
+ assert.equal(g.combo,2);
+ assert.deepEqual(g.drainEvents().filter(e=>e.type==='milestone').map(e=>e.reached),[1000]);
+});
+test('Two rings simultaneously give squared reward and one scene event',()=>{
+ const g=new Game(()=>0);g.board[0].fill(0);g.board[1].fill(0);
+ assert.equal(g.clearRings(),2);assert.equal(g.score,1920);
+ const rings=g.drainEvents().filter(e=>e.type==='ring');
+ assert.equal(rings.length,1);assert.equal(rings[0].gained,1920);
+});
+test('Huge jackpot emits only one bounded milestone notice',()=>{
+ const g=new Game(()=>0);g.award(10300,'test');
+ const m=g.drainEvents().filter(e=>e.type==='milestone');
+ assert.equal(m.length,1);assert.equal(m[0].reached,1000);assert.equal(m[0].upto,10000);
+});
+test('New game resets session points but retains chosen slow fall speed',()=>{
+ const g=new Game(()=>0);g.setBaseFallSeconds(7.5);g.award(200,'test');g.placements=3;g.reset();
+ assert.equal(g.score,0);assert.equal(g.placements,0);assert.equal(g.baseFallSeconds,7.5);
+});

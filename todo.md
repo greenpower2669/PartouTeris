@@ -47,3 +47,12 @@
 - [x] Ajouter tests Node orientation et géométrie aux tailles portrait.
 - [x] CI GitHub Actions #39518335994 réussie (tests Node + compilation Android) ; APK directe vérifiée `temp/PartouTeris-v0.1.4-debug.apk` (26 736 octets).
 - [ ] Valider visuellement sur SM-A576B Android 16 avec une nouvelle capture.
+
+## PT-008 — Score et célébrations 0.1.5
+- [x] Récompenser pièces posées, couronnes et combos réels.
+- [x] Afficher +40 flottants, bulles et projecteurs sur couronnes.
+- [x] Boule à facettes aux doubles couronnes et feux d'artifice à chaque 1000 points.
+- [x] Fanfare WebAudio indépendante du fond musical, mode visuel doux.
+- [x] Préserver portrait, quatre chutes, tactile 2 mains, sauvegardes.
+- [x] Ajouter tests des scores, seuils et animations.
+- [ ] Vérifier CI/APK directe 0.1.5 ; tester réellement sur Android 16.

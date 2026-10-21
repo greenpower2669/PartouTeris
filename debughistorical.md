@@ -41,3 +41,9 @@
 - Risques à confirmer sur Samsung : taille réelle des boutons, zones tactiles et disponibilité de l'espace pour les quatre voiles en portrait.
 
 - CI PT-007 : run #39518335994 **success**, tests Node, build Android et publication APK brute de 26 736 octets dans `temp/PartouTeris-v0.1.4-debug.apk`. Aucune fusion `main` ; capture réelle du mode portrait en attente.
+
+## PT-008 — Récompenses (21 octobre 2026)
+- Lacune 0.1.4 : aucun score au placement ; célébrations trop rares.
+- Correctif : points calculés uniquement à la pose solide (+40), combo de couronnes réelles, palier 1000 détecté une seule fois même en cas de jackpot.
+- Scènes inspirées de Block Boost, mais synthèse graphique/sonore autonome ; pas de fichiers audio privés.
+- Animation limitée, option douce, pas de stroboscope et overlay pointer-events:none. Tests et rendu réel sur Samsung à confirmer.

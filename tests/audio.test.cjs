@@ -40,3 +40,7 @@ test('Repeated touch does not restart a playing melody',()=>{
     assert.equal(s.nextBeat,42);
   }finally{if(old)globalThis.AudioContext=old;else delete globalThis.AudioContext;}
 });
+
+test('Milestone fanfare is safe without an audio context',()=>{
+  const s=new Soundtrack();assert.doesNotThrow(()=>s.cue('milestone'));
+});

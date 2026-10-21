@@ -124,6 +124,13 @@
         const notes=[523.25,659.25,783.99,1046.50,1318.5];
         for(let i=0;i<Math.min(5,3+count);i++)
           this.tone(notes[i],now+i*.07,.37,.23,"triangle",this.effects);
+      } else if(kind==="milestone"){
+        // Short original fanfare, without muting the background bed.
+        const melody=[523.25,659.25,783.99,1046.50,783.99,1174.66,1318.50];
+        for(let i=0;i<melody.length;i++){
+          this.tone(melody[i],now+i*.19,.26,.16,"triangle",this.effects);
+          if(i%2===0)this.tone(melody[i]/2,now+i*.19,.27,.048,"sine",this.effects);
+        }
       } else if(kind==="gameover"){
         for(let i=0;i<4;i++)this.tone(380*Math.pow(.81,i),now+i*.20,.30,.21,"sawtooth",this.effects);
       }

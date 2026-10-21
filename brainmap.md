@@ -20,3 +20,5 @@
 - PT-006 : `app/src/main/assets/visuals.js` est le moteur visuel procédural Canvas 2D ; `index.html` lui délègue le fond, la Lune, les cellules, les parachutes, les impulsions énergétiques. Rendu hors ligne.
 
 - PT-007 : `app/src/main/assets/layout.js` calcule un plateau portrait borné entre HUD et dock bas. `index.html` intègre emblème SVG des trois pyramides à côté du titre, commandes en grille 2 lignes ; `visuals.js` conserve une Lune à cratères sans pyramides. `AndroidManifest.xml` et `MainActivity.java` forcent le mode portrait. `tests/portrait.test.cjs` garantit orientation et espacements portrait.
+
+- PT-008 : engine.js award et événements points/ring/milestone ; celebrations.js gère float +40, bulles/disco/feux ; index.html ajoute scoreBurst transparent, mode doux et score lisible ; audio.js fanfare originale. Tests celebrations.test.cjs, engine.test.cjs et audio.test.cjs.

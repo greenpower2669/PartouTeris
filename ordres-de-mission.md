@@ -45,3 +45,10 @@
 - Le plateau doit rester entre le HUD et les boutons, jamais sous les contrôles ; l'interface portrait place les commandes sur deux rangées.
 - Trois pyramides décoratives à côté du titre en haut, retirées de la texture lunaire (cratères conservés).
 - Statut : code et tests validés par CI #39518335994, APK directe 0.1.4 vérifiée ; contrôle du rendu portrait sur Samsung toujours attendu.
+
+## PT-008 — Points et célébrations Block Boost (21 octobre 2026)
+- Demande : « Faut des points et des célébrations comme avec block boost pour dynamiser ».
+- Référence auditée : Block-Boost (fireworks.mjs, result-celebration.mjs, disco-sprites.mjs) ; principes des scènes bornées et seuils de 1 000 points.
+- Code 0.1.5 : +40 points à chaque pose valable, score réel de couronnes et combos, gains flottants ; bulles/projecteurs, disco, feux d'artifice, fanfare originale et option visuelle douce.
+- Préserver la licence, les sauvegardes, le tactile, le portrait et les sons existants. Aucun média privé de Djipie transféré.
+- Statut : code ajouté sur branche de travail ; build GitHub et validation téléphone attendus.
