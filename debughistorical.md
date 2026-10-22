@@ -150,3 +150,8 @@
 
 ## PT-019 : Ciblage laser trop précis sur Android
 Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.2.5, le pointeur devait rester appuyé, sans bouger, pendant 1300 ms ; un relâchement interrompait le focus. Version 0.2.6 : visée magnétique, focus conservé après levée du doigt, progression visible en haut de l'écran. Run #39689590579 réussi, test réel Samsung à effectuer.
+
+## PT-020 — Chiralités, couleurs et séries de tirages (22/10/2026)
+- Cause confirmée : les couleurs étaient codées par front (`COLORS[p.lane]`) et les cellules verrouillées ne mémorisaient que ce front. Le tirage était indépendant, avec possibilité de répétitions longues.
+- Correction : sept couleurs par type I/O/L/J/Z/S/T, `boardTypes` synchronisé à la pose, aux couronnes et au laser, tirage équitable par sac global de sept, et log des chiralités posées sous `PartouChirality` (forme, rotation, front, couleur, compteurs tirés/posés).
+- Tests Node, compilation Gradle et aperçu Chromium réussis : Actions #39742860690. Aucun log réel de partie sur Samsung encore recueilli. La réflexion du repère polaire n'est pas modifiée afin de préserver collisions et commandes ; l'observation des logs et visuels déterminera la suite.
