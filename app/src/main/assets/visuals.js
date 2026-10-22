@@ -11,7 +11,10 @@ const PALETTE=[
 ];
 function shadeFor(color){
   const i=["#67dcf1","#ffd567","#bca5ff","#ff9077"].indexOf(color);
-  return PALETTE[Math.max(0,i)];
+  if(i>=0)return PALETTE[i];
+  const n=parseInt(color.slice(1),16),rgb=[(n>>16)&255,(n>>8)&255,n&255];
+  const mix=(p)=>"#"+rgb.map(x=>Math.round(x*p).toString(16).padStart(2,"0")).join("");
+  return ["#ffffff",color,mix(.45)];
 }
 function rng(seed){return function(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 function position(cx,cy,r,a){return [cx+Math.cos(a)*r,cy+Math.sin(a)*r];}
