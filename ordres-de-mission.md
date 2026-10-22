@@ -172,3 +172,11 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - Fichiers : `session.js` validé/versionné/isolé, `index.html` bouton et déclencheurs, `MainActivity.java` flush onPause, `hud-pt016.css` pyramide CSS ; tests `pt022-session.test.cjs`.
 - Build GitHub Actions [#39760329152](https://github.com/greenpower2669/PartouTetris/actions/runs/39760329152) **success**, Android 0.2.9, APK brute `temp/PartouTetris-v0.2.9-debug.apk` (8 799 042 octets). Capture `design/rendu-jeu-apercu.jpg` inspectée : A pyramidal et O lunaire présents sans masquer le plateau.
 - Main intacte, validation d'une fermeture/réouverture sur Samsung SM-A576B encore nécessaire avant Release.
+
+## PT-023 — Reprise confirmée et Hall of Fame local (22 octobre 2026)
+- Après fermeture complète/réouverture WebView avec checkpoint valide, afficher une question séparée : « Voulez-vous continuer là où vous en étiez ? ».
+- OUI : restaurer à ce moment seulement les quatre fronts sauvegardés, puis reprendre au toucher. Le checkpoint n'est pas modifié avant la réponse.
+- NON : afficher une **deuxième** fenêtre « Vous êtes sûr ? » ; « GARDER MA PARTIE » retourne à la question initiale sans effacer ; « OUI, NOUVELLE PARTIE » est l'unique voie qui supprime la session et commence à zéro. Records, classements, pseudo et préférences jamais supprimés.
+- Hall of Fame **local et hors démarrage** : fenêtre distincte depuis Réglages et fin de partie, dix meilleures performances, pseudo, points, médailles; données déjà conservées par leaderboard.js. Le résumé des trois meilleurs scores dans le HUD reste lisible pendant une partie.
+- L'accueil initial affiche « ▶ JOUER » et non « Démarrer avec le son » ni une explication technique Android sur l'audio. La musique suit ses préférences et démarre après un geste, inchangée.
+- Tests PT-023 plus ajustement des anciens contrats PT-016 et PT-022, build [GitHub Actions #39763997838](https://github.com/greenpower2669/PartouTetris/actions/runs/39763997838) réussi. APK brute `temp/PartouTetris-v0.2.10-debug.apk`, 8 801 497 octets, sur branche `feature/lunar-four-fronts-001`. Capture de plateau inspectée. Tester la séquence complète sur Samsung. Main intacte.

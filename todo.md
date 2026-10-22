@@ -244,3 +244,12 @@
 - [x] GitHub Actions #39760329152 success, APK brute `temp/PartouTetris-v0.2.9-debug.apk` (8 799 042 octets) vérifiée ; capture CSS A inspectée.
 - [ ] Valider reprise réelle sur SM-A576B : fermer l'app, rouvrir, reprendre après action utilisateur et comparer les quatre fronts et score. Tester aussi la sauvegarde au milieu d'un déplacement, sans boost résiduel.
 - [ ] Demander accord Fab avant fusion main / publication AAB.
+
+## PT-023 — Accueil, sauvegarde et Hall of Fame
+- [x] Popup de reprise seulement après réouverture complète avec partie sauvegardée : « Voulez-vous continuer là où vous en étiez ? ».
+- [x] OUI reprend les 4 fronts restaurés avec score/combos/paramètres sauvegardés ; aucune restauration avant le choix.
+- [x] NON affiche une deuxième confirmation « Vous êtes sûr ? » ; possibilité de garder la partie ; effacement uniquement sur deuxième validation.
+- [x] Hall of Fame local indépendant (top 10 avec pseudo/points) accessible dans Réglages et sur écran de défaite, absent de la fenêtre initiale.
+- [x] Remplacement de « JOUER AVEC LE SON » par « ▶ JOUER », suppression du texte technique audio de démarrage.
+- [x] Tests adaptés et build GitHub Actions #39763997838 réussi ; APK brute `temp/PartouTetris-v0.2.10-debug.apk` 8 801 497 octets vérifiée ; capture de plateau contrôlée.
+- [ ] Essayer sur Samsung : fermer complètement l'app avec une partie, la rouvrir, Oui → bonne reprise ; Non → annuler (conservation) puis Non → confirmation finale (nouveau jeu) ; ouvrir Hall of Fame, vérifier historique inchangé.

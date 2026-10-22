@@ -169,3 +169,9 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Identité : A pyramide CSS sculpté en or, O reste une Lune bleue. Capture Chromium 412×915 inspectée, logo lisible, écran lunaire dégagé.
 - Tests Node et assemblage Android réussis : CI #39760329152 ; `temp/PartouTetris-v0.2.9-debug.apk` 8 799 042 octets SHA blob f8322d35b2b938ba14115bb18ad3f939200dbe83.
 - Essai réel restant : démarrer une partie, placer quelques blocs, quitter/forcer arrêt de l'application puis relancer et tester reprise exacte du score, cellules, pièces et palette ; nouveau jeu doit laisser les records intacts.
+
+## PT-023 — Audit sauvegarde, ouverture et Hall of Fame
+- Avant : dès le chargement `session.restore(game,savedSession)` mutait le moteur avant le choix et proposait « REPRENDRE » / « NOUVELLE PARTIE » dans le démarrage avec libellé « JOUER AVEC LE SON ».
+- Après : aucune restauration avant OUI. NON demande une confirmation indépendante ; simple annulation revient à la question initiale et préserve checkpoint. Machine à état pure `ResumeDecision` empêche un effacement sans passer par la confirmation.
+- Hall of Fame local déjà sauvegardé au format leaderboard-v1 (10 meilleurs) mais jusqu'ici top3 seulement dans HUD ; désormais popup hors démarrage, consultable depuis Réglages ou game over. Aucun appel réseau ni classement global.
+- Premier essai CI : deux anciens tests attendent un ancien libellé et interdisent `position:fixed` dans feuille HUD. Test mis à jour, dialogue passé en `position:absolute` dans viewport ; rerun #39763997838 **success** (Node, Gradle, capture, publication APK). Test Android réel de cycle fermeture/relancement puis confirmations nécessaire.
