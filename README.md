@@ -1,12 +1,12 @@
 # 🌙 PartouTetris — Les Pharaons de la Lune
 
-## Prototype Android 0.2.6 — PT-014 : annonces hors plateau, musique officielle
+## Prototype Android 0.2.7 — PT-014 : annonces hors plateau, musique officielle
 
 **Branche :** `feature/lunar-four-fronts-001` — `main` conservée intacte.
 
 ### 📲 APK Android direct (sans ZIP)
 
-**[Télécharger PartouTetris-v0.2.6-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.6-debug.apk)**
+**[Télécharger PartouTetris-v0.2.7-debug.apk](https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.7-debug.apk)**
 
 APK debug compilé par [GitHub Actions](https://github.com/greenpower2669/PartouTetris/actions), directement installable sur Android ; AAB de publication seulement après validation de Fab.
 
@@ -50,3 +50,6 @@ La Terre s'anime par rotation apparente et nuages blancs translucides mobiles, a
 ### PT-019 : Corriger une erreur avec le laser
 
 Active ⚡ LASER puis touche une brique déjà posée. Le laser cible la brique pendant 1,3 seconde, même si tu retires ton doigt. La barre en haut indique la charge. À la fin, une seule brique est retirée avec une pénalité de points adaptée à sa hauteur. Toucher hors cible annule. Le classement, les sauvegardes et le mode tir bref sur pièces volantes sont inchangés.
+
+### PT-020 — Couleurs et chiralités
+Les couleurs suivent maintenant la forme : I cyan, O jaune, L orange, J bleu, S vert, Z rouge, T violet. Le bloc garde sa couleur après la pose. Le tirage est équilibré par sacs de 7 pièces. Chaque pose produit une trace `[PT020][POSE]` avec les compteurs L/J/S/Z, front, rotation et couleur, visible dans Android Logcat sous `PartouChirality`. Tests et APK debug 0.2.7 : Actions #39742860690.
