@@ -214,3 +214,13 @@
 - [x] Barre de progression pendant 1,3 seconde et retrait d'une brique avec le malus existant.
 - [x] Tests et compilation GitHub Actions #39689590579 réussis ; APK brute dans temp/PartouTetris-v0.2.6-debug.apk.
 - [ ] Essai sur Samsung : choix de la cible, progression visible, pénalité, annulation et conservation des records.
+
+## PT-020 — Chiralités et couleurs (22 octobre 2026)
+- [x] Couleurs fixes selon la forme : I cyan, O jaune, L orange, J bleu, Z rouge, S vert, T violet.
+- [x] Conserver le type/couleur des pièces posées à travers les couronnes et le laser.
+- [x] Générateur équitable par sac global de sept pièces sans remise.
+- [x] Debug console et Android Logcat `PartouChirality` à chaque pose : L/J/S/Z, front, rotation, couleur, cumuls posés et tirés.
+- [x] Tests chiralités miroirs, tirage, conservation des couleurs et APK 0.2.7 : Actions #39742860690 success.
+- [x] APK brute `temp/PartouTetris-v0.2.7-debug.apk`, 8 794 454 octets, vérifiée.
+- [ ] Contrôler sur Samsung les couleurs des quatre fronts et capturer les logs après au moins 14 placements.
+- [ ] Ne pas inverser les coordonnées polaires avant accord et vérification des impacts sur les commandes/collisions.
