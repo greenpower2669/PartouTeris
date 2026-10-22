@@ -39,6 +39,10 @@ public final class MainActivity extends Activity {
                     Log.d("PartouChirality", message.message());
                     return true;
                 }
+                if (message.message() != null && message.message().startsWith("[PT021][BOOST]")) {
+                    Log.d("PartouTouch", message.message());
+                    return true;
+                }
                 return super.onConsoleMessage(message);
             }
         });
