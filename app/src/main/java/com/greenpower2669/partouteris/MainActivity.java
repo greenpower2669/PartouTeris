@@ -64,6 +64,15 @@ public final class MainActivity extends Activity {
         super.onWindowFocusChanged(focus);
         if(focus) immersive();
     }
+    @Override protected void onPause() {
+        // Flush JavaScript state while WebView is still available; an
+        // independent 850ms checkpoint already protects abrupt process kills.
+        if (webView != null) {
+            webView.evaluateJavascript(
+                "window.partouFlushSession&&window.partouFlushSession()", null);
+        }
+        super.onPause();
+    }
     @Override protected void onDestroy() {
         if(webView!=null){webView.stopLoading();webView.destroy();webView=null;}
         super.onDestroy();
