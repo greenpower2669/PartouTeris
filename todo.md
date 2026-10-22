@@ -224,3 +224,13 @@
 - [x] APK brute `temp/PartouTetris-v0.2.7-debug.apk`, 8 794 454 octets, vérifiée.
 - [ ] Contrôler sur Samsung les couleurs des quatre fronts et capturer les logs après au moins 14 placements.
 - [ ] Ne pas inverser les coordonnées polaires avant accord et vérification des impacts sur les commandes/collisions.
+
+## PT-021 — Chutes ×10 involontaires pendant le déplacement
+- [x] Identifier déclenchement caché radial de 17px dans `touch.js`.
+- [x] Supprimer complètement cette action involontaire ; premier doigt = déplacement uniquement, y compris franchissement des quartiers.
+- [x] Le deuxième doigt stable ≥420ms reste la seule accélération multitouch ; glissement après hold coupe immédiatement ×10.
+- [x] Verrouiller la cible du bouton CHUTE sur le front initial jusqu'au relâchement ; gérer simultanéité avec boost du second doigt et clavier via `boost-sources.js`.
+- [x] Ajouter traces debug `PartouTouch` pour ON/OFF et source.
+- [x] Ajouter tests du glissement radial, des changements de quartier/front, des sources simultanées, des relâchements et interruptions.
+- [ ] GitHub Actions compilation 0.2.8 et vérification APK brute.
+- [ ] Essai Samsung : placer plusieurs pièces en promenant le doigt au centre et entre quartiers, aucune chute rapide sans second doigt.
