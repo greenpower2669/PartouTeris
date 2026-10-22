@@ -173,3 +173,40 @@
 @media(prefers-reduced-motion:reduce){
  #hud .brand-minos,#hud .brand-title,#hud #scoreTotal{animation:none!important}
 }
+
+/* PT-022: stylized Egyptian pyramid is the glyph A in PARTOUTETRIS.
+   Sculpted in CSS, independent of the logo's existing blue Moon O. */
+#hud .brand-pyramid {
+  -webkit-text-fill-color:initial;position:relative;display:inline-block;
+  flex:0 0 .78em;width:.78em;height:.91em;
+  margin:0 -.025em;vertical-align:middle;
+  background:
+    linear-gradient(108deg,#fff1bd 0%,#ffe1a0 15%,#cb812e 49%,#81411a 51%,#ffd47a 82%,#fff3b9 100%);
+  clip-path:polygon(50% 0%,99% 93%,99% 100%,1% 100%,1% 93%);
+  filter:drop-shadow(0 0 3px #edb95a);
+}
+#hud .brand-pyramid::before{
+  content:"";position:absolute;inset:14% 10% 14%;
+  background:repeating-linear-gradient(180deg,transparent 0 21%,#68391477 22% 25%,transparent 26% 37%);
+  clip-path:polygon(50% 0%,100% 100%,0% 100%);
+}
+#hud .brand-pyramid::after{
+  content:"";position:absolute;
+  bottom:9%;left:30%;width:40%;height:36%;
+  background:linear-gradient(110deg,#173653,#08162e 60%,#122842);
+  border-top:2px solid #ffe9a6;
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+  box-shadow:0 -1px 6px #fff1ad;
+}
+/* The title and the resume controls must remain readable on narrow phones. */
+#startPanel #sessionResumeNotice:not([hidden]) {
+  color:#a9f4ff;font-weight:800;
+  text-shadow:0 0 8px #4ac5df88;
+  border:1px solid #82dfff6d;border-radius:10px;
+  padding:9px;background:#102d4ba6;
+}
+#startPanel #newSession{display:block;margin:10px auto 0;font-size:14px}
+#startPanel #newSession[hidden],#startPanel #sessionResumeNotice[hidden]{display:none!important}
+@media(max-width:350px){
+ #hud .brand-pyramid{flex-basis:.73em;width:.73em;margin:0 -.035em}
+}
