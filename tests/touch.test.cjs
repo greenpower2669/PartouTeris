@@ -97,11 +97,35 @@ test('Ending primary grip while secondary held instantly cancels fast drop',()=>
  c.up(p(2,18,30,100,600));
  assert.equal(e.some(x=>x[0]==='rotate'),false);
 });
-test('Releasing held finger while grip is inward-dragged keeps acceleration',()=>{
+test('PT-021: dragging inward by 40 pixels while changing quadrant never accelerates',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,4,250,90,0,140));
+ // Long diagonal inward grip movement across two distinct quadrants.
+ c.move(p(1,17,210,135,120,92));
+ c.move(p(1,31,180,160,240,48));
+ c.tick(1200);
+ assert.equal(e.filter(x=>x[0]==='boost'&&x[2]===true).length,0);
+ assert.ok(e.some(x=>x[0]==='move'));
+ c.up(p(1,31,180,160,1250,48));
+ assert.equal(e.filter(x=>x[0]==='boost'&&x[2]===true).length,0);
+});
+test('PT-021: releasing a deliberate second-finger hold stops x10 even if first finger moved inward',()=>{
  const {controls:c,events:e,p}=rig();
  c.down(p(1,4,250,90,0,90));c.move(p(1,4,250,90,20,50));
  c.down(p(2,18,30,100,30));c.tick(550);c.up(p(2,18,30,100,600));
- assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,true]);
- c.up(p(1,4,250,90,610));
  assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,false]);
+ c.up(p(1,4,250,90,610));
+});
+test('PT-021: a second finger sliding after activation immediately stops boost',()=>{
+ const {controls:c,events:e,p}=rig();
+ c.down(p(1,4,250,90,0));
+ c.down(p(2,18,35,100,100));
+ c.tick(540);
+ assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,true]);
+ c.move(p(2,18,101,160,555));
+ assert.deepEqual(e.filter(x=>x[0]==='boost').at(-1),['boost',0,false]);
+ c.tick(1200);
+ assert.deepEqual(e.filter(x=>x[0]==='boost'&&x[2]),[['boost',0,true]]);
+ c.up(p(2,18,101,160,1300));
+ assert.equal(e.filter(x=>x[0]==='rotate').length,0);
 });
