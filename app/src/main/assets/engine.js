@@ -11,7 +11,10 @@
     [[-1,1],[0,1],[0,0],[1,0]],
     [[-1,0],[0,0],[1,0],[0,1]]
   ];
-  const COLORS = ["#67dcf1","#ffd567","#bca5ff","#ff9077"];
+  const COLORS = ["#67dcf1","#ffd567","#bca5ff","#ff9077"]; // legacy front accents
+  const FORM_NAMES=Object.freeze(["I","O","L","J","Z","S","T"]);
+  const TYPE_COLORS=Object.freeze(["#31dfff","#ffd34d","#ff9b36","#397bff","#ff5969","#46e58b","#bb83ff"]);
+  const CHIRALITY=Object.freeze(["non chirale","non chirale","L (miroir J)","J (miroir L)","Z (miroir S)","S (miroir Z)","non chirale"]);
   const mod = (n, m) => ((n % m) + m) % m;
   function cellsOf(p, a=p.angle, r=p.radius, rot=p.rot) {
     const offsets = FORMS[p.type];
@@ -26,6 +29,9 @@
       this.baseFallSeconds=this.baseFallSeconds||5.0;
       this.events=[];
       this.board = Array.from({length:RINGS},()=>Array(SECTORS).fill(-1));
+      this.boardTypes=Array.from({length:RINGS},()=>Array(SECTORS).fill(-1));
+      this.bag=[];this.spawnedTypes=Array(FORMS.length).fill(0);
+      this.placedTypes=Array(FORMS.length).fill(0);
       this.score=0; this.cleared=0; this.level=1; this.seconds=0; this.placements=0;
       this.combo=0; this.flash=0; this.over=false; this.paused=false;
       this.pieces=Array(LANES).fill(null);
@@ -52,6 +58,7 @@
          this.board[radius][sector]===-1)return null;
       const owner=this.board[radius][sector],penalty=this.destructionPenalty(radius);
       this.board[radius][sector]=-1;
+      this.boardTypes[radius][sector]=-1;
       const charged=Math.min(this.score,penalty);
       this.score-=charged;
       const result={type:"destroy",sector,radius,owner,penalty,charged,
@@ -72,7 +79,10 @@
       return points;
     }
     spawn(lane) {
-      const type=Math.max(0,Math.min(FORMS.length-1,Math.floor(this.rng()*FORMS.length)));
+      if(!this.bag.length)this.bag=FORMS.map((_,i)=>i);
+      const i=Math.max(0,Math.min(this.bag.length-1,Math.floor(this.rng()*this.bag.length)));
+      const type=this.bag.splice(i,1)[0];
+      this.spawnedTypes[type]++;
       this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+SPACE_STEPS,rot:0,boost:false};
       this.fall[lane]=0;
     }
@@ -176,9 +186,18 @@
       }
       const blocks=cellsOf(p,p.angle,radius,p.rot);
       const reward=this.placementReward(blocks); // BEFORE committing this piece
-      for(const [a,r] of blocks) this.board[r][a]=lane;
+      for(const [a,r] of blocks){
+        this.board[r][a]=lane;
+        this.boardTypes[r][a]=p.type;
+      }
       this.placements++;
-      this.events.push({type:'lock',lane,angle:p.angle,radius});
+      this.placedTypes[p.type]++;
+      this.events.push({
+        type:'lock',lane,angle:p.angle,radius,rotation:p.rot,
+        pieceType:p.type,form:FORM_NAMES[p.type],chirality:CHIRALITY[p.type],
+        color:TYPE_COLORS[p.type],placement:this.placements,
+        placedCounts:this.placedTypes.slice(),spawnCounts:this.spawnedTypes.slice()
+      });
       this.award(reward.points,'placement',{lane,angle:p.angle,radius,...reward});
       this.pieces[lane]=null;
       this.spawn(lane);
@@ -190,6 +209,8 @@
         if(this.board[r].every(x=>x>=0)){
           this.board.splice(r,1);
           this.board.push(Array(SECTORS).fill(-1));
+          this.boardTypes.splice(r,1);
+          this.boardTypes.push(Array(SECTORS).fill(-1));
           n++; r--;
         }
       }
@@ -234,7 +255,7 @@
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,FORM_NAMES,TYPE_COLORS,CHIRALITY,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
