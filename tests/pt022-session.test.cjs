@@ -103,7 +103,7 @@ test('PT-022 UI resumes after an explicit audio gesture and flushes on Android l
  assert.match(html,/<script src="session.js"><\/script>/);
  assert.match(html,/session\.read\(storage\)/);
  assert.match(html,/session\.restore\(game,savedSession\)/);
- assert.match(html,/REPRENDRE LA PARTIE/);
+ assert.match(html,/id="resumeYes"[^>]*>✓ OUI, REPRENDRE<\/button>/);
  assert.match(html,/id="resumePopup"/);
  assert.match(html,/id="resumeConfirm"/);
  assert.match(html,/id="resumeDiscard"/);
