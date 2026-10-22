@@ -463,6 +463,8 @@ function persistSession(){
   if(!started||game.over)return false;
   return session.save(storage,game,selected);
 }
+// Native Android Activity.onPause requests a flush before possible WebView kill.
+window.partouFlushSession=()=>persistSession();
 function startPlay(newGame=false){
   if(newGame){
     session.clear(storage);game.reset();selected=0;
