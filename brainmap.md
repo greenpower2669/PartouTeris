@@ -54,3 +54,5 @@
 - PT-019 : `laser-aim.js` offre `findLocked` pour cases fixées avec tolérance de visée. `index.html` maintient `laserTarget` au relâchement, affiche `laserFocusHud` pendant 1,3 s et annule sur pause ou changement de mode ; tests `laser-aim.test.cjs`.
 
 - PT-020 : `engine.js` expose FORM_NAMES, TYPE_COLORS, CHIRALITY et un sac global de 7 ; le tableau `boardTypes` garde le type des pièces verrouillées en parallèle à `board`, notamment lors de la suppression d'anneau et du laser. `index.html` choisit les couleurs par type, journalise chaque pose dans la console ; `MainActivity.java` transfère `[PT020][POSE]` dans Android Logcat `PartouChirality`. Tests : `tests/pt020-chirality.test.cjs`.
+
+- PT-021 : `touch.js` supprime l'ancienne commande de boost cachée `g.inward` déclenchée par −17px de rayon. `boost-sources.js` coordonne séparément `touch`, `button` et `keyboard`, retient le front de départ et combine leurs durées sans laisser de boost bloqué. `index.html` connecte ces sources, relâche sur pause/blur et console `[PT021][BOOST]`. `MainActivity.java` redirige vers Logcat tag `PartouTouch`. Tests `tests/touch.test.cjs`, `tests/pt021-boost.test.cjs`.
