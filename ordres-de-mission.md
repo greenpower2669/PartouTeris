@@ -157,3 +157,9 @@ Objectif : corriger un mauvais placement moyennant du temps et des points. L'anc
 
 ## PT-020 (22/10/2026)
 Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des poses. Modifications sur la branche : boardTypes, chiralités et statistiques. CI #39742860690 réussie, APK 0.2.7. main à préserver, test Samsung requis.
+
+## PT-021 — Accélérations involontaires (22/10/2026)
+- Fab signale des chutes ×10 sans consentement en déplaçant une pièce, notamment entre quartiers.
+- Cause confirmée : `touch.js` interprétait un déplacement radial vers la Lune supérieur à 17 px comme commande de boost ; ce geste doit rester exclusivement un déplacement. Autre défaut : bouton CHUTE activait un front mais désactivait le front *actuellement sélectionné*, laissant l'ancien boost actif après changement de sélection.
+- Contrat : seul le deuxième doigt maintenu volontairement au moins 420 ms ou un bouton/une touche explicite déclenche ×10. Une glissade du deuxième doigt annule le boost. Chaque source conserve son front initial jusqu'au relâchement, sans conflits entre sources simultanées.
+- Debug Android `PartouTouch` : ON/OFF + source et front. Préserver chiralités, couleurs, audio, records et package Android. Branche de travail uniquement, sans fusion `main`. Version 0.2.8 à tester sur SM-A576B.
