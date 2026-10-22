@@ -23,7 +23,7 @@
       if(this.grip && this.grip.id===p.id)return false;
       if(!this.grip){
         const lane=this.chooseLane(p.angle);
-        this.grip={id:p.id,lane,lastAngle:p.angle,accumulator:0,startDistance:p.distance,inward:false};
+        this.grip={id:p.id,lane,lastAngle:p.angle,accumulator:0};
         this.onSelect(lane);
         return true;
       }
@@ -42,17 +42,23 @@
           this.onMove(g.lane,direction);
           g.accumulator-=direction;
         }
-        g.inward=p.distance<g.startDistance-17;
-        this.updateBoost();
+        // PT-021: dragging inward across a lunar quadrant must NEVER
+        // trigger a hard drop. Only a deliberate second-finger hold can.
+        // The fall boost has no relationship to radial grip motion.
         return true;
       }
       const t=this.taps.get(p.id);
       if(!t)return false;
-      if(Math.hypot(p.x-t.x,p.y-t.y)>this.longTapTravel)t.moved=true;
+      if(Math.hypot(p.x-t.x,p.y-t.y)>this.longTapTravel){
+        t.moved=true;
+        // If the second finger starts sliding after its hold activated,
+        // release the boost immediately; it cannot reactivate on this tap.
+        if(t.long){t.long=false;this.updateBoost();}
+      }
       return true;
     }
     updateBoost(force=false) {
-      const active=!!(this.grip&&(this.grip.inward||[...this.taps.values()].some(t=>t.long)));
+      const active=!!(this.grip&&[...this.taps.values()].some(t=>t.long&&!t.moved));
       if(this.grip&&(force||active!==this.boostActive)){
         this.boostActive=active;
         this.onBoost(this.grip.lane,active);
