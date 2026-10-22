@@ -703,10 +703,10 @@ canvas.addEventListener("pointercancel",e=>{
   if(laserMode)return; // focus persists after pointerup/pointercancel
   hands.cancel(touchInfo(e));
 });
-window.addEventListener("blur",()=>{hands.reset();boostSources.clear();resetLaserFocus();});
+window.addEventListener("blur",()=>{hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();});
 laserButton.addEventListener("click",()=>{
   if(!started||game.over)return;
-  hands.reset();boostSources.clear();resetLaserFocus();laserMode=!laserMode;updateLaserMode();
+  hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();laserMode=!laserMode;updateLaserMode();
 });
 updateLaserMode();
 nickname.addEventListener("change",()=>{
@@ -717,7 +717,7 @@ document.getElementById("turn").addEventListener("click",()=>{if(sound.enabled)s
 document.getElementById("pause").addEventListener("click",()=>{
   if(!started||game.over||settingsOpen)return;
   if(sound.enabled)sound.start();
-  hands.reset();boostSources.clear();resetLaserFocus();game.paused=!game.paused;lastTime=0;
+  hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();game.paused=!game.paused;lastTime=0;
 });
 document.getElementById("start").addEventListener("click",()=>{
   started=true;game.paused=false;lastTime=0;
@@ -734,7 +734,7 @@ document.getElementById("audioButton").addEventListener("click",()=>{
 });
 document.getElementById("options").addEventListener("click",()=>{
   if(settingsOpen)return;
-  hands.reset();boostSources.clear();resetLaserFocus();settingsOpen=true;pausedBeforeSettings=game.paused;game.paused=true;
+  hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();settingsOpen=true;pausedBeforeSettings=game.paused;game.paused=true;
   document.getElementById("settingsPanel").style.display="block";
 });
 document.getElementById("optionsClose").addEventListener("click",()=>{
@@ -779,7 +779,7 @@ document.getElementById("again").addEventListener("click",()=>{
 });
 document.addEventListener("visibilitychange",()=>{if(document.hidden){hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();game.paused=true;lastTime=0;}});
 window.addEventListener("keydown",e=>{
- if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();boostSources.clear();game.paused=!game.paused;}
+ if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();boostSources.clear();fastPointerId=null;game.paused=!game.paused;}
  if(e.key==="ArrowLeft"&&game.shift(selected,-1))sound.cue("move");
  if(e.key==="ArrowRight"&&game.shift(selected,1))sound.cue("move");
  if(e.key==="ArrowUp")game.rotate(selected);
