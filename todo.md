@@ -232,5 +232,5 @@
 - [x] Verrouiller la cible du bouton CHUTE sur le front initial jusqu'au relâchement ; gérer simultanéité avec boost du second doigt et clavier via `boost-sources.js`.
 - [x] Ajouter traces debug `PartouTouch` pour ON/OFF et source.
 - [x] Ajouter tests du glissement radial, des changements de quartier/front, des sources simultanées, des relâchements et interruptions.
-- [ ] GitHub Actions compilation 0.2.8 et vérification APK brute.
+- [x] GitHub Actions #39749278236 **success** : tests Node, Android Gradle, capture Chromium ; APK directe `temp/PartouTetris-v0.2.8-debug.apk` vérifiée, 8 795 703 octets, SHA blob `babf831b701c8e7baf912da2fcdbe39eafc9c8e5`.
 - [ ] Essai Samsung : placer plusieurs pièces en promenant le doigt au centre et entre quartiers, aucune chute rapide sans second doigt.
