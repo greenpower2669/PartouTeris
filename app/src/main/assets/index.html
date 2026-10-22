@@ -360,6 +360,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="celebrations.js"></script>
 <script src="leaderboard.js"></script>
 <script src="session.js"></script>
+<script src="resume-flow.js"></script>
 <script>
 (function(){
 "use strict";
@@ -469,6 +470,7 @@ const session=window.PartouSession;
 let lastSessionSave=0;
 const savedSession=session.read(storage);
 const canResume=!!savedSession;
+const resumeDecision=new window.PartouResumeFlow.ResumeDecision(canResume);
 const startPanel=document.getElementById("startPanel");
 const resumePopup=document.getElementById("resumePopup");
 const resumeConfirm=document.getElementById("resumeConfirm");
@@ -832,7 +834,8 @@ document.getElementById("pause").addEventListener("click",()=>{
 });
 document.getElementById("start").addEventListener("click",()=>startPlay(true));
 document.getElementById("resumeYes").addEventListener("click",()=>{
-  if(!canResume||!session.restore(game,savedSession)){
+  if(resumeDecision.resume()!=="resume")return;
+  if(!session.restore(game,savedSession)){
     // Invalid checkpoint: never silently run a partially restored board.
     resumePopup.hidden=true;startPanel.style.display="block";
     session.clear(storage);
@@ -844,12 +847,16 @@ document.getElementById("resumeYes").addEventListener("click",()=>{
   startPlay(false);
 });
 document.getElementById("resumeNo").addEventListener("click",()=>{
+  if(resumeDecision.reject()!=="confirm")return;
   resumePopup.hidden=true;
   resumeConfirm.hidden=false;
   document.getElementById("resumeBack").focus();
 });
-document.getElementById("resumeBack").addEventListener("click",()=>showResumeQuestion());
+document.getElementById("resumeBack").addEventListener("click",()=>{
+  if(resumeDecision.back()==="question")showResumeQuestion();
+});
 document.getElementById("resumeDiscard").addEventListener("click",()=>{
+  if(resumeDecision.discard()!=="new")return;
   // This is the ONLY irreversible branch of the two-step "Non" flow.
   session.clear(storage);
   resumeConfirm.hidden=true;
