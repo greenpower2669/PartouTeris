@@ -49,3 +49,5 @@
 - PT-018 : Terre animée avec nuages blancs semi-transparents, trois cyclones procéduraux et rotation apparente, satellites vivants (mouvements orbitaux de faible amplitude, propulsion pulsée). Laser 1,3s en mode LASER sur brique verrouillée détruit exactement une cellule, pénalité hauteur 80 × (r+1) × ceil((r+1)/2) sans score négatif ni record affecté. Annulation tactile; ancien tir bref sur pièce active maintenu.
 
 - PT-019 : laser de correction au toucher sur case verrouillée. Ciblage magnétique, maintien automatique de la visée 1,3 s et barre de progression dans le HUD. Une case retirée avec coût de points suivant la hauteur ; records et tirs brefs conservés.
+
+- PT-020 (0.2.7) : couleur stable selon la forme et non le front : I cyan, O jaune, L orange, J bleu, Z rouge, S vert, T violet. boardTypes conserve le type après verrouillage et suppression des couronnes. Tirage global de 7 sans remise. Journal de chaque pose avec chiralité, orientation, front et compte des L/J/S/Z dans Logcat PartouChirality. Collisions inchangées.
