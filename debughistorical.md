@@ -155,3 +155,9 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Cause confirmée : les couleurs étaient codées par front (`COLORS[p.lane]`) et les cellules verrouillées ne mémorisaient que ce front. Le tirage était indépendant, avec possibilité de répétitions longues.
 - Correction : sept couleurs par type I/O/L/J/Z/S/T, `boardTypes` synchronisé à la pose, aux couronnes et au laser, tirage équitable par sac global de sept, et log des chiralités posées sous `PartouChirality` (forme, rotation, front, couleur, compteurs tirés/posés).
 - Tests Node, compilation Gradle et aperçu Chromium réussis : Actions #39742860690. Aucun log réel de partie sur Samsung encore recueilli. La réflexion du repère polaire n'est pas modifiée afin de préserver collisions et commandes ; l'observation des logs et visuels déterminera la suite.
+
+## PT-021 — Chute accélérée aléatoire rapportée par Fab
+- Symptôme : chute « de son plein gré » pendant le guidage d'une pièce, souvent au passage entre quartiers.
+- Deux causes concrètes visibles en code 0.2.7 : `g.inward=p.distance<g.startDistance-17` suivie de `active=this.grip.inward||secondFinger.long` accélère sans deuxième doigt ; `fast pointerup => game.boost(selected,false)` peut laisser accéléré le front qui était sélectionné au début de la pression.
+- Correction 0.2.8 : suppression totale du boost par direction radiale ; le second doigt doit être immobile et maintenu ≥420 ms, et tout glissement significatif après activation l'arrête. Sources de boost séparées/pinnées par front pour bouton, doigts et clavier ; remise à zéro sur pause, cache et changement de mode ; traces Android `PartouTouch`.
+- CI Node + Android et essai réel Samsung à confirmer. Collisions et vitesse de gravité non modifiées.
