@@ -154,3 +154,6 @@
 
 ## PT-019 : Correction laser approuvée par retour utilisateur
 Objectif : corriger un mauvais placement moyennant du temps et des points. L'ancienne manipulation empêchait souvent de terminer le tir. Nouvelle manipulation : LASER activé, touche sur une brique posée, focus automatique 1,3 seconde, malus croissant puis retrait d'une brique. Conserver les sauvegardes et `main` intacte ; APK de test 0.2.6 sur la branche.
+
+## PT-020 (22/10/2026)
+Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des poses. Modifications sur la branche : boardTypes, chiralités et statistiques. CI #39742860690 réussie, APK 0.2.7. main à préserver, test Samsung requis.
