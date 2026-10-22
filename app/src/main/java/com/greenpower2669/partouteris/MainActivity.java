@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -30,7 +32,16 @@ public final class MainActivity extends Activity {
         webView.setBackgroundColor(0xff060d1c);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         webView.setWebViewClient(new WebViewClient());
-        webView.setWebChromeClient(new WebChromeClient());
+        // Debug-only gameplay traces, without flooding Android system logs.
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override public boolean onConsoleMessage(ConsoleMessage message) {
+                if (message.message() != null && message.message().startsWith("[PT020][POSE]")) {
+                    Log.d("PartouChirality", message.message());
+                    return true;
+                }
+                return super.onConsoleMessage(message);
+            }
+        });
         configure(webView.getSettings());
         setContentView(webView);
         webView.loadUrl("file:///android_asset/index.html");
