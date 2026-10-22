@@ -308,8 +308,10 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
 <h1>🌙 Les Pharaons de la Lune</h1><p>Laser : touche brièvement une pièce volante pour la pivoter ; sur une brique posée, touche pour verrouiller le focus, puis laisse tirer 1,3 seconde même sans maintenir le doigt ; malus croissant. Appuie sur LASER puis touche un débris en chute pour le faire pivoter ou le repousser latéralement. Ses flammes viennent de l’espace.</p><p>✋ Main droite : attrape et guide une pièce. ☝️ Main gauche : tapote pour pivoter, ou garde appuyé pour une descente ×10. Dans l’espace : rotation uniquement ; guidage possible dès la zone lunaire.</p><p>Débris incandescents dans l'espace, puis petites voiles de stabilisation uniquement près de la Lune. Satellites-pyramides dorés et lasers cyan.</p><p>Vitesse réglable et musique officielle PartouTetris.</p>
-<button id="start" aria-label="Commencer le jeu avec la musique">▶ JOUER AVEC LE SON</button>
-<p>Le son démarre après ce toucher, conformément aux règles d'Android.</p></div>
+<p id="sessionResumeNotice" hidden aria-live="polite"></p>
+<button id="start" aria-label="Commencer ou reprendre la partie avec la musique">▶ JOUER AVEC LE SON</button>
+<button id="newSession" hidden aria-label="Abandonner la partie sauvegardée et recommencer à zéro">↻ NOUVELLE PARTIE</button>
+<p>La partie est sauvegardée automatiquement sur ce téléphone. Le son démarre après ce toucher.</p></div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
 <h2>⚙ Réglages</h2>
 <label for="nickname">Pseudo du joueur</label>
@@ -336,6 +338,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="layout.js"></script>
 <script src="celebrations.js"></script>
 <script src="leaderboard.js"></script>
+<script src="session.js"></script>
 <script>
 (function(){
 "use strict";
@@ -350,10 +353,12 @@ function mountMoonWordmark(){
   const original=title.textContent;
   if(original!=="PARTOUTETRIS")return;
   const moon=document.createElement("span");
-  moon.className="brand-moon";
-  moon.setAttribute("aria-hidden","true");
+  moon.className="brand-moon";moon.setAttribute("aria-hidden","true");
+  const pyramid=document.createElement("span");
+  pyramid.className="brand-pyramid";pyramid.setAttribute("aria-hidden","true");
   title.setAttribute("aria-label",original);
-  title.replaceChildren(document.createTextNode("PART"),moon,document.createTextNode("UTETRIS"));
+  title.replaceChildren(document.createTextNode("P"),pyramid,
+    document.createTextNode("RT"),moon,document.createTextNode("UTETRIS"));
   title.dataset.orbMounted="true";
 }
 mountMoonWordmark();
@@ -439,6 +444,40 @@ updateSliders();updateAudioLabel();game.paused=true;
 let record=0;try{record=+(localStorage.getItem("partouteris-record")||0)}catch(e){}
 let W=1,H=1,dpr=1,cx=0,cy=0,scale=1,inner=0,outer=0,stepR=0,earth=null;
 let selected=0,lastTime=0,previousCleared=0;
+const session=window.PartouSession;
+let lastSessionSave=0;
+const resumeNotice=document.getElementById("sessionResumeNotice");
+const newSessionButton=document.getElementById("newSession");
+const savedSession=session.read(storage);
+const canResume=!!savedSession&&session.restore(game,savedSession);
+if(canResume){
+  selected=savedSession.selected;
+  speed.value=game.baseFallSeconds;updateSliders();
+  document.getElementById("start").textContent="▶ REPRENDRE LA PARTIE";
+  resumeNotice.textContent="Partie retrouvée : "+
+    game.score.toLocaleString("fr-FR")+" points · "+game.cleared+
+    " couronnes · 4 fronts sauvegardés.";
+  resumeNotice.hidden=false;newSessionButton.hidden=false;
+}
+function persistSession(){
+  if(!started||game.over)return false;
+  return session.save(storage,game,selected);
+}
+function startPlay(newGame=false){
+  if(newGame){
+    session.clear(storage);game.reset();selected=0;
+    scoreSaved=false;previousCleared=0;ui.alert.style.display="none";
+  }
+  hands.reset();boostSources.clear();fastPointerId=null;
+  resetLaserFocus();laserMode=false;updateLaserMode();
+  started=true;game.paused=false;lastTime=0;lastSessionSave=performance.now();
+  document.getElementById("startPanel").style.display="none";
+  persistSession();
+  if(sound.enabled){
+    const ok=sound.start();
+    if(!ok)document.getElementById("audioButton").textContent="⚠ AUDIO";
+  }
+}
 const stars=[];
 let seed=91;function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
 for(let i=0;i<125;i++)stars.push({x:random(),y:random(),r:0.3+random()*1.6,a:0.25+random()*0.65});
@@ -596,6 +635,10 @@ function frame(time){
     for(const from of emitters)
       art.laserDrill({from,to:laserTarget.to,progress,reduced:reducedCelebrations.checked});
   }
+  if(game.over)session.clear(storage);
+  else if(started&&time-lastSessionSave>=850){
+    persistSession();lastSessionSave=time;
+  }
   updateHud();requestAnimationFrame(frame);
 }
 function fromEvent(e){
@@ -718,15 +761,10 @@ document.getElementById("pause").addEventListener("click",()=>{
   if(!started||game.over||settingsOpen)return;
   if(sound.enabled)sound.start();
   hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();game.paused=!game.paused;lastTime=0;
+  persistSession();
 });
-document.getElementById("start").addEventListener("click",()=>{
-  started=true;game.paused=false;lastTime=0;
-  document.getElementById("startPanel").style.display="none";
-  if(sound.enabled){
-    const ok=sound.start();
-    if(!ok)document.getElementById("audioButton").textContent="⚠ AUDIO";
-  }
-});
+document.getElementById("start").addEventListener("click",()=>startPlay(false));
+newSessionButton.addEventListener("click",()=>startPlay(true));
 document.getElementById("audioButton").addEventListener("click",()=>{
   sound.setEnabled(!sound.enabled);
   if(sound.enabled)sound.start();
@@ -773,13 +811,22 @@ for(const name of ["pointerup","pointercancel","lostpointercapture"]){
   });
 }
 document.getElementById("again").addEventListener("click",()=>{
+  session.clear(storage);
   hands.reset();boostSources.clear();fastPointerId=null;festival.reset();game.reset();scoreSaved=false;laserMode=false;resetLaserFocus();laserShots=[];updateLaserMode();
   ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
   if(sound.enabled)sound.start();
 });
-document.addEventListener("visibilitychange",()=>{if(document.hidden){hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();game.paused=true;lastTime=0;}});
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){
+    persistSession();
+    hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();
+    game.paused=true;lastTime=0;
+  }
+});
+window.addEventListener("pagehide",()=>persistSession());
+window.addEventListener("beforeunload",()=>persistSession());
 window.addEventListener("keydown",e=>{
- if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();boostSources.clear();fastPointerId=null;game.paused=!game.paused;}
+ if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();boostSources.clear();fastPointerId=null;game.paused=!game.paused;persistSession();}
  if(e.key==="ArrowLeft"&&game.shift(selected,-1))sound.cue("move");
  if(e.key==="ArrowRight"&&game.shift(selected,1))sound.cue("move");
  if(e.key==="ArrowUp")game.rotate(selected);
