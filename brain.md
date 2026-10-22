@@ -51,3 +51,5 @@
 - PT-019 : laser de correction au toucher sur case verrouillée. Ciblage magnétique, maintien automatique de la visée 1,3 s et barre de progression dans le HUD. Une case retirée avec coût de points suivant la hauteur ; records et tirs brefs conservés.
 
 - PT-020 (0.2.7) : couleur stable selon la forme et non le front : I cyan, O jaune, L orange, J bleu, Z rouge, S vert, T violet. boardTypes conserve le type après verrouillage et suppression des couronnes. Tirage global de 7 sans remise. Journal de chaque pose avec chiralité, orientation, front et compte des L/J/S/Z dans Logcat PartouChirality. Collisions inchangées.
+
+- PT-021 : la prise au premier doigt ne commande **jamais** la chute ×10, même si l'utilisateur rapproche le doigt du centre ou traverse un autre quartier. Second doigt stable ≥420 ms, bouton CHUTE et touche clavier explicites uniquement. Boost par source et front initial via `BoostSources`, annulation lors d'un glissement du second doigt, pause, changement de mode et perte de focus. Traces Android `PartouTouch` pour ON/OFF et front.
