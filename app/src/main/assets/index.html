@@ -338,7 +338,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script>
 (function(){
 "use strict";
-const {Game,SECTORS,RINGS,LANES,COLORS,cellsOf,mod,SPACE_STEPS,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS}=window.PartouEngine;
+const {Game,SECTORS,RINGS,LANES,COLORS,FORM_NAMES,TYPE_COLORS,cellsOf,mod,SPACE_STEPS,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS}=window.PartouEngine;
 const canvas=document.getElementById("screen"),ctx=canvas.getContext("2d");
 const art=new window.PartouVisuals.Artist(ctx);
 // PT-016 — authentic coded HUD. The crated blue moon replaces the O of the
@@ -467,7 +467,7 @@ function pieces(){
   for(const p of game.pieces){
     if(!p||p.radius>=RINGS)continue;
     const ghost=game.ghost(p);
-    for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))wedge(a,r,COLORS[p.lane],.20,false);
+    for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))wedge(a,r,TYPE_COLORS[p.type],.20,false);
   }
   for(const p of game.pieces){
     if(!p)continue;
@@ -481,15 +481,15 @@ function pieces(){
       });
       const blocks=cellsOf(p);
       const relative=blocks.map(([a,r])=>[mod(a-p.angle+SECTORS/2,SECTORS)-SECTORS/2,r-p.radius]);
-      art.spacePiece({position:spot,cells:relative,color:COLORS[p.lane],
+      art.spacePiece({position:spot,cells:relative,color:TYPE_COLORS[p.type],
         time:performance.now()/1000,reduced:reducedCelebrations.checked,size:stepR});
     }else{
       art.incoming({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
         time:performance.now()/1000,reduced:reducedCelebrations.checked});
       if(window.PartouVisuals.shouldDeployCanopy(p.radius,RINGS))
         art.canopy({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
-          color:COLORS[p.lane],reduced:reducedCelebrations.checked});
-      for(const [a,r] of cellsOf(p))wedge(a,r,COLORS[p.lane],.94,true);
+          color:TYPE_COLORS[p.type],reduced:reducedCelebrations.checked});
+      for(const [a,r] of cellsOf(p))wedge(a,r,TYPE_COLORS[p.type],.94,true);
     }
   }
   const p=game.pieces[selected];
@@ -539,6 +539,16 @@ function frame(time){
   if(!game.paused&&!game.over)hands.tick(time);
   const before=game.cleared;game.step(dt);
   for(const ev of game.drainEvents()){
+    if(ev.type==="lock"){
+      const placed=ev.placedCounts,drawn=ev.spawnCounts;
+      console.info("[PT020][POSE] #"+ev.placement+
+        " forme="+ev.form+" chiralité="+ev.chirality+
+        " rotation="+(ev.rotation*90)+"deg"+
+        " front="+(ev.lane+1)+" secteur="+ev.angle+
+        " couronne="+ev.radius+" couleur="+ev.color+
+        " posées={L:"+placed[2]+",J:"+placed[3]+",S:"+placed[5]+",Z:"+placed[4]+"}"+
+        " tirées={L:"+drawn[2]+",J:"+drawn[3]+",S:"+drawn[5]+",Z:"+drawn[4]+"}");
+    }
     festival.handle(ev);
     if(ev.type==="milestone")sound.cue("milestone");
     else if(ev.type!=="points"&&ev.type!=="destroy")sound.cue(ev.type,ev.count);
@@ -567,7 +577,10 @@ function frame(time){
   sound.tick(game.paused||game.over,game.level);
   if(game.cleared!==before){previousCleared=game.cleared;if(navigator.vibrate)navigator.vibrate(40);}
   backdrop();
-  for(let r=0;r<RINGS;r++)for(let a=0;a<SECTORS;a++)if(game.board[r][a]!==-1)wedge(a,r,COLORS[game.board[r][a]],.88,true);
+  for(let r=0;r<RINGS;r++)for(let a=0;a<SECTORS;a++)if(game.board[r][a]!==-1){
+    const type=game.boardTypes[r][a];
+    wedge(a,r,type>=0?TYPE_COLORS[type]:COLORS[game.board[r][a]],.88,true);
+  }
   moon();pieces();overlays();
   laserShots=laserShots.filter(shot=>time-shot.at<480);
   // Three Earth defence satellites independently converge on each target.
