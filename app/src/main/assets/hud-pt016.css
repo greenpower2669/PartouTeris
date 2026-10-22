@@ -210,3 +210,44 @@
 @media(max-width:350px){
  #hud .brand-pyramid{flex-basis:.73em;width:.73em;margin:0 -.035em}
 }
+
+/* PT-023 — recovery and local Hall of Fame live in separate modals.
+   No high-score overlay or technical audio explanation on the welcome screen. */
+.decision-dialog{
+  position:fixed;z-index:12;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(92vw,440px);max-height:84dvh;overflow:auto;
+  padding:clamp(16px,4vw,23px);text-align:center;
+  border:2px solid #efca79;border-radius:20px;
+  background:linear-gradient(150deg,#123657f9,#08152afc 75%);
+  box-shadow:0 0 0 150vmax #010d1cba,0 0 25px #66d9f88a,0 17px 38px #000e;
+  color:#edf8ff;touch-action:pan-y;overscroll-behavior:contain;
+}
+.decision-dialog[hidden]{display:none!important}
+.decision-dialog h2{
+  color:#ffdfa0;font-size:clamp(21px,5.4vw,27px);line-height:1.2;
+  margin:0 0 12px;text-shadow:0 0 12px #d99e5d7c;
+}
+.decision-dialog p{
+  color:#d6eaf5;font-size:clamp(14px,3.6vw,16px);line-height:1.4;
+  margin:8px 0 17px;
+}
+.decision-actions{display:flex;flex-direction:column;gap:10px}
+.decision-actions button,.hall-of-fame #hallClose{
+  width:100%;min-height:52px;font-size:clamp(15px,4vw,18px);
+  border-color:#aee7f6;color:#fff7d9;
+}
+#resumeNo,#resumeBack{background:linear-gradient(155deg,#18364c,#18263e)}
+#resumeDiscard{background:linear-gradient(145deg,#6f2839,#442334);border-color:#ff9b9b}
+#resumeYes{background:linear-gradient(145deg,#196777,#0e3d5c);border-color:#83e7ff}
+.hall-of-fame ol{padding:0;margin:9px 0 17px;list-style:none;display:flex;flex-direction:column;gap:6px}
+.hall-of-fame li{
+  display:flex;align-items:center;justify-content:space-between;gap:9px;
+  border:1px solid #5c93ad7d;border-radius:9px;padding:10px;
+  background:linear-gradient(115deg,#193b55dc,#0d263fdc);
+  font-size:clamp(13px,3.4vw,16px);
+}
+.hall-of-fame li span{min-width:0;overflow-wrap:anywhere;text-align:left}
+.hall-of-fame li strong{flex:0 0 auto;font-variant-numeric:tabular-nums;color:#ffdf9c}
+.hall-of-fame li.hall-empty{justify-content:center;color:#b9dcfa}
+#hallFromSettings,#hallFromEnd{display:block;min-height:48px;margin:13px auto 0}
+@media(max-height:650px){.decision-dialog{max-height:90dvh;padding:12px}}
