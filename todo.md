@@ -234,3 +234,13 @@
 - [x] Ajouter tests du glissement radial, des changements de quartier/front, des sources simultanées, des relâchements et interruptions.
 - [x] GitHub Actions #39749278236 **success** : tests Node, Android Gradle, capture Chromium ; APK directe `temp/PartouTetris-v0.2.8-debug.apk` vérifiée, 8 795 703 octets, SHA blob `babf831b701c8e7baf912da2fcdbe39eafc9c8e5`.
 - [ ] Essai Samsung : placer plusieurs pièces en promenant le doigt au centre et entre quartiers, aucune chute rapide sans second doigt.
+
+## PT-022 — Lettre pyramide et reprise automatique
+- [x] Sculpture CSS du A doré du titre, O lunaire conservé, lecture accessible complète.
+- [x] Autosave versionné et validé des 4 pièces, du tableau polaire et des types fixés, score, rythme de chute, sac des 7 formes, temps, niveau et combo.
+- [x] Sauvegarde toutes ~850 ms et lorsqu'Android suspend / cache / ferme la WebView ; restauration en pause au démarrage.
+- [x] Boutons Reprendre la partie et Nouvelle partie, nouvelle partie et game-over nettoient seulement la clé de session.
+- [x] Tests Node : round-trip complet, copies indépendantes, sauvegarde corrompue, nettoyage, non-régression des records et contrats visuels.
+- [x] GitHub Actions #39760329152 success, APK brute `temp/PartouTetris-v0.2.9-debug.apk` (8 799 042 octets) vérifiée ; capture CSS A inspectée.
+- [ ] Valider reprise réelle sur SM-A576B : fermer l'app, rouvrir, reprendre après action utilisateur et comparer les quatre fronts et score. Tester aussi la sauvegarde au milieu d'un déplacement, sans boost résiduel.
+- [ ] Demander accord Fab avant fusion main / publication AAB.

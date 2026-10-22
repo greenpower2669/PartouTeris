@@ -161,3 +161,11 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Deux causes concrètes visibles en code 0.2.7 : `g.inward=p.distance<g.startDistance-17` suivie de `active=this.grip.inward||secondFinger.long` accélère sans deuxième doigt ; `fast pointerup => game.boost(selected,false)` peut laisser accéléré le front qui était sélectionné au début de la pression.
 - Correction 0.2.8 : suppression totale du boost par direction radiale ; le second doigt doit être immobile et maintenu ≥420 ms, et tout glissement significatif après activation l'arrête. Sources de boost séparées/pinnées par front pour bouton, doigts et clavier ; remise à zéro sur pause, cache et changement de mode ; traces Android `PartouTouch`.
 - CI Node + Android et essai réel Samsung à confirmer. Collisions et vitesse de gravité non modifiées.
+
+## PT-022 — Sauvegarde persistante et titre pharaonique (22/10/2026)
+- Avant : preferences audio/vitesse et leaderboard uniquement ; pas de partie en cours persistante. La réouverture réinitialisait quatre pièces et score.
+- Correction : `session.js` (version 1, clé distincte) enregistre l'état complet y compris position/rotation des quatre pièces, metadata des couleurs posées, bag aléatoire, compteurs, gravité, combinaisons. Vérification dimension/type + copie profonde avant restauration. Aucune reprise d'un boost encore tenu ni ancienne file d'événements.
+- Vue : `startPanel` propose REPRENDRE avec score retrouvé ou NOUVELLE PARTIE, le moteur reste en pause en attente du geste qui autorise aussi la musique. Sauvegarde régulière ~850ms + pagehide/visibilitychange + WebView Activity.onPause. Quand le jeu se termine, checkpoint supprimé sans effacer records/paramètres.
+- Identité : A pyramide CSS sculpté en or, O reste une Lune bleue. Capture Chromium 412×915 inspectée, logo lisible, écran lunaire dégagé.
+- Tests Node et assemblage Android réussis : CI #39760329152 ; `temp/PartouTetris-v0.2.9-debug.apk` 8 799 042 octets SHA blob f8322d35b2b938ba14115bb18ad3f939200dbe83.
+- Essai réel restant : démarrer une partie, placer quelques blocs, quitter/forcer arrêt de l'application puis relancer et tester reprise exacte du score, cellules, pièces et palette ; nouveau jeu doit laisser les records intacts.
