@@ -93,5 +93,14 @@ jobs:
           if test -f design/rendu-jeu-apercu.jpg; then git add design/rendu-jeu-apercu.jpg; fi
           if ! git diff --cached --quiet; then
             git commit -m "build: temporary installable PartouTetris debug APK [skip ci]"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            # The documentation or test branch may have advanced while Gradle ran.
+            # Rebase only the generated APK commit onto the newest remote tip.
+            # Never force-push or rewrite someone else's commits.
+            for attempt in 1 2 3; do
+              git fetch origin "${GITHUB_REF_NAME}"
+              git rebase "origin/${GITHUB_REF_NAME}"
+              if git push origin "HEAD:${GITHUB_REF_NAME}"; then exit 0; fi
+              sleep 2
+            done
+            exit 1
           fi
