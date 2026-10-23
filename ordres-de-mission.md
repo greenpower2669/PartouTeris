@@ -197,3 +197,10 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - Bridge Java HTTPS vers le service commun connu, aucune clé privée intégrée.
 - Le gameId PartouTetris n'est PAS confirmé sur le serveur partagé : tant que la route /api/v1/games/partoutetris/ n'est pas disponible et testée, ne pas prétendre que des scores mondiaux sont reçus.
 - Travail sur la branche existante ; pas de fusion vers main ou de publication Play sans validation.
+
+## PT-026 — Projection tangentielle et observateur virtuel glissant (23/10/2026)
+- Fab valide l'expérimentation du contrôle : observateur virtuel projeté au-delà du centre de la Lune sur l'axe opposé à la pièce, projection différentielle des gestes sur la tangente locale, contrôle continu haut/bas/côtés/diagonales sans inversion visible ni retour imposé au centre.
+- La main droite garde le bloc ; la seconde main conserve tap pour tourner et maintien pour chute x10. Sensibilité continue plus précise lentement, plus ample rapidement ; contrôles originaux récupérables dans Réglages via « Guidage tangentiel projeté (essai) ».
+- Réalisation exclusivement sur `feature/lunar-four-fronts-tangent-026` à partir de `feature/lunar-four-fronts-001`, sans merge main : `tangent-control.js`, `touch.js`, `index.html`, `tests/pt026-tangent.test.cjs`, `design/PT-026-controle-tangentiel.md`.
+- Validation CI : [run #39999637500](https://github.com/greenpower2669/PartouTetris/actions/runs/39999637500) SUCCESS (tests Node, build Gradle, publication APK). APK directe : `temp/PartouTetris-v0.2.13-tangent-debug.apk` (8 814 495 octets), versionCode 24. Ne pas confondre la validation technique avec une validation ergonomique humaine.
+- Attente : test tactile sur SM-A576B Android 16 en haut, bas, côtés et diagonales, précision doigt éloigné, doigt réagrippé, boutons, laser, chute x10, compatibilité sauvegardes et Hall of Fame. **Fab décide avant fusion, sortie de test ou modification définitive du guidage.**
