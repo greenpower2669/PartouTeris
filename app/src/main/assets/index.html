@@ -366,6 +366,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="joystick-guide.js"></script>
 <script src="grip-vectors.js"></script>
 <script src="ghost-moon-guide.js"></script>
+<script src="landing-guide.js"></script>
 <script src="boost-sources.js"></script>
 <script src="visuals.js"></script>
 <script src="arrival.js"></script>
@@ -636,6 +637,13 @@ function backdrop(){
     time:performance.now()/1000,reduced:reducedCelebrations.checked});
 }
 function moon(){art.moon({cx,cy,inner});}
+function projectedLanding(piece){
+  if(!piece)return null;
+  return window.PartouLandingGuide.resolveLandingReference({
+    game,piece,cellsOf,moonCenter:{x:cx,y:cy},
+    inner,stepR,sectors:SECTORS
+  });
+}
 function pieces(){
   for(const p of game.pieces){
     if(!p||p.radius>=RINGS)continue;
@@ -779,16 +787,17 @@ function frame(time){
     wedge(a,r,type>=0?TYPE_COLORS[type]:COLORS[game.board[r][a]],.88,true);
   }
   moon();
-  // PT-031: the translucent projected Moon slides on the real Moon-to-
-  // finger segment on EVERY frame, rather than staying at the first grab.
-  // Paint it under moving pieces; only its visual pivot moves, not physics.
+  // PT-032: after grabbing the *real* falling piece, guide from the
+  // centroid of its actual future landing footprint, recalculated every
+  // frame as the ghost changes. Render behind minos, never change physics.
   {
     const grip=hands.grip;
     if(grip&&hands.experimental&&!laserMode&&!game.paused&&!game.over&&!settingsOpen){
       const piece=game.pieces[grip.lane];
       if(piece&&piece.radius<RINGS){
-        ghostMoonGuide.render(ctx,{grip,angle:piece.angle,sectors:SECTORS,
-          moonCenter:{x:cx,y:cy},time});
+        const target=projectedLanding(piece);
+        ghostMoonGuide.render(ctx,{grip,angle:target?.angle??piece.angle,
+          sectors:SECTORS,moonCenter:{x:cx,y:cy},target,time});
       }else ghostMoonGuide.hide();
     }else ghostMoonGuide.hide();
   }
@@ -818,7 +827,8 @@ function frame(time){
     const piece=game.pieces[grip.lane];
     if(piece&&piece.radius<RINGS){
       window.PartouGripVectors.drawGripVectors(ctx,{
-        x:grip.lastX,y:grip.lastY,angle:piece.angle,sectors:SECTORS,
+        x:grip.lastX,y:grip.lastY,
+        angle:projectedLanding(piece)?.angle??piece.angle,sectors:SECTORS,
         time,reducedMotion:reducedCelebrations.checked
       });
     }
@@ -853,12 +863,15 @@ const hands=new window.PartouTouch.TwoHandControls({
   projectDrag:(lane,from,to)=>{
     const p=game.pieces[lane];
     if(!p)return 0;
-    // The same virtual observer frame is used for both finger samples.
-    // It follows the actual brick angle, not the location of the hand.
-    const radius=inner+(Math.min(RINGS,p.radius)+.36)*stepR+
+    // Reference PT-032: use the projected *landing* point for the
+    // observer frame, not the flying height. Sector/tangent and response
+    // keep the proven PT-026/028 physics and sensitivity unchanged.
+    const landing=projectedLanding(p);
+    const radius=landing?Math.hypot(landing.x-cx,landing.y-cy):
+      inner+(Math.min(RINGS,p.radius)+.36)*stepR+
       Math.max(0,p.radius-RINGS)*stepR*.58;
     const projection=window.PartouTangent.projectDrag({
-      from,to,angle:p.angle,orbitRadius:radius,
+      from,to,angle:landing?.angle??p.angle,orbitRadius:radius,
       centerX:cx,centerY:cy,screenWidth:W,sectorCount:SECTORS
     });
     if(p.radius<RINGS)joystick.movement(projection.projectedPixels,to.time);
@@ -877,9 +890,11 @@ function updateTouchGuide(time=performance.now()){
   const piece=visible?game.pieces[grip.lane]:null;
   if(!piece){joystick.hide();return;}
   joystick.show(grip.lane);
-  joystick.render(piece.angle,time,{
+  const landing=projectedLanding(piece);
+  joystick.render(landing?.angle??piece.angle,time,{
     reducedMotion:reducedCelebrations.checked,
-    inSpace:piece.radius>=RINGS
+    inSpace:piece.radius>=RINGS,
+    landing:!!landing
   });
 }
 function touchInfo(e){
