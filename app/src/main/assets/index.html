@@ -279,6 +279,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 #hud #laserFocusBar{display:block;height:100%;width:0%;background:linear-gradient(90deg,#26d5ff,#ffe6a7)}
 </style>
 <link rel="stylesheet" href="hud-pt016.css">
+<link rel="stylesheet" href="joystick-guide.css">
 </head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
 <div id="scoreBurst" aria-hidden="true"></div>
@@ -303,7 +304,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
   </div>
 </div>
 <div id="controlDeck">
-<div id="tip"><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = chute ×10</span></span><button id="laserButton" aria-label="LASER : toucher une brique posée pour verrouiller la visée, puis laisser tirer 1,3 seconde contre un malus" aria-pressed="false">⚡ LASER</button></div>
+<div id="tip"><div id="touchGuide" hidden role="img" aria-label="Joystick pédagogique : l'axe cyan indique dans quelle direction glisser le doigt pour déplacer la pièce"><strong id="guideAxisText">↔ GAUCHE–DROITE</strong><svg viewBox="0 0 210 90" aria-hidden="true" focusable="false"><circle cx="105" cy="45" r="28" stroke="#9ccee0" stroke-width="1.5" stroke-dasharray="4 6" fill="none" opacity=".5"/><circle cx="105" cy="45" r="4" fill="#ddfaff" opacity=".8"/><path id="guideTrack" class="guide-rail" d="M 29 45 L 181 45"/><g id="guideGhost" class="guide-ghost" transform="translate(105 45)"><circle r="10"/><path d="M -2 8 L -2 20 Q 0 24 4 20 L 7 11" stroke="#b8faff" stroke-width="4" stroke-linecap="round" fill="none"/></g><circle id="guideThumb" cx="105" cy="45" r="7"/></svg></div><span class="gesture"><span class="hand" aria-hidden="true">✋</span><span><b>Droite</b> : maintenir pour saisir et guider</span></span><span class="gesture"><span class="hand" aria-hidden="true">☝️</span><span><b>Gauche</b> : tap = tourner · maintien = chute ×10</span></span><button id="laserButton" aria-label="LASER : toucher une brique posée pour verrouiller la visée, puis laisser tirer 1,3 seconde contre un malus" aria-pressed="false">⚡ LASER</button></div>
 <div id="buttons"><button id="turn" aria-label="Tourner la pièce sélectionnée">↻ TOURNER</button><button id="fast" aria-label="Accélérer la pièce sélectionnée dix fois">⇣ ×10</button><button id="audioButton" aria-label="Activer ou couper le son">🔊 SON</button><button id="options" aria-label="Réglages de vitesse et de volume">⚙ RÉGLAGES</button><button id="pause" aria-label="Mettre en pause">Ⅱ PAUSE</button></div>
 </div>
 <div id="startPanel" role="dialog" aria-label="Début du jeu">
@@ -362,6 +363,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="audio.js"></script>
 <script src="touch.js"></script>
 <script src="tangent-control.js"></script>
+<script src="joystick-guide.js"></script>
 <script src="boost-sources.js"></script>
 <script src="visuals.js"></script>
 <script src="arrival.js"></script>
@@ -792,6 +794,7 @@ function frame(time){
   else if(started&&time-lastSessionSave>=850){
     persistSession();lastSessionSave=time;
   }
+  updateTouchGuide(time);
   updateHud();requestAnimationFrame(frame);
 }
 function fromEvent(e){
@@ -813,6 +816,8 @@ const boostSources=new window.PartouBoostSources.BoostSources(
   ({source,lane,active})=>console.info(
     "[PT021][BOOST] "+(active?"ON":"OFF")+" source="+source+" front="+(lane+1))
 );
+const joystick=new window.PartouJoystickGuide.Guide(
+  document.getElementById("touchGuide"),document.getElementById("tip"));
 const hands=new window.PartouTouch.TwoHandControls({
   sectorCount:SECTORS,
   experimental:experimentalTouch.checked,
@@ -823,10 +828,12 @@ const hands=new window.PartouTouch.TwoHandControls({
     // It follows the actual brick angle, not the location of the hand.
     const radius=inner+(Math.min(RINGS,p.radius)+.36)*stepR+
       Math.max(0,p.radius-RINGS)*stepR*.58;
-    return window.PartouTangent.projectDrag({
+    const projection=window.PartouTangent.projectDrag({
       from,to,angle:p.angle,orbitRadius:radius,
       centerX:cx,centerY:cy,screenWidth:W,sectorCount:SECTORS
-    }).sectorDelta;
+    });
+    if(p.radius<RINGS)joystick.movement(projection.projectedPixels,to.time);
+    return projection.sectorDelta;
   },
   chooseLane:nearestLane,
   onSelect:lane=>{selected=lane;},
@@ -834,6 +841,18 @@ const hands=new window.PartouTouch.TwoHandControls({
   onRotate:lane=>{game.rotate(lane);},
   onBoost:(lane,value)=>{boostSources.set("touch",lane,value);}
 });
+function updateTouchGuide(time=performance.now()){
+  const grip=hands.grip;
+  const visible=!!(grip&&hands.experimental&&!laserMode&&
+    !game.paused&&!game.over&&!settingsOpen);
+  const piece=visible?game.pieces[grip.lane]:null;
+  if(!piece){joystick.hide();return;}
+  joystick.show(grip.lane);
+  joystick.render(piece.angle,time,{
+    reducedMotion:reducedCelebrations.checked,
+    inSpace:piece.radius>=RINGS
+  });
+}
 function touchInfo(e){
   const p=fromEvent(e);
   return {id:e.pointerId,x:p.x,y:p.y,angle:p.angle,distance:p.distance,time:e.timeStamp};
@@ -895,22 +914,26 @@ canvas.addEventListener("pointerdown",e=>{
     return;
   }
   if(hands.down(touchInfo(e)))canvas.setPointerCapture(e.pointerId);
+  updateTouchGuide();
 });
 canvas.addEventListener("pointermove",e=>{
   if(game.over||game.paused)return;
   e.preventDefault();
   if(laserMode)return; // focus holds steady independently of finger drift
   hands.move(touchInfo(e));
+  updateTouchGuide();
 });
 canvas.addEventListener("pointerup",e=>{
   e.preventDefault();
   if(laserMode)return; // focus persists after pointerup/pointercancel
   hands.up(touchInfo(e));
+  updateTouchGuide();
 });
 canvas.addEventListener("pointercancel",e=>{
   e.preventDefault();
   if(laserMode)return; // focus persists after pointerup/pointercancel
   hands.cancel(touchInfo(e));
+  updateTouchGuide();
 });
 window.addEventListener("blur",()=>{hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();});
 laserButton.addEventListener("click",()=>{
@@ -1003,7 +1026,7 @@ fxVolume.addEventListener("input",()=>{
   sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);updateSliders();storeSettings();
 });
 experimentalTouch.addEventListener("change",()=>{
-  hands.reset(); // no control-mode jump during an active grab
+  hands.reset();joystick.hide(); // no control-mode jump during an active grab
   hands.experimental=experimentalTouch.checked;
   console.info("[PT026][TANGENT] "+(hands.experimental?"ON":"OFF"));
   storeSettings();
