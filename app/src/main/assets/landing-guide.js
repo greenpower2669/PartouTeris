@@ -44,7 +44,24 @@
     return {...reference,landingRadius:radius,angle:piece.angle};
   }
 
-  root.PartouLandingGuide={landingReference,resolveLandingReference};
+  function drawLandingCue(ctx,target,{stepR=12}={}){
+    if(!ctx||![target?.x,target?.y,stepR].every(Number.isFinite))return false;
+    // A tiny, translucent marker on the exact future landing silhouette.
+    // It is NOT another piece, and sits beneath the translucent minos.
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(target.x,target.y,Math.max(8,stepR*.68),0,TAU);
+    ctx.lineWidth=1.8;
+    ctx.strokeStyle="rgba(138,245,255,0.38)";
+    ctx.shadowColor="rgba(80,220,245,0.25)";
+    ctx.shadowBlur=5;
+    ctx.stroke();
+    ctx.restore();
+    return true;
+  }
+
+  root.PartouLandingGuide={landingReference,resolveLandingReference,
+    drawLandingCue};
   if(typeof module!=="undefined"&&module.exports)
-    module.exports={landingReference,resolveLandingReference};
+    module.exports={landingReference,resolveLandingReference,drawLandingCue};
 })(typeof globalThis!=="undefined"?globalThis:this);
