@@ -327,9 +327,16 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
   </div>
 </div>
 <div id="hallOfFame" class="decision-dialog hall-of-fame" role="dialog" aria-modal="true" aria-labelledby="hallTitle" hidden>
-  <h2 id="hallTitle">🏆 HALL OF FAME LOCAL</h2>
-  <p>Les dix meilleurs scores des Pharaonites de ce téléphone.</p>
-  <ol id="hallEntries" aria-label="Classement local des dix meilleurs scores"></ol>
+  <h2 id="hallTitle">🏆 HALL OF FAME</h2>
+  <p>Les exploits des Pharaonites, ici et dans le monde.</p>
+  <div id="hallTabs" role="group" aria-label="Classement">
+    <button id="hallLocal" aria-pressed="true">📱 LOCAL</button>
+    <button id="hallWorld" aria-pressed="false">🌍 MONDIAL</button>
+  </div>
+  <p id="hallStatus" role="status" aria-live="polite"></p>
+  <button id="hallHistoryMode" type="button">VOIR TOUT L’HISTORIQUE</button>
+  <ol id="hallEntries" aria-label="Classement des Pharaonites"></ol>
+  <button id="hallRefresh" type="button" hidden>↻ ACTUALISER MONDIAL</button>
   <button id="hallClose">FERMER</button>
 </div>
 <div id="settingsPanel" role="dialog" aria-label="Réglages du jeu">
@@ -359,6 +366,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="layout.js"></script>
 <script src="celebrations.js"></script>
 <script src="leaderboard.js"></script>
+<script src="global-hall.js"></script>
 <script src="session.js"></script>
 <script src="resume-flow.js"></script>
 <script>
@@ -389,6 +397,9 @@ const ui={score:document.getElementById("scoreTotal"),stats:document.getElementB
 const game=new Game(),sound=new window.PartouAudio.Soundtrack();
 let storage=null;try{storage=window.localStorage}catch(e){}
 const leaderboard=new window.PartouScores.Leaderboard(storage);
+const globalHall=new window.PartouGlobalHall.GlobalHall(storage,window.PartouHall||null);
+window.partouHallReply=(id,status,body)=>globalHall.receive(id,status,body);
+let hallScope="local",hallAllHistory=false;
 const nickname=document.getElementById("nickname");
 nickname.value=leaderboard.name;
 const pointFeed=document.getElementById("pointFeed");
@@ -495,25 +506,66 @@ if(canResume){
 }
 function renderHallOfFame(){
   hallEntries.replaceChildren();
-  const medals=["🥇","🥈","🥉"];
-  const top=leaderboard.top(10);
+  const local=hallScope==="local";
+  document.getElementById("hallLocal").setAttribute("aria-pressed",String(local));
+  document.getElementById("hallWorld").setAttribute("aria-pressed",String(!local));
+  const status=document.getElementById("hallStatus");
+  const toggle=document.getElementById("hallHistoryMode");
+  const refresh=document.getElementById("hallRefresh");
+  toggle.hidden=!local;
+  toggle.textContent=hallAllHistory?"AFFICHER TOP 10":"VOIR TOUT L’HISTORIQUE";
+  refresh.hidden=local;
+  let top;
+  if(local){
+    top=hallAllHistory?leaderboard.all(10000):leaderboard.top(10);
+    status.textContent="Classement local enregistré sur cet appareil · "+
+      leaderboard.history.length+" partie(s) archivées.";
+  }else{
+    top=globalHall.top(100);
+    const labels={
+      non_configure:"Synchronisation mondiale indisponible dans cet environnement.",
+      non_verifie:"Serveur mondial en cours de vérification.",
+      en_ligne:"Classement mondial reçu du serveur commun.",
+      hors_ligne:"Hors ligne : derniers scores mondiaux conservés, si disponibles.",
+      en_attente:"Le serveur ne confirme pas encore la synchronisation.",
+      serveur_indisponible:"PartouTetris n'est pas encore activé sur le serveur commun."
+    };
+    status.textContent=(labels[globalHall.status]||"Synchronisation en attente.")+
+      (globalHall.pending.length?" · "+globalHall.pending.length+
+        " score(s) en attente d'envoi.":"");
+  }
   if(!top.length){
     const empty=document.createElement("li");
     empty.className="hall-empty";
-    empty.textContent="Aucun record pour le moment.";
+    empty.textContent=local?"À toi d'ouvrir le classement !":
+      "Aucun score mondial confirmé pour le moment.";
     hallEntries.appendChild(empty);
   }
+  const medals=["🥇","🥈","🥉"];
   top.forEach((entry,index)=>{
     const item=document.createElement("li");
     const label=document.createElement("span");
+    const body=document.createElement("span");
+    const name=document.createElement("strong");
+    const detail=document.createElement("small");
     const points=document.createElement("strong");
-    label.textContent=(medals[index]||"#"+(index+1))+" "+entry.name;
+    label.textContent=(medals[index]||"#"+(index+1))+" ";
+    name.textContent=entry.name;
+    const extras=[];
+    if(entry.crowns>0)extras.push(entry.crowns+" couronne(s)");
+    if(entry.at>1000000000000)extras.push(new Date(entry.at).toLocaleDateString("fr-FR"));
+    detail.textContent=extras.join(" · ");
     points.textContent=entry.score.toLocaleString("fr-FR")+" pts";
-    item.append(label,points);
+    body.className="hall-player";body.append(name,detail);
+    item.append(label,body,points);
     hallEntries.appendChild(item);
   });
 }
+globalHall.onChange=()=>{
+  if(!hallOfFame.hidden&&hallScope==="world")renderHallOfFame();
+};
 function openHallOfFame(){
+  hallScope="local";hallAllHistory=false;
   renderHallOfFame();
   hallPreviousPause=game.paused;
   if(started&&!game.over){
@@ -643,7 +695,18 @@ function updateHud(){
     (game.combo>1?" · ×"+game.combo:"");
   ui.pause.textContent=game.paused?"▶ REPRENDRE":"Ⅱ PAUSE";
   if(game.over){
-    if(!scoreSaved){leaderboard.add(game.score);scoreSaved=true;renderPodium();}
+    if(!scoreSaved){
+      const runId=window.PartouScores.newRunId();
+      const recorded=leaderboard.add(game.score,Date.now(),{
+        runId,crowns:game.cleared,level:game.level,
+        elapsedSeconds:game.seconds,appVersion:"0.2.12"
+      });
+      if(recorded){
+        globalHall.queue(leaderboard.session(runId));
+        renderPodium();
+      }
+      scoreSaved=true;
+    }
     ui.final.textContent=leaderboard.name+" · "+game.score.toLocaleString("fr-FR")+" points · Couronnes : "+game.cleared;
     ui.alert.style.display="block";
   }
@@ -881,6 +944,21 @@ document.getElementById("resumeDiscard").addEventListener("click",()=>{
 document.getElementById("hallFromSettings").addEventListener("click",()=>openHallOfFame());
 document.getElementById("hallFromEnd").addEventListener("click",()=>openHallOfFame());
 document.getElementById("hallClose").addEventListener("click",()=>closeHallOfFame());
+document.getElementById("hallLocal").addEventListener("click",()=>{
+  hallScope="local";renderHallOfFame();
+});
+document.getElementById("hallWorld").addEventListener("click",()=>{
+  hallScope="world";renderHallOfFame();globalHall.refresh();
+});
+document.getElementById("hallHistoryMode").addEventListener("click",()=>{
+  hallAllHistory=!hallAllHistory;renderHallOfFame();
+});
+document.getElementById("hallRefresh").addEventListener("click",()=>{
+  globalHall.refresh();globalHall.uploadNext();renderHallOfFame();
+});
+window.addEventListener("online",()=>{
+  globalHall.refresh();globalHall.uploadNext();
+});
 document.getElementById("audioButton").addEventListener("click",()=>{
   sound.setEnabled(!sound.enabled);
   if(sound.enabled)sound.start();
