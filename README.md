@@ -78,3 +78,10 @@ CI et test Android compilé : https://github.com/greenpower2669/PartouTetris/act
 
 ### PT-025 — Hall of Fame local et mondial
 Top10 local et historique de toutes les parties avec pseudo ; les anciennes performances sont conservées. Un identifiant unique est attribué à chaque partie terminée. Le système prépare aussi les scores à transmettre au serveur Hall of Fame partagé de SpaceFortressVs / GeckoDoku, avec reprise après perte réseau et cache de consultation. L'onglet Mondial n'affiche que les résultats confirmés par le serveur et signale son indisponibilité en cas d'absence de route. IMPORTANT : gameId partoutetris doit encore être vérifié ou provisionné côté serveur commun avant de considérer la synchronisation mondiale opérationnelle. Aucune clé privée n'est intégrée à l'APK.
+
+### PT-025 — Version Android 0.2.12 de test
+APK directe : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-001/temp/PartouTetris-v0.2.12-debug.apk
+
+Tests Node, Gradle et capture Chromium : https://github.com/greenpower2669/PartouTetris/actions/runs/39946832870 — succès.
+
+À tester : jeu terminé → score local conservé ; Hall depuis Réglages → Local Top10, historique et Mondial ; sans réseau, scores en attente ; après retour réseau, distinguer un vrai accusé du serveur d'une absence de route PartouTetris. Sans provisionnement du gameId, la partie Mondial reste techniquement préparée mais non opérationnelle.

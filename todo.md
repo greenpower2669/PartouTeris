@@ -272,7 +272,7 @@
 - [x] Outbox hors ligne et cache monde persistants, contrôle d'accusé par runId, pas de dédoublonnage par pseudo.
 - [x] Bridge Android HTTPS limité au service commun, permission réseau, aucune clé embarquée.
 - [x] Tests automatisés JS d'archives locales, fiabilité de file, cache, reconnexion et dédoublonnage.
-- [ ] Vérifier Actions et APK brute debug 0.2.12 sur la branche.
+- [x] Actions #39946832870 réussie : tests Node, rendu Chromium et compilation Android. APK directe temp/PartouTetris-v0.2.12-debug.apk vérifiée, 8 812 320 octets (blob Git SHA d10635408467764c9f25243ed9d5aa3838fcf602).
 - [ ] Activer ou valider réellement la route serveur du jeu partoutetris et son schéma de score.
 - [ ] Faire essai Android 16, deux appareils pour classement inter-joueurs, test hors ligne.
 - [ ] Ne pas fusionner main sans accord.
