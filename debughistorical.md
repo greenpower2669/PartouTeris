@@ -181,3 +181,9 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Après : niveau par couronne uniquement, vitesse max lente 8s au départ, coefficient 0,92 par couronne ; aucun accroissement par le temps. Récompense différentielle sur les composantes circulaires affectées : (L_fin² - Σ L_avant²) pondérée par profondeur. Pas de double prime des portions déjà posées. Un bonus Royal Bridge et Géodésie s'ajoute une seule fois à l'événement de placement ; la scène n'attribue pas de points additionnels.
 - Points de vitesse : 1+(max(0,8/tempsEtage-1))², borné ×100. Une pression sur CHUTE ×10 n'entre pas dans ce multiplicateur. Nouvelle partie à 8s ; ancienne sauvegarde continue avec sa base manuelle mais son ancien niveau automatique dû au temps est recalculé selon les couronnes.
 - CI finale #39938398035 SUCCESS : tests Node, Gradle, capture du jeu et publication APK brute v0.2.11 réussis. Visuel inspecté, Lune/terre/satellites/HUD lisibles. À confirmer sur Samsung le rythme initial, la première couronne, les ponts, l'absence de double prime et les performances.
+
+## PT-025 — État des services partagés et protection des scores
+- SpaceFortressVs : HallOfFameSyncClient avec serveur partagé, protocoles de scores et clé d'upload spécifique ; GeckoDoku : transport sans clé, payload avec runId, file de synchronisation persistante et cache paginé.
+- PartouTetris n'avait qu'un Top10 en local. Ajout de l'historique complet, idempotence par runId et synchronisation cache/world inspirées de ces projets.
+- Sur serveur commun, la route du gameId partoutetris n'a pas pu être confirmée ; l'application garde les scores localement, signale 403/404, aucune fabrication de classement en cas de panne.
+- Test Android requis : publication réelle, sync deux appareils, hors ligne et doublons.

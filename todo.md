@@ -264,3 +264,15 @@
 - [x] CI et compilation Android #39938398035 réussies. APK non ZIP temp/PartouTetris-v0.2.11-debug.apk vérifiée (8 803 677 octets) ; capture portrait inspectée.
 - [ ] Test sur Samsung SM-A576B : temps constant sur partie longue sans couronne, vitesse accrue après 1 couronne, points bonus et garde-fous, animations/sons.
 - [ ] Ne pas fusionner main ou publier AAB sans validation explicite de Fab.
+
+## PT-025 — Hall of Fame inspiré de SpaceFortress et GeckoDoku
+- [x] Auditer les implémentations globales des deux autres jeux.
+- [x] Enregistrer tous les scores locaux avec identifiant unique ; conserver les meilleurs historiques.
+- [x] Hall Local / Mondial / historique, informations claires sur absence de réseau ou serveur non configuré.
+- [x] Outbox hors ligne et cache monde persistants, contrôle d'accusé par runId, pas de dédoublonnage par pseudo.
+- [x] Bridge Android HTTPS limité au service commun, permission réseau, aucune clé embarquée.
+- [x] Tests automatisés JS d'archives locales, fiabilité de file, cache, reconnexion et dédoublonnage.
+- [ ] Vérifier Actions et APK brute debug 0.2.12 sur la branche.
+- [ ] Activer ou valider réellement la route serveur du jeu partoutetris et son schéma de score.
+- [ ] Faire essai Android 16, deux appareils pour classement inter-joueurs, test hors ligne.
+- [ ] Ne pas fusionner main sans accord.

@@ -188,3 +188,12 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - La prime de continuité couvre 48 secteurs circulaires et utilise carré(longueur nouvelle chaîne) moins somme(carrés chaînes antérieures) : seule la nouveauté est récompensée, pas l'ancien score. Pont Royal si au moins deux anciennes chaînes sont réunies, Géodésie lorsque le raccord franchit une frontière 11/12,23/24,35/36,47/0.
 - Garder les quatre fronts, contrôles, lasers correcteurs, musique, Hall of Fame local, sauvegardes et records. Aucune fusion main.
 - Tests Node + Gradle + capture Chromium et APK v0.2.11 directs : GitHub Actions #39938398035 SUCCESS ; APK brute temp/PartouTetris-v0.2.11-debug.apk (8 803 677 octets, blob SHA 8fa54a73c4d508b2bc254bc9b189540986390c39). Essai Android réel encore requis.
+
+## PT-025 — Hall of Fame inspiré de SpaceFortressVs / GeckoDoku (23 octobre 2026)
+- Mission Fab : highscores complets et classement partagé.
+- Archivage local de toutes les parties terminées avec ID de session unique, conservation des anciens records et du pseudo.
+- Hall local avec Top10 / historique, onglet Monde avec statut de synchronisation et cache.
+- Reprise après réseau absent via file persistante, accusés idempotents et déduplication par identifiant réel de partie, jamais par pseudo.
+- Bridge Java HTTPS vers le service commun connu, aucune clé privée intégrée.
+- Le gameId PartouTetris n'est PAS confirmé sur le serveur partagé : tant que la route /api/v1/games/partoutetris/ n'est pas disponible et testée, ne pas prétendre que des scores mondiaux sont reçus.
+- Travail sur la branche existante ; pas de fusion vers main ou de publication Play sans validation.
