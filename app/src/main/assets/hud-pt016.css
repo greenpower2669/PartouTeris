@@ -251,3 +251,23 @@
 .hall-of-fame li.hall-empty{justify-content:center;color:#b9dcfa}
 #hallFromSettings,#hallFromEnd{display:block;min-height:48px;margin:13px auto 0}
 @media(max-height:650px){.decision-dialog{max-height:90dvh;padding:12px}}
+
+/* PT-025: separated local / worldwide Hall, large touch targets for Fab. */
+#hallTabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+#hallTabs button,#hallRefresh,#hallHistoryMode{font-size:clamp(13px,3.7vw,17px);min-height:46px}
+#hallTabs button[aria-pressed="true"]{
+  border:2px solid #78efff;
+  background:linear-gradient(135deg,#235b78,#143048);
+  box-shadow:0 0 11px #5adfff8c;color:#fff0b7;
+}
+#hallStatus{font-size:clamp(13px,3.2vw,15px);color:#bfebff;min-height:22px}
+#hallHistoryMode{display:block;width:100%;margin-bottom:6px}
+#hallHistoryMode[hidden],#hallRefresh[hidden]{display:none!important}
+#hallRefresh{display:block;width:100%;margin:7px 0 13px}
+.hall-of-fame ol{max-height:40dvh;overflow-y:auto;overscroll-behavior:contain}
+.hall-of-fame li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;text-align:left}
+.hall-of-fame .hall-player{display:flex;flex-direction:column;gap:2px}
+.hall-of-fame .hall-player strong{font-size:clamp(13px,3.5vw,17px);color:#e9f6ff}
+.hall-of-fame .hall-player small{color:#a9d6e9;font-size:clamp(11px,3vw,13px)}
+.hall-of-fame li>strong{white-space:nowrap;font-size:clamp(13px,3.5vw,17px)}
+.hall-of-fame li.hall-empty{display:block;text-align:center}
