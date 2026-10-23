@@ -70,7 +70,8 @@ function restore(game,v){
   game.placedTypes=v.placedTypes.slice();
   game.baseFallSeconds=v.baseFallSeconds;
   game.score=v.score;game.cleared=v.cleared;
-  game.level=v.level;game.seconds=v.seconds;
+  // Normalize older saves whose level used to increase with elapsed time.
+  game.level=1+v.cleared;game.seconds=v.seconds;
   game.placements=v.placements;game.combo=v.combo;
   game.over=false;game.paused=true;game.flash=0;game.events=[];
   return true;

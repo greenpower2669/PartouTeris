@@ -150,6 +150,10 @@
       } else if(kind==="lock"){
         this.tone(160,now,.15,.24,"sine",this.effects,70);
         this.noise(now,.055,.07,this.effects);
+      } else if(kind==="bridge"){
+        // Short ascending arpeggio for a genuine two-bank connection.
+        for(let i=0;i<3;i++)
+          this.tone([392,587.33,783.99][i],now+i*.095,.16,.11,"triangle",this.effects);
       } else if(kind==="ring"){
         const notes=[523.25,659.25,783.99,1046.50,1318.5];
         for(let i=0;i<Math.min(5,3+count);i++)
