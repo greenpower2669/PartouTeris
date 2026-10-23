@@ -779,15 +779,16 @@ function frame(time){
     wedge(a,r,type>=0?TYPE_COLORS[type]:COLORS[game.board[r][a]],.88,true);
   }
   moon();
-  // PT-029: the ghost Moon is a translucent local circular reference near
-  // the held finger. Paint it UNDER flying pieces to protect urgent visibility.
-  // Its direction follows the SAME tangent used by the actual controls.
+  // PT-031: the translucent projected Moon slides on the real Moon-to-
+  // finger segment on EVERY frame, rather than staying at the first grab.
+  // Paint it under moving pieces; only its visual pivot moves, not physics.
   {
     const grip=hands.grip;
     if(grip&&hands.experimental&&!laserMode&&!game.paused&&!game.over&&!settingsOpen){
       const piece=game.pieces[grip.lane];
       if(piece&&piece.radius<RINGS){
-        ghostMoonGuide.render(ctx,{grip,angle:piece.angle,sectors:SECTORS});
+        ghostMoonGuide.render(ctx,{grip,angle:piece.angle,sectors:SECTORS,
+          moonCenter:{x:cx,y:cy},time});
       }else ghostMoonGuide.hide();
     }else ghostMoonGuide.hide();
   }
