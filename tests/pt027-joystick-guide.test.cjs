@@ -18,8 +18,9 @@ test("PT027 joystick rotates smoothly through quadrants, no discontinuity",()=>{
   near(Math.hypot(u.x,u.y),1);
   assert.ok(u.x*v.x+u.y*v.y>0.99);
   const rail=railForAxis(u);
-  assert.ok(rail.a.x>=22&&rail.b.x<=188);
-  assert.ok(rail.a.y>=13.9&&rail.b.y<=76.1);
+  assert.ok(rail.a.x>=52.9&&rail.b.x<=157.1);
+  assert.ok(rail.a.y>=7.9&&rail.b.y<=112.1);
+  near(Math.hypot(rail.b.x-rail.a.x,rail.b.y-rail.a.y),104);
  }
 });
 test("PT027 all four sides and diagonal directions are legible",()=>{
