@@ -798,6 +798,7 @@ function frame(time){
         const target=projectedLanding(piece);
         ghostMoonGuide.render(ctx,{grip,angle:target?.angle??piece.angle,
           sectors:SECTORS,moonCenter:{x:cx,y:cy},target,time});
+        if(target)window.PartouLandingGuide.drawLandingCue(ctx,target,{stepR});
       }else ghostMoonGuide.hide();
     }else ghostMoonGuide.hide();
   }
