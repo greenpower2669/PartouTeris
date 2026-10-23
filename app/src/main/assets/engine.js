@@ -63,7 +63,33 @@
       return Math.max(.8,this.baseFallSeconds*Math.pow(RING_SPEED_FACTOR,this.cleared));
     }
     speedMultiplier(){
+      // Difficulty preview only. PT-030: never use the CURRENT slider state
+      // as the payout of a piece already travelling.
       const relativeSpeed=MAX_WAIT_SECONDS/this.fallInterval();
+      return Math.min(100,1+Math.pow(Math.max(0,relativeSpeed-1),2));
+    }
+    // Reference time for the same route if gravity remained at the original
+    // eight-second difficulty. Includes the final blocked downward step,
+    // so a high landing is compared to a high landing, not to a full descent.
+    nominalFlightSeconds(p){
+      if(!p||!Number.isInteger(p.radius)||p.radius<0||
+         p.radius>RINGS+SPACE_STEPS)return 0;
+      let weightedSteps=0;
+      for(let r=RINGS+SPACE_STEPS;r>=p.radius;r--){
+        weightedSteps+=r>=RINGS?SPACE_INTERVAL_FACTOR:1;
+      }
+      return MAX_WAIT_SECONDS*weightedSteps;
+    }
+    flightSpeedMultiplier(p){
+      const birth=p?.spawnedAtSeconds;
+      const duration=Number.isFinite(birth)?this.seconds-birth:NaN;
+      // Old checkpoints carry no birth time. They retain their progress and
+      // existing points, but the first resumed piece earns the safe ×1
+      // rather than a guessed/instant jackpot.
+      if(!Number.isFinite(duration)||duration<.05)return 1;
+      const nominal=this.nominalFlightSeconds(p);
+      if(!Number.isFinite(nominal)||nominal<=0)return 1;
+      const relativeSpeed=nominal/duration;
       return Math.min(100,1+Math.pow(Math.max(0,relativeSpeed-1),2));
     }
     drainEvents(){return this.events.splice(0);}
@@ -103,7 +129,8 @@
       const i=Math.max(0,Math.min(this.bag.length-1,Math.floor(this.rng()*this.bag.length)));
       const type=this.bag.splice(i,1)[0];
       this.spawnedTypes[type]++;
-      this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+SPACE_STEPS,rot:0,boost:false};
+      this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+SPACE_STEPS,
+        rot:0,boost:false,spawnedAtSeconds:this.seconds};
       this.fall[lane]=0;
     }
     canPlace(p,angle=p.angle,radius=p.radius,rot=p.rot) {
@@ -230,7 +257,7 @@
     // Four canonical minos are scored by their actual cell count, then by
     // depth: nearer the Moon yields more than an otherwise identical pose
     // high in orbit. Each new left/right continuation earns Δ(length²).
-    placementReward(blocks) {
+    placementReward(blocks,earnedFlightMultiplier=1) {
       const current=new Set(blocks.map(([a,r])=>r+":"+a));
       const neighbourCells=new Set();
       let radialSum=0;
@@ -249,7 +276,8 @@
       const base=sizePoints+centerBonus;
       const multiplier=Math.max(1,contacts);
       const chain=this.placementContinuity(blocks);
-      const speedMultiplier=this.speedMultiplier();
+      const speedMultiplier=Number.isFinite(earnedFlightMultiplier)?
+        Math.max(1,Math.min(100,earnedFlightMultiplier)):1;
       const rawPoints=base*multiplier+chain.continuityPoints+
         chain.bridgePoints+chain.geodesyPoints;
       return {points:Math.max(1,Math.round(rawPoints*speedMultiplier)),
@@ -257,7 +285,7 @@
         speedMultiplier:Math.round(speedMultiplier*1000)/1000,
         ...chain};
     }
-    lock(lane) {
+    lock(lane,arrivals=null) {
       const p=this.pieces[lane];
       if(!p || this.over) return false;
       const radius=this.landingRadius(p);
@@ -265,7 +293,10 @@
         this.over=true;this.events.push({type:'gameover',lane});return false;
       }
       const blocks=cellsOf(p,p.angle,radius,p.rot);
-      const reward=this.placementReward(blocks); // BEFORE committing this piece
+      const earnedFlightMultiplier=this.flightSpeedMultiplier(p);
+      const flightSeconds=Number.isFinite(p.spawnedAtSeconds)?
+        Math.max(0,this.seconds-p.spawnedAtSeconds):null;
+      const reward=this.placementReward(blocks,earnedFlightMultiplier); // BEFORE committing
       for(const [a,r] of blocks){
         this.board[r][a]=lane;
         this.boardTypes[r][a]=p.type;
@@ -278,16 +309,20 @@
         color:TYPE_COLORS[p.type],placement:this.placements,
         placedCounts:this.placedTypes.slice(),spawnCounts:this.spawnedTypes.slice()
       });
-      this.award(reward.points,'placement',{lane,angle:p.angle,radius,...reward});
+      this.award(reward.points,'placement',{lane,angle:p.angle,radius,
+        ...reward,flightSeconds,
+        nominalSeconds:this.nominalFlightSeconds(p),
+        speedSource:"measured-flight"});
       if(reward.bridges>0)this.events.push({type:'bridge',lane,
         bridges:reward.bridges,geodesy:reward.geodesy,
         bonus:Math.round((reward.bridgePoints+reward.geodesyPoints)*reward.speedMultiplier),
         chains:reward.chains});
+      if(Array.isArray(arrivals))arrivals.push(earnedFlightMultiplier);
       this.pieces[lane]=null;
       this.spawn(lane);
       return true;
     }
-    clearRings() {
+    clearRings(earnedFlightMultiplier=1) {
       let n=0;
       for(let r=0;r<RINGS;r++) {
         if(this.board[r].every(x=>x>=0)){
@@ -302,7 +337,10 @@
         this.combo++;
         this.cleared+=n;
         this.level=1+this.cleared; // exactly one step per cleared ring
-        const speedMultiplier=this.speedMultiplier();
+        // The crown triggered by this landing cannot use the newly selected
+        // slider speed, nor the gravity that changes AFTER the crown clears.
+        const speedMultiplier=Number.isFinite(earnedFlightMultiplier)?
+          Math.max(1,Math.min(100,earnedFlightMultiplier)):1;
         const gained=Math.round((480*n*n*this.level+
           100*Math.max(0,this.combo-1))*speedMultiplier);
         this.flash=1;
@@ -319,6 +357,7 @@
       this.level=1+this.cleared; // passage of time is NOT a difficulty trigger
       const interval=this.fallInterval();
       let didLock=false;
+      const landedMultipliers=[];
       for(let lane=0;lane<LANES;lane++) {
         let p=this.pieces[lane];
         if(!p)continue;
@@ -332,7 +371,7 @@
           this.fall[lane]-=laneInterval;
           if(this.canPlace(p,p.angle,p.radius-1,p.rot))p.radius--;
           else{
-            didLock=this.lock(lane)||didLock;
+            didLock=this.lock(lane,landedMultipliers)||didLock;
             // Never accelerate the freshly spawned replacement this frame.
             break;
           }
@@ -340,7 +379,12 @@
         }
         if(this.over)break;
       }
-      if(didLock&&!this.over) this.clearRings();
+      if(didLock&&!this.over){
+        // If several pieces land in the same frame, use the conservative
+        // earned factor rather than the highest one as the crown trigger.
+        const earned=landedMultipliers.length?Math.min(...landedMultipliers):1;
+        this.clearRings(earned);
+      }
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
