@@ -2,6 +2,7 @@
   "use strict";
   const SECTORS = 48, RINGS = 10, LANES = 4, SPACE_STEPS = 5, BOOST_MULTIPLIER=10, SPACE_INTERVAL_FACTOR=.82, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
   const LOCKED_LASER_HOLD_MS=1300, DESTRUCTION_BASE=80;
+  const MAX_WAIT_SECONDS=8, RING_SPEED_FACTOR=.92, CONTINUITY_FACTOR=2, ROYAL_BRIDGE_FACTOR=2, GEODESY_FACTOR=35;
   const FORMS = [
     [[-1,0],[0,0],[1,0],[2,0]],
     [[0,0],[1,0],[0,1],[1,1]],
@@ -23,10 +24,23 @@
       return [mod(a+x, SECTORS), r+y];
     });
   }
+  // Decompose a complete 360-degree row into maximal circular chains.
+  // Unlike linear runs, sector 47 is adjacent to sector 0.
+  function circularRuns(occupied) {
+    if(occupied.every(Boolean))return [Array.from({length:SECTORS},(_,i)=>i)];
+    const empty=occupied.findIndex(v=>!v),out=[];
+    let group=[];
+    for(let k=1;k<=SECTORS;k++){
+      const sector=mod(empty+k,SECTORS);
+      if(occupied[sector])group.push(sector);
+      else if(group.length){out.push(group);group=[];}
+    }
+    return out;
+  }
   class Game {
     constructor(rng=Math.random) { this.rng=rng; this.reset(); }
     reset() {
-      this.baseFallSeconds=this.baseFallSeconds||5.0;
+      this.baseFallSeconds=this.baseFallSeconds||MAX_WAIT_SECONDS;
       this.events=[];
       this.board = Array.from({length:RINGS},()=>Array(SECTORS).fill(-1));
       this.boardTypes=Array.from({length:RINGS},()=>Array(SECTORS).fill(-1));
@@ -44,7 +58,13 @@
       return this.baseFallSeconds;
     }
     fallInterval() {
-      return Math.max(.8,this.baseFallSeconds*Math.pow(.92,this.level-1));
+      // PT-024: time alone NEVER increases gravity. Each removed ring
+      // advances speed by one permanent step. Manual speed stays possible.
+      return Math.max(.8,this.baseFallSeconds*Math.pow(RING_SPEED_FACTOR,this.cleared));
+    }
+    speedMultiplier(){
+      const relativeSpeed=MAX_WAIT_SECONDS/this.fallInterval();
+      return Math.min(100,1+Math.pow(Math.max(0,relativeSpeed-1),2));
     }
     drainEvents(){return this.events.splice(0);}
     // PT-018: upward bricks carry an increasing destructive cost.
@@ -156,8 +176,60 @@
       }
       return null; // material has reached the orbital limit
     }
-    // Neighbours mean distinct already-settled cells, not cells of the
-    // new tetromino itself. Polar adjacency wraps across sector 47 → 0.
+    // Only changed connections are rewarded: the squared lengths of each
+    // newly touched circular chain MINUS the squared lengths it inherited.
+    // This makes left/right extensions and bridging additive without
+    // farming the same existing chain's previous score.
+    placementContinuity(blocks) {
+      const byRing=new Map();
+      for(const [a,r] of blocks) {
+        if(r<0||r>=RINGS)continue;
+        if(!byRing.has(r))byRing.set(r,new Set());
+        byRing.get(r).add(a);
+      }
+      let continuityUnits=0,continuityPoints=0,bridgePoints=0,geodesyPoints=0;
+      let bridges=0,geodesy=0;
+      const summaries=[];
+      for(const [r,added] of byRing){
+        const old=this.board[r].map(value=>value!==-1);
+        const updated=old.slice();
+        for(const a of added)updated[a]=true;
+        const before=circularRuns(old),after=circularRuns(updated);
+        const depth=RINGS-r;
+        for(const chain of after){
+          if(!chain.some(a=>added.has(a)))continue;
+          const chainSet=new Set(chain);
+          const oldComponents=before.filter(run=>run.some(a=>chainSet.has(a)));
+          const oldSquares=oldComponents.reduce((sum,run)=>sum+run.length**2,0);
+          const squareGain=chain.length**2-oldSquares;
+          // Square gain is strictly positive whenever at least one new
+          // cell extends a chain; old connected cells are never re-awarded.
+          continuityUnits+=squareGain;
+          continuityPoints+=squareGain*CONTINUITY_FACTOR*depth;
+          let crossings=0;
+          if(oldComponents.length>=2){
+            bridges++;
+            bridgePoints+=squareGain*ROYAL_BRIDGE_FACTOR*depth;
+            for(const edge of [11,23,35,47]) {
+              const other=mod(edge+1,SECTORS);
+              if(chainSet.has(edge)&&chainSet.has(other)&&
+                 !(old[edge]&&old[other])) {
+                crossings++;
+                geodesy++;
+                geodesyPoints+=GEODESY_FACTOR*depth;
+              }
+            }
+          }
+          summaries.push({ring:r,length:chain.length,squareGain,depth,
+            existingChains:oldComponents.length,crossings});
+        }
+      }
+      return {continuityUnits,continuityPoints,bridgePoints,
+        geodesyPoints,bridges,geodesy,chains:summaries};
+    }
+    // Four canonical minos are scored by their actual cell count, then by
+    // depth: nearer the Moon yields more than an otherwise identical pose
+    // high in orbit. Each new left/right continuation earns Δ(length²).
     placementReward(blocks) {
       const current=new Set(blocks.map(([a,r])=>r+":"+a));
       const neighbourCells=new Set();
@@ -165,7 +237,7 @@
       for(const [a,r] of blocks) {
         radialSum+=r;
         for(const [na,nr] of [[mod(a-1,SECTORS),r],[mod(a+1,SECTORS),r],[a,r-1],[a,r+1]]) {
-          if(nr<0||nr>=RINGS)continue; // The Moon is ground, not another block.
+          if(nr<0||nr>=RINGS)continue;
           const key=nr+":"+na;
           if(!current.has(key)&&this.board[nr][na]!==-1)neighbourCells.add(key);
         }
@@ -173,9 +245,17 @@
       const contacts=neighbourCells.size;
       const meanRadius=radialSum/blocks.length;
       const centerBonus=Math.max(0,Math.round((RINGS-1-meanRadius)*12));
-      const base=PLACEMENT_POINTS+centerBonus;
+      const size=blocks.length,sizePoints=Math.round(PLACEMENT_POINTS*size/4);
+      const base=sizePoints+centerBonus;
       const multiplier=Math.max(1,contacts);
-      return {points:base*multiplier,base,centerBonus,contacts,multiplier};
+      const chain=this.placementContinuity(blocks);
+      const speedMultiplier=this.speedMultiplier();
+      const rawPoints=base*multiplier+chain.continuityPoints+
+        chain.bridgePoints+chain.geodesyPoints;
+      return {points:Math.max(1,Math.round(rawPoints*speedMultiplier)),
+        base,size,sizePoints,centerBonus,contacts,multiplier,
+        speedMultiplier:Math.round(speedMultiplier*1000)/1000,
+        ...chain};
     }
     lock(lane) {
       const p=this.pieces[lane];
@@ -199,6 +279,10 @@
         placedCounts:this.placedTypes.slice(),spawnCounts:this.spawnedTypes.slice()
       });
       this.award(reward.points,'placement',{lane,angle:p.angle,radius,...reward});
+      if(reward.bridges>0)this.events.push({type:'bridge',lane,
+        bridges:reward.bridges,geodesy:reward.geodesy,
+        bonus:Math.round((reward.bridgePoints+reward.geodesyPoints)*reward.speedMultiplier),
+        chains:reward.chains});
       this.pieces[lane]=null;
       this.spawn(lane);
       return true;
@@ -217,9 +301,14 @@
       if(n){
         this.combo++;
         this.cleared+=n;
-        const gained=480*n*n*this.level + 100*Math.max(0,this.combo-1);
-        this.flash=1; this.events.push({type:'ring',count:n,gained,combo:this.combo});
-        this.award(gained,'ring',{count:n,combo:this.combo});
+        this.level=1+this.cleared; // exactly one step per cleared ring
+        const speedMultiplier=this.speedMultiplier();
+        const gained=Math.round((480*n*n*this.level+
+          100*Math.max(0,this.combo-1))*speedMultiplier);
+        this.flash=1;
+        this.events.push({type:'ring',count:n,gained,combo:this.combo,
+          level:this.level,fallInterval:this.fallInterval(),speedMultiplier});
+        this.award(gained,'ring',{count:n,combo:this.combo,speedMultiplier});
       }else this.combo=0;
       return n;
     }
@@ -227,7 +316,7 @@
       if(this.over||this.paused) return;
       const dt=Math.min(Math.max(dtSeconds,0),0.12);
       this.seconds+=dt;
-      this.level=1+Math.floor(this.cleared/3)+Math.floor(this.seconds/150);
+      this.level=1+this.cleared; // passage of time is NOT a difficulty trigger
       const interval=this.fallInterval();
       let didLock=false;
       for(let lane=0;lane<LANES;lane++) {
@@ -255,7 +344,7 @@
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,FORMS,COLORS,FORM_NAMES,TYPE_COLORS,CHIRALITY,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,MAX_WAIT_SECONDS,RING_SPEED_FACTOR,FORMS,COLORS,FORM_NAMES,TYPE_COLORS,CHIRALITY,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
