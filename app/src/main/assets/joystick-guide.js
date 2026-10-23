@@ -16,11 +16,12 @@
     return {x,y,label};
   }
   function railForAxis({x,y}){
-    // Keep a constant physical screen direction, within a short portrait HUD.
-    const half=Math.min(76/Math.max(.001,Math.abs(x)),
-                        31/Math.max(.001,Math.abs(y)));
-    const a={x:105-x*half,y:45-y*half};
-    const b={x:105+x*half,y:45+y*half};
+    // PT-028: constant LENGTH (104 SVG units) at every angle. PT-027
+    // shortened the vertical rail to 62 units, visually suggesting weaker
+    // control on the sides. The tangent maths already uses unit vectors.
+    const half=52;
+    const a={x:105-x*half,y:60-y*half};
+    const b={x:105+x*half,y:60+y*half};
     const wing=8,tip=9;
     const nx=-y,ny=x;
     function arrow(p,d){
@@ -70,11 +71,11 @@
       this.track.setAttribute("d",rail.path);
       // The ghost hand demonstrates the same line; it cannot move the game.
       const travel=reducedMotion?0:Math.sin(time/550)*rail.half*.64;
-      const gx=105+t.x*travel,gy=45+t.y*travel;
+      const gx=105+t.x*travel,gy=60+t.y*travel;
       this.ghost.setAttribute("transform","translate("+gx.toFixed(2)+" "+gy.toFixed(2)+")");
       // The golden mark is the actual recent tangential finger motion.
       const tx=105+t.x*rail.half*.72*this.finger;
-      const ty=45+t.y*rail.half*.72*this.finger;
+      const ty=60+t.y*rail.half*.72*this.finger;
       this.thumb.setAttribute("cx",tx.toFixed(2));
       this.thumb.setAttribute("cy",ty.toFixed(2));
       this.finger*=.94;
