@@ -578,7 +578,7 @@ function openHallOfFame(){
   renderHallOfFame();
   hallPreviousPause=game.paused;
   if(started&&!game.over){
-    hands.reset();boostSources.clear();fastPointerId=null;
+    hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;
     resetLaserFocus();game.paused=true;persistSession();
   }
   hallOfFame.hidden=false;
@@ -601,7 +601,7 @@ function startPlay(newGame=false){
     speed.value=8;updateSliders();storeSettings();selected=0;
     scoreSaved=false;previousCleared=0;ui.alert.style.display="none";
   }
-  hands.reset();boostSources.clear();fastPointerId=null;
+  hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;
   resetLaserFocus();laserMode=false;updateLaserMode();
   started=true;game.paused=false;lastTime=0;lastSessionSave=performance.now();
   startPanel.style.display="none";
@@ -969,7 +969,7 @@ canvas.addEventListener("pointercancel",e=>{
 window.addEventListener("blur",()=>{hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;resetLaserFocus();});
 laserButton.addEventListener("click",()=>{
   if(!started||game.over)return;
-  hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();laserMode=!laserMode;updateLaserMode();
+  hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;resetLaserFocus();laserMode=!laserMode;updateLaserMode();
 });
 updateLaserMode();
 nickname.addEventListener("change",()=>{
@@ -980,7 +980,7 @@ document.getElementById("turn").addEventListener("click",()=>{if(sound.enabled)s
 document.getElementById("pause").addEventListener("click",()=>{
   if(!started||game.over||settingsOpen)return;
   if(sound.enabled)sound.start();
-  hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();game.paused=!game.paused;lastTime=0;
+  hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;resetLaserFocus();game.paused=!game.paused;lastTime=0;
   persistSession();
 });
 document.getElementById("start").addEventListener("click",()=>startPlay(true));
@@ -1038,7 +1038,7 @@ document.getElementById("audioButton").addEventListener("click",()=>{
 });
 document.getElementById("options").addEventListener("click",()=>{
   if(settingsOpen)return;
-  hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();settingsOpen=true;pausedBeforeSettings=game.paused;game.paused=true;
+  hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;resetLaserFocus();settingsOpen=true;pausedBeforeSettings=game.paused;game.paused=true;
   document.getElementById("settingsPanel").style.display="block";
 });
 document.getElementById("optionsClose").addEventListener("click",()=>{
@@ -1057,7 +1057,7 @@ fxVolume.addEventListener("input",()=>{
   sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);updateSliders();storeSettings();
 });
 experimentalTouch.addEventListener("change",()=>{
-  hands.reset();joystick.hide(); // no control-mode jump during an active grab
+  hands.reset();ghostMoonGuide.hide();joystick.hide(); // no control-mode jump during an active grab
   hands.experimental=experimentalTouch.checked;
   console.info("[PT026][TANGENT] "+(hands.experimental?"ON":"OFF"));
   storeSettings();
@@ -1084,21 +1084,21 @@ for(const name of ["pointerup","pointercancel","lostpointercapture"]){
 }
 document.getElementById("again").addEventListener("click",()=>{
   session.clear(storage);
-  hands.reset();boostSources.clear();fastPointerId=null;festival.reset();game.reset();scoreSaved=false;laserMode=false;resetLaserFocus();laserShots=[];updateLaserMode();
+  hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;festival.reset();game.reset();scoreSaved=false;laserMode=false;resetLaserFocus();laserShots=[];updateLaserMode();
   ui.alert.style.display="none";selected=0;previousCleared=0;lastTime=0;
   if(sound.enabled)sound.start();
 });
 document.addEventListener("visibilitychange",()=>{
   if(document.hidden){
     persistSession();
-    hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();
+    hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;resetLaserFocus();
     game.paused=true;lastTime=0;
   }
 });
 window.addEventListener("pagehide",()=>persistSession());
 window.addEventListener("beforeunload",()=>persistSession());
 window.addEventListener("keydown",e=>{
- if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();boostSources.clear();fastPointerId=null;game.paused=!game.paused;persistSession();}
+ if(e.code==="Space"&&started&&!settingsOpen){e.preventDefault();hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;game.paused=!game.paused;persistSession();}
  if(e.key==="ArrowLeft"&&game.shift(selected,-1))sound.cue("move");
  if(e.key==="ArrowRight"&&game.shift(selected,1))sound.cue("move");
  if(e.key==="ArrowUp")game.rotate(selected);
