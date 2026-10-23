@@ -86,7 +86,8 @@
       // Old checkpoints carry no birth time. They retain their progress and
       // existing points, but the first resumed piece earns the safe ×1
       // rather than a guessed/instant jackpot.
-      if(!Number.isFinite(duration)||duration<.05)return 1;
+      if(!Number.isFinite(birth)||birth<0||
+         !Number.isFinite(duration)||duration<.05)return 1;
       const nominal=this.nominalFlightSeconds(p);
       if(!Number.isFinite(nominal)||nominal<=0)return 1;
       const relativeSpeed=nominal/duration;
