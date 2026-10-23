@@ -43,6 +43,10 @@ public final class MainActivity extends Activity {
                     Log.d("PartouTouch", message.message());
                     return true;
                 }
+                if (message.message() != null && message.message().startsWith("[PT024][SCORE]")) {
+                    Log.d("PartouScore", message.message());
+                    return true;
+                }
                 return super.onConsoleMessage(message);
             }
         });
