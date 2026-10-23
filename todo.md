@@ -253,3 +253,14 @@
 - [x] Remplacement de « JOUER AVEC LE SON » par « ▶ JOUER », suppression du texte technique audio de démarrage.
 - [x] Tests adaptés et build GitHub Actions #39763997838 réussi ; APK brute `temp/PartouTetris-v0.2.10-debug.apk` 8 801 497 octets vérifiée ; capture de plateau contrôlée.
 - [ ] Essayer sur Samsung : fermer complètement l'app avec une partie, la rouvrir, Oui → bonne reprise ; Non → annuler (conservation) puis Non → confirmation finale (nouveau jeu) ; ouvrir Hall of Fame, vérifier historique inchangé.
+
+## PT-024 — Score au carré et progression stratégique
+- [x] Vitesse lente initiale maximum 8 secondes/case sur nouvelle partie ; aucune accélération due au temps.
+- [x] À chaque couronne complète supprimée, baisse progressive et immédiate de l'attente (facteur 0,92, minimum 0,8s).
+- [x] Bonus multiplicateur de vitesse au carré du différentiel, indépendant du boost tactile ×10.
+- [x] Score selon taille réelle de la pièce, profondeur et contacts, chaîne continue 360° à gauche/droite valorisée par gain de carrés sans recompter les anciennes chaînes.
+- [x] Bonus Pont des Pharaons en réunissant deux structures et prime Géodésie au raccord interquartiers, célébrations HUD et son court.
+- [x] Tests de cercle 47/0, chaînes anciennes, pont, profondeur, progression couronnes, vitesse² et migration session.
+- [x] CI et compilation Android #39938398035 réussies. APK non ZIP temp/PartouTetris-v0.2.11-debug.apk vérifiée (8 803 677 octets) ; capture portrait inspectée.
+- [ ] Test sur Samsung SM-A576B : temps constant sur partie longue sans couronne, vitesse accrue après 1 couronne, points bonus et garde-fous, animations/sons.
+- [ ] Ne pas fusionner main ou publier AAB sans validation explicite de Fab.
