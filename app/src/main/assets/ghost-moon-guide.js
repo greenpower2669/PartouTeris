@@ -7,16 +7,21 @@
   // Its centre is *behind* that finger along the selected piece's radial.
   // Consequently the circle's local tangent is exactly the tangent used
   // by tangent-control.js on every one of the 48 lunar sectors.
-  function ghostMoonGeometry({x,y,angle,sectors=48,radius=58}={}){
+  function ghostMoonGeometry({x,y,angle,sectors=48,radius=58,anchor=null}={}){
     if(![x,y,angle].every(Number.isFinite)||
        !Number.isFinite(sectors)||sectors<=0||
        !Number.isFinite(radius)||radius<=0)return null;
     const theta=-Math.PI/2+(angle/sectors)*TAU;
     const radial={x:Math.cos(theta),y:Math.sin(theta)};
     const tangent={x:-radial.y,y:radial.x};
+    const center=anchor&&Number.isFinite(anchor.x)&&Number.isFinite(anchor.y)?
+      {x:anchor.x,y:anchor.y}:{x:x-radius*radial.x,y:y-radius*radial.y};
     return {
-      center:{x:x-radius*radial.x,y:y-radius*radial.y},
-      contact:{x,y},radial,tangent,radius,theta
+      center,
+      // This marker follows the brick's angle while the virtual Moon's
+      // centre stays at the initial grip anchor.
+      contact:{x:center.x+radius*radial.x,y:center.y+radius*radial.y},
+      finger:{x,y},radial,tangent,radius,theta
     };
   }
 
@@ -64,7 +69,30 @@
     return true;
   }
 
-  root.PartouGhostMoon={ghostMoonGeometry,drawGhostMoon};
+  class GhostMoonGuide{
+    constructor(radius=58){
+      this.radius=radius;this.pointerId=null;this.anchor=null;
+    }
+    hide(){this.pointerId=null;this.anchor=null;}
+    render(ctx,{grip,angle,sectors=48}={}){
+      if(!grip||![grip.lastX,grip.lastY,angle].every(Number.isFinite)){
+        this.hide();return false;
+      }
+      if(this.pointerId!==grip.id||!this.anchor){
+        const g=ghostMoonGeometry({
+          x:grip.lastX,y:grip.lastY,angle,sectors,radius:this.radius
+        });
+        if(!g)return false;
+        this.pointerId=grip.id;
+        this.anchor=g.center;
+      }
+      return drawGhostMoon(ctx,{
+        x:grip.lastX,y:grip.lastY,angle,sectors,radius:this.radius,
+        anchor:this.anchor
+      });
+    }
+  }
+  root.PartouGhostMoon={ghostMoonGeometry,drawGhostMoon,GhostMoonGuide};
   if(typeof module!=="undefined"&&module.exports)
-    module.exports={ghostMoonGeometry,drawGhostMoon};
+    module.exports={ghostMoonGeometry,drawGhostMoon,GhostMoonGuide};
 })(typeof globalThis!=="undefined"?globalThis:this);
