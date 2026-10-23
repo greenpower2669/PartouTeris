@@ -14,6 +14,12 @@ function chooseScene(event){
    kind:"fireworks",priority:3,duration:FIREWORKS_DURATION,
    title:event.reached===event.upto?"🎆 "+event.reached.toLocaleString("fr-FR")+" POINTS !":"🎆 "+event.reached.toLocaleString("fr-FR")+" À "+event.upto.toLocaleString("fr-FR")+" POINTS !"
  };
+ if(event.type==="bridge")return {
+   kind:"bubbles",priority:1,duration:2400,
+   title:event.geodesy>0?"🌉 PONT ROYAL · GÉODÉSIE !":"🌉 PONT DES PHARAONS !",
+   subtitle:"+"+event.bonus.toLocaleString("fr-FR")+
+     " BONUS · "+event.bridges+" pont"+(event.bridges>1?"s":"")
+ };
  if(event.type==="ring"&&event.count>=2)return {
    kind:"disco",priority:2,duration:4100,
    title:"🪩 DOUBLE COURONNE !",subtitle:"+"+event.gained+" POINTS · COMBO ×"+event.combo
@@ -121,7 +127,7 @@ class Festival {
        this.gainTimer=setTimeout(()=>{this.gainHost.hidden=true;this.gainTimer=null;},2100);
      }
    }
-   else if(event.type==="ring"||event.type==="milestone")this.show(event);
+   else if(event.type==="ring"||event.type==="milestone"||event.type==="bridge")this.show(event);
  }
 }
 root.PartouFestival={Festival,chooseScene,milestones,FIREWORKS_STEP,FIREWORKS_DURATION};
