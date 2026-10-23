@@ -18,7 +18,10 @@ function capture(game,selected=0){
     board:game.board.map(r=>r.slice()),
     boardTypes:game.boardTypes.map(r=>r.slice()),
     pieces:game.pieces.map(p=>({
-      lane:p.lane,type:p.type,angle:p.angle,radius:p.radius,rot:p.rot
+      lane:p.lane,type:p.type,angle:p.angle,radius:p.radius,rot:p.rot,
+      // Nullable for backwards compatibility with checkpoints predating PT-030.
+      spawnedAtSeconds:Number.isFinite(p.spawnedAtSeconds)?
+        p.spawnedAtSeconds:null
     })),
     fall:game.fall.slice(),
     bag:game.bag.slice(),
@@ -42,7 +45,11 @@ function valid(v){
     const p=v.pieces[lane];
     if(!p||!integer(p.lane,lane,lane)||!integer(p.type,0,TYPES-1)||
        !integer(p.angle,0,SECTORS-1)||!integer(p.radius,0,RINGS+5)||
-       !integer(p.rot,0,3))return false;
+       !integer(p.rot,0,3)||
+       // Old v1 save format omitted the creation timestamp. Never invent
+       // one: a resumed old piece receives the conservative ×1 factor.
+       !(p.spawnedAtSeconds===undefined||p.spawnedAtSeconds===null||
+         finite(p.spawnedAtSeconds,0,v.seconds)))return false;
   }
   if(!Array.isArray(v.fall)||v.fall.length!==LANES||
      !v.fall.every(n=>finite(n,0,100)))return false;
@@ -63,7 +70,11 @@ function restore(game,v){
   // Deep-copy validated values; never revive old pointer ownership or timers.
   game.board=v.board.map(row=>row.slice());
   game.boardTypes=v.boardTypes.map(row=>row.slice());
-  game.pieces=v.pieces.map(p=>({...p,boost:false}));
+  game.pieces=v.pieces.map(p=>({
+    ...p,boost:false,
+    spawnedAtSeconds:Number.isFinite(p.spawnedAtSeconds)?
+      p.spawnedAtSeconds:null
+  }));
   game.fall=v.fall.slice();
   game.bag=v.bag.slice();
   game.spawnedTypes=v.spawnedTypes.slice();
