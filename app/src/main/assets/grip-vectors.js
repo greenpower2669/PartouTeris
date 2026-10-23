@@ -10,13 +10,14 @@
     const tangent={x:-Math.sin(theta),y:Math.cos(theta)};
     // Symmetric soft pulse, one single angle and length at all four fronts.
     const pulse=reducedMotion?0.5:(1+Math.sin(time/370))/2;
-    const inner=20, length=13+12*pulse;
+    // Wider neon arrows stay legible beyond a fingertip without flooding the playfield.
+    const inner=30, length=24+18*pulse;
     const normal={x:-tangent.y,y:tangent.x};
     const arrows=[-1,1].map(sign=>{
       const dir={x:tangent.x*sign,y:tangent.y*sign};
       const from={x:x+dir.x*inner,y:y+dir.y*inner};
       const tip={x:from.x+dir.x*length,y:from.y+dir.y*length};
-      const wing=5.5,back=8;
+      const wing=7,back=10;
       return {from,tip,headLeft:{x:tip.x-dir.x*back+normal.x*wing,y:tip.y-dir.y*back+normal.y*wing},
         headRight:{x:tip.x-dir.x*back-normal.x*wing,y:tip.y-dir.y*back-normal.y*wing}};
     });
@@ -27,8 +28,9 @@
     if(!vectors||!ctx)return false;
     ctx.save();
     ctx.lineCap="round";ctx.lineJoin="round";
-    ctx.shadowColor="#42dfff";ctx.shadowBlur=8;
-    ctx.strokeStyle="#b9f8ff";ctx.lineWidth=3.5;
+    ctx.globalAlpha=.58; // semi-transparent cyan neon
+    ctx.shadowColor="#42dfff";ctx.shadowBlur=12;
+    ctx.strokeStyle="#a3f5ff";ctx.lineWidth=4.2;
     for(const a of vectors.arrows){
       ctx.beginPath();
       ctx.moveTo(a.from.x,a.from.y);
