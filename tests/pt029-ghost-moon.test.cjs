@@ -47,18 +47,19 @@ test("PT029: draw only when valid and always restore canvas state",()=>{
  assert.ok(acts.filter(a=>a==="arc").length>=5);
  assert.equal(drawGhostMoon(ctx,{x:NaN,y:10,angle:4}),false);
 });
-test("PT029: same grip keeps a fixed pivot; release then reacquire reanchors",()=>{
+test("PT029/PT031: projected pivot follows grip and reanchors after release",()=>{
  const {ctx}=mock(),guide=new GhostMoonGuide(58);
- const grip={id:7,lastX:175,lastY:410};
- assert.equal(guide.render(ctx,{grip,angle:5}),true);
+ const grip={id:7,lane:0,lastX:175,lastY:410};
+ const moonCenter={x:120,y:310};
+ assert.equal(guide.render(ctx,{grip,angle:5,moonCenter,time:0}),true);
  const first={...guide.anchor};
  grip.lastX=265;grip.lastY=440;
- assert.equal(guide.render(ctx,{grip,angle:9}),true);
- near(guide.anchor.x,first.x);near(guide.anchor.y,first.y);
- guide.hide();assert.equal(guide.anchor,null);
- assert.equal(guide.render(ctx,{grip,angle:9}),true);
+ assert.equal(guide.render(ctx,{grip,angle:9,moonCenter,time:16}),true);
  assert.ok(Math.hypot(guide.anchor.x-first.x,guide.anchor.y-first.y)>30);
- guide.render(ctx,{grip:null,angle:9});
+ guide.hide();assert.equal(guide.anchor,null);
+ assert.equal(guide.render(ctx,{grip,angle:9,moonCenter,time:32}),true);
+ assert.ok(Math.hypot(guide.anchor.x-first.x,guide.anchor.y-first.y)>30);
+ guide.render(ctx,{grip:null,angle:9,moonCenter,time:48});
  assert.equal(guide.anchor,null);
 });
 test("PT029: longer fingertip vectors remain opposed and semi-transparent neon",()=>{
@@ -80,7 +81,7 @@ test("PT029: ghost is faint and cannot intercept touch or alter game physics",()
  assert.match(ghost,/rgba\(135,235,253,0\.15\)/);
  assert.doesNotMatch(ghost,/pointerdown|addEventListener|setPointerCapture|game\.shift|game\.rotate/);
  assert.match(html,/src="ghost-moon-guide.js"/);
- assert.match(html,/ghostMoonGuide\.render\(ctx,\{grip,angle:piece\.angle,sectors:SECTORS\}\)/);
+ assert.match(html,/ghostMoonGuide\.render\(ctx,\{grip,angle:piece\.angle,sectors:SECTORS,/);
  assert.ok(html.indexOf("ghostMoonGuide.render(ctx")<html.indexOf("pieces();overlays();"));
  assert.match(html,/ghostMoonGuide\.hide\(\)/);
  assert.match(html,/if\(grip&&hands\.experimental&&!laserMode&&!game\.paused&&!game\.over&&!settingsOpen\)/);
