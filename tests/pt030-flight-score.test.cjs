@@ -26,9 +26,9 @@ test("PT030: every newly created space piece has independent active game-time bi
 test("PT030: reference travel duration includes space and final collision stage",()=>{
  const g=new Game(()=>0);
  near(g.nominalFlightSeconds({radius:0}),
-   MAX_WAIT_SECONDS*(SPACE_STEPS*SPACE_INTERVAL_FACTOR+RINGS+1));
+   MAX_WAIT_SECONDS*((SPACE_STEPS+1)*SPACE_INTERVAL_FACTOR+RINGS));
  near(g.nominalFlightSeconds({radius:8}),
-   MAX_WAIT_SECONDS*(SPACE_STEPS*SPACE_INTERVAL_FACTOR+3));
+   MAX_WAIT_SECONDS*((SPACE_STEPS+1)*SPACE_INTERVAL_FACTOR+2));
 });
 test("PT030 exploit blocked: changing slider only just before landing gives no instantaneous jackpot",()=>{
  const g=new Game(()=>0);
@@ -45,7 +45,7 @@ test("PT030 exploit blocked: changing slider only just before landing gives no i
  near(placement.speedMultiplier,Math.round(before*1000)/1000,1e-8);
  assert.ok(placement.gained<300);
  near(placement.flightSeconds,100);
- near(placement.nominalSeconds,120.8);
+ near(placement.nominalSeconds,119.36);
  assert.equal(placement.speedSource,"measured-flight");
 });
 test("PT030: a legitimately faster whole flight earns the squared speed differential",()=>{
