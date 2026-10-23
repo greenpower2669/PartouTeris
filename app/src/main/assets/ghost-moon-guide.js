@@ -2,11 +2,25 @@
   "use strict";
   const TAU=Math.PI*2;
 
-  // PT-029: a scaled, perceptual guide; NOT a second physics orbit.
-  // The gripped finger lies on the rim of a tiny virtual Moon.
-  // Its centre is *behind* that finger along the selected piece's radial.
-  // Consequently the circle's local tangent is exactly the tangent used
-  // by tangent-control.js on every one of the 48 lunar sectors.
+  // PT-031: pedagogical projection, never a second controller. The centre
+  // belongs to the open segment from real Moon C to gripping finger F:
+  // A = C + lambda * (F-C), 0 < lambda < 1. The scalar lambda is smoothed
+  // over time, and the anchor reprojects onto the CURRENT segment each frame
+  // (not fixed at first contact). The arc orientation remains the real
+  // brick's radial angle: its tangent is exactly the control tangent.
+  function projectedAnchor({x,y,moonCenter,radius=58,lambda=null}={}){
+    if(![x,y,moonCenter?.x,moonCenter?.y,radius].every(Number.isFinite)||
+       radius<=0)return null;
+    const dx=x-moonCenter.x,dy=y-moonCenter.y;
+    const distance=Math.hypot(dx,dy);
+    // For nearby fingers the circle is deliberately NOT resized: keep a
+    // very light visual marker, halfway close to the actual Moon if needed.
+    const target=Math.max(.12,Math.min(.94,1-radius/Math.max(distance,1)));
+    const portion=Number.isFinite(lambda)?
+      Math.max(.12,Math.min(.94,lambda)):target;
+    return {x:moonCenter.x+dx*portion,y:moonCenter.y+dy*portion,
+      lambda:portion,target};
+  }
   function ghostMoonGeometry({x,y,angle,sectors=48,radius=58,anchor=null}={}){
     if(![x,y,angle].every(Number.isFinite)||
        !Number.isFinite(sectors)||sectors<=0||
@@ -71,28 +85,53 @@
 
   class GhostMoonGuide{
     constructor(radius=58){
-      this.radius=radius;this.pointerId=null;this.anchor=null;
+      this.radius=radius;
+      this.pointerId=null;this.lane=null;
+      this.anchor=null;this.lambda=null;this.lastTime=null;
     }
-    hide(){this.pointerId=null;this.anchor=null;}
-    render(ctx,{grip,angle,sectors=48}={}){
-      if(!grip||![grip.lastX,grip.lastY,angle].every(Number.isFinite)){
+    hide(){
+      this.pointerId=null;this.lane=null;
+      this.anchor=null;this.lambda=null;this.lastTime=null;
+    }
+    render(ctx,{grip,angle,sectors=48,moonCenter,time}={}){
+      if(!grip||![grip.lastX,grip.lastY,angle,moonCenter?.x,
+          moonCenter?.y].every(Number.isFinite)){
         this.hide();return false;
       }
-      if(this.pointerId!==grip.id||!this.anchor){
-        const g=ghostMoonGeometry({
-          x:grip.lastX,y:grip.lastY,angle,sectors,radius:this.radius
-        });
-        if(!g)return false;
-        this.pointerId=grip.id;
-        this.anchor=g.center;
+      const projection=projectedAnchor({
+        x:grip.lastX,y:grip.lastY,moonCenter,radius:this.radius
+      });
+      if(!projection){this.hide();return false;}
+      // Regripping, changing lane or losing focus creates a fresh visual
+      // anchor. A pointer that hasn't moved NEVER triggers piece movement.
+      if(this.pointerId!==grip.id||this.lane!==grip.lane||
+         this.lambda===null){
+        this.pointerId=grip.id;this.lane=grip.lane;
+        this.lambda=projection.target;
+      }else{
+        // Smooth ONLY the proportional distance along C -> F, not the
+        // position from an outdated axis. Hence the centre is always
+        // between the Moon and the CURRENT finger, including diagonals.
+        const dt=Number.isFinite(time)&&Number.isFinite(this.lastTime)?
+          Math.max(0,Math.min(64,time-this.lastTime)):16;
+        const blend=1-Math.exp(-dt/90);
+        this.lambda+=(projection.target-this.lambda)*blend;
       }
+      this.lastTime=Number.isFinite(time)?time:null;
+      const now=projectedAnchor({
+        x:grip.lastX,y:grip.lastY,moonCenter,
+        radius:this.radius,lambda:this.lambda
+      });
+      this.anchor={x:now.x,y:now.y};
       return drawGhostMoon(ctx,{
         x:grip.lastX,y:grip.lastY,angle,sectors,radius:this.radius,
         anchor:this.anchor
       });
     }
   }
-  root.PartouGhostMoon={ghostMoonGeometry,drawGhostMoon,GhostMoonGuide};
+  root.PartouGhostMoon={ghostMoonGeometry,projectedAnchor,
+    drawGhostMoon,GhostMoonGuide};
   if(typeof module!=="undefined"&&module.exports)
-    module.exports={ghostMoonGeometry,drawGhostMoon,GhostMoonGuide};
+    module.exports={ghostMoonGeometry,projectedAnchor,
+      drawGhostMoon,GhostMoonGuide};
 })(typeof globalThis!=="undefined"?globalThis:this);
