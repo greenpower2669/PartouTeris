@@ -337,9 +337,9 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <label for="nickname">Pseudo du joueur</label>
 <input id="nickname" name="nickname" type="text" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Tous3nKamion" aria-label="Pseudo affiché dans le classement">
 <p>Ton pseudo apparaît avec les meilleurs scores enregistrés sur ce téléphone.</p>
-<label for="speed">Temps de descente par étage : <strong id="speedValue">5,0 s</strong></label>
-<input id="speed" type="range" min="2" max="8" step="0.5" value="5" aria-label="Secondes par étage, plus grand est plus lent">
-<p>2 secondes = rapide · 8 secondes = très lent. Le jeu accélère progressivement.</p>
+<label for="speed">Temps initial par étage : <strong id="speedValue">8,0 s</strong></label>
+<input id="speed" type="range" min="2" max="8" step="0.5" value="8" aria-label="Secondes initiales par étage, 8 est le temps maximal">
+<p>Départ à 8 secondes par étage. La vitesse augmente uniquement quand une couronne disparaît. Plus vite = bonus de points au carré. Réglage manuel possible ici.</p>
 <label for="musicVolume">Musique : <strong id="musicValue">33 %</strong></label>
 <input id="musicVolume" type="range" min="0" max="100" step="5" value="33">
 <label for="fxVolume">Effets sonores : <strong id="fxValue">75 %</strong></label>
@@ -444,7 +444,9 @@ function readConfig(){
 const settings=readConfig();
 reducedCelebrations.checked=settings.reducedCelebrations!==undefined?!!settings.reducedCelebrations:!!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 const speed=document.getElementById("speed"),musicVolume=document.getElementById("musicVolume"),fxVolume=document.getElementById("fxVolume");
-if(Number.isFinite(+settings.speed)&&settings.speed!==undefined)speed.value=game.setBaseFallSeconds(+settings.speed);
+// PT-024: ignore old speed preferences when beginning a new session.
+ // A resumed run keeps its precise speed from its existing checkpoint.
+ speed.value=game.setBaseFallSeconds(8);
 if(Number.isFinite(+settings.music)&&settings.music!==undefined)musicVolume.value=Math.round(+settings.music*100);
 if(Number.isFinite(+settings.effects)&&settings.effects!==undefined)fxVolume.value=Math.round(+settings.effects*100);
 sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);
@@ -534,7 +536,8 @@ function persistSession(){
 window.partouFlushSession=()=>persistSession();
 function startPlay(newGame=false){
   if(newGame){
-    session.clear(storage);game.reset();selected=0;
+    session.clear(storage);game.reset();game.setBaseFallSeconds(8);
+    speed.value=8;updateSliders();storeSettings();selected=0;
     scoreSaved=false;previousCleared=0;ui.alert.style.display="none";
   }
   hands.reset();boostSources.clear();fastPointerId=null;
@@ -635,7 +638,9 @@ function updateHud(){
   ui.stats.textContent=leaderboard.name+" · Record "+best.toLocaleString("fr-FR");
   bestScoreValue.textContent=best.toLocaleString("fr-FR");
   ui.level.textContent="Niveau "+game.level;
-  ui.rings.textContent="Couronnes "+game.cleared+(game.combo>1?" · Combo ×"+game.combo:" · 4 fronts");
+  ui.rings.textContent="Couronnes "+game.cleared+" · "+
+    game.fallInterval().toFixed(1).replace(".",",")+" s"+
+    (game.combo>1?" · ×"+game.combo:"");
   ui.pause.textContent=game.paused?"▶ REPRENDRE":"Ⅱ PAUSE";
   if(game.over){
     if(!scoreSaved){leaderboard.add(game.score);scoreSaved=true;renderPodium();}
@@ -657,6 +662,17 @@ function frame(time){
         " couronne="+ev.radius+" couleur="+ev.color+
         " posées={L:"+placed[2]+",J:"+placed[3]+",S:"+placed[5]+",Z:"+placed[4]+"}"+
         " tirées={L:"+drawn[2]+",J:"+drawn[3]+",S:"+drawn[5]+",Z:"+drawn[4]+"}");
+    }
+    if(ev.type==="points"&&ev.reason==="placement"){
+      console.info("[PT024][SCORE] pose front="+(ev.lane+1)+
+        " taille="+ev.size+" profondeur="+ev.centerBonus+
+        " chaîneΔ²="+ev.continuityUnits+" ponts="+ev.bridges+
+        " géodésie="+ev.geodesy+" vitesse×="+ev.speedMultiplier+
+        " gain="+ev.gained);
+    }else if(ev.type==="ring"){
+      console.info("[PT024][SCORE] couronne(s)="+ev.count+
+        " palier="+ev.level+" attente="+ev.fallInterval.toFixed(2)+
+        "s vitesse×="+ev.speedMultiplier.toFixed(2));
     }
     festival.handle(ev);
     if(ev.type==="milestone")sound.cue("milestone");
