@@ -955,15 +955,17 @@ canvas.addEventListener("pointerup",e=>{
   e.preventDefault();
   if(laserMode)return; // focus persists after pointerup/pointercancel
   hands.up(touchInfo(e));
+  if(!hands.grip)ghostMoonGuide.hide();
   updateTouchGuide();
 });
 canvas.addEventListener("pointercancel",e=>{
   e.preventDefault();
   if(laserMode)return; // focus persists after pointerup/pointercancel
   hands.cancel(touchInfo(e));
+  if(!hands.grip)ghostMoonGuide.hide();
   updateTouchGuide();
 });
-window.addEventListener("blur",()=>{hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();});
+window.addEventListener("blur",()=>{hands.reset();ghostMoonGuide.hide();boostSources.clear();fastPointerId=null;resetLaserFocus();});
 laserButton.addEventListener("click",()=>{
   if(!started||game.over)return;
   hands.reset();boostSources.clear();fastPointerId=null;resetLaserFocus();laserMode=!laserMode;updateLaserMode();
