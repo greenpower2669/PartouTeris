@@ -352,6 +352,8 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <label for="fxVolume">Effets sonores : <strong id="fxValue">75 %</strong></label>
 <input id="fxVolume" type="range" min="0" max="100" step="5" value="75">
 <label for="reducedCelebrations"><input id="reducedCelebrations" type="checkbox"> Effets visuels doux (moins de mouvement)</label>
+<label for="experimentalTouch"><input id="experimentalTouch" type="checkbox"> 🎯 Guidage tangentiel projeté (essai)</label>
+<p>Le doigt peut rester loin de la pièce : repère virtuel derrière la Lune, axe de déplacement tangent, transitions souples. Décoche pour comparer avec l'ancien contrôle.</p>
 <button id="hallFromSettings" type="button">🏆 HALL OF FAME</button>
 <button id="optionsClose">VALIDER ✓</button>
 </div>
@@ -359,6 +361,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="engine.js"></script>
 <script src="audio.js"></script>
 <script src="touch.js"></script>
+<script src="tangent-control.js"></script>
 <script src="boost-sources.js"></script>
 <script src="visuals.js"></script>
 <script src="arrival.js"></script>
@@ -453,6 +456,8 @@ function readConfig(){
   try{return JSON.parse(localStorage.getItem(storageKey)||"{}")||{};}catch(e){return {};}
 }
 const settings=readConfig();
+const experimentalTouch=document.getElementById("experimentalTouch");
+experimentalTouch.checked=settings.tangentControl!==false; // ON for the PT-026 trial, reversible
 reducedCelebrations.checked=settings.reducedCelebrations!==undefined?!!settings.reducedCelebrations:!!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 const speed=document.getElementById("speed"),musicVolume=document.getElementById("musicVolume"),fxVolume=document.getElementById("fxVolume");
 // PT-024: ignore old speed preferences when beginning a new session.
@@ -464,7 +469,7 @@ sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);
 if(settings.enabled===false)sound.setEnabled(false);
 function storeSettings(){
   try{localStorage.setItem(storageKey,JSON.stringify({
-    speed:game.baseFallSeconds,music:sound.musicVolume,effects:sound.effectsVolume,enabled:sound.enabled,reducedCelebrations:reducedCelebrations.checked
+    speed:game.baseFallSeconds,music:sound.musicVolume,effects:sound.effectsVolume,enabled:sound.enabled,reducedCelebrations:reducedCelebrations.checked,tangentControl:experimentalTouch.checked
   }));}catch(e){}
 }
 function updateAudioLabel(){
@@ -810,6 +815,19 @@ const boostSources=new window.PartouBoostSources.BoostSources(
 );
 const hands=new window.PartouTouch.TwoHandControls({
   sectorCount:SECTORS,
+  experimental:experimentalTouch.checked,
+  projectDrag:(lane,from,to)=>{
+    const p=game.pieces[lane];
+    if(!p)return 0;
+    // The same virtual observer frame is used for both finger samples.
+    // It follows the actual brick angle, not the location of the hand.
+    const radius=inner+(Math.min(RINGS,p.radius)+.36)*stepR+
+      Math.max(0,p.radius-RINGS)*stepR*.58;
+    return window.PartouTangent.projectDrag({
+      from,to,angle:p.angle,orbitRadius:radius,
+      centerX:cx,centerY:cy,screenWidth:W,sectorCount:SECTORS
+    }).sectorDelta;
+  },
   chooseLane:nearestLane,
   onSelect:lane=>{selected=lane;},
   onMove:(lane,direction)=>{if(game.shift(lane,direction))sound.cue("move");},
@@ -983,6 +1001,12 @@ musicVolume.addEventListener("input",()=>{
 });
 fxVolume.addEventListener("input",()=>{
   sound.setVolumes(+musicVolume.value/100,+fxVolume.value/100);updateSliders();storeSettings();
+});
+experimentalTouch.addEventListener("change",()=>{
+  hands.reset(); // no control-mode jump during an active grab
+  hands.experimental=experimentalTouch.checked;
+  console.info("[PT026][TANGENT] "+(hands.experimental?"ON":"OFF"));
+  storeSettings();
 });
 reducedCelebrations.addEventListener("change",()=>{
   festival.root.classList.toggle("fx-reduced",reducedCelebrations.checked);storeSettings();
