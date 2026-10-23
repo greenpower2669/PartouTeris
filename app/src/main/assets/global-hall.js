@@ -128,9 +128,12 @@ class GlobalHall{
       status===0?"hors_ligne":"en_attente";
     this.notify();return true;
   }
-  const merged=new Map(this.entries.map(e=>[e.scoreId,e]));
+  // A retry may expose the same run with another server scoreId.
+  // The immutable run ID, never the player's nickname, defines identity.
+  const key=e=>e.runId||e.scoreId;
+  const merged=new Map(this.entries.map(e=>[key(e),e]));
   for(const raw of parsed.entries){
-   const e=cleanRemote(raw);if(e)merged.set(e.scoreId,e);
+   const e=cleanRemote(raw);if(e)merged.set(key(e),e);
   }
   this.entries=[...merged.values()].slice(-MAX_WORLD);
   this.cursor=parsed.nextCursor;
