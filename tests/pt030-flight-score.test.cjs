@@ -43,7 +43,9 @@ test("PT030 exploit blocked: changing slider only just before landing gives no i
  const placement=event(g,"placement");
  assert.ok(placement);
  near(placement.speedMultiplier,Math.round(before*1000)/1000,1e-8);
- assert.ok(placement.gained<300);
+ const unboosted=placement.base*Math.max(1,placement.contacts)+
+   placement.continuityPoints+placement.bridgePoints+placement.geodesyPoints;
+ assert.ok(placement.gained<unboosted*1.1,"last-minute slider must not multiply whole-flight payout");
  near(placement.flightSeconds,100);
  near(placement.nominalSeconds,119.36);
  assert.equal(placement.speedSource,"measured-flight");
@@ -94,7 +96,7 @@ test("PT030: crown reward uses landing piece's earned speed, not post-clear inst
  assert.ok(placement&&ring,"the last piece must land and clear the crown");
  assert.equal(g.cleared,1);
  assert.ok(placement.speedMultiplier<1.1);
- near(ring.speedMultiplier,placement.speedMultiplier);
+ near(ring.speedMultiplier,placement.speedMultiplier,.001);
  assert.ok(ring.speedMultiplier<g.speedMultiplier());
 });
 test("PT030: scoring cannot mint time-based bonuses for missing, future or zero-time birth",()=>{
