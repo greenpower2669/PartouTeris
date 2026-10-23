@@ -61,10 +61,11 @@
       this.finger=clamp(this.finger*.38+projectedPixels/26,-1,1);
       this.lastMotion=Number.isFinite(time)?time:0;
     }
-    render(angle,time,{reducedMotion=false,inSpace=false}={}){
+    render(angle,time,{reducedMotion=false,inSpace=false,landing=false}={}){
       if(!this.active)return;
       const t=axisForAngle(angle),rail=railForAxis(t);
-      const label=inSpace?"ESPACE · GUIDAGE APRÈS L’APPROCHE":t.label;
+      const label=inSpace?"ESPACE · GUIDAGE APRÈS L’APPROCHE":
+        landing?"POSE · "+t.label:t.label;
       if(label!==this.lastLabel){
         this.axisLabel.textContent=label;this.lastLabel=label;
       }
