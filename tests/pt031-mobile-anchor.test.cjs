@@ -121,8 +121,8 @@ test("PT031: geometric guide is display-only, preserves PT030 score source",()=>
  const html=fs.readFileSync("app/src/main/assets/index.html","utf8");
  const ghost=fs.readFileSync("app/src/main/assets/ghost-moon-guide.js","utf8");
  const scoring=fs.readFileSync("app/src/main/assets/engine.js","utf8");
- assert.match(html,/ghostMoonGuide\.render\(ctx,\{grip,angle:piece\.angle,sectors:SECTORS,/);
- assert.match(html,/moonCenter:\{x:cx,y:cy\},time/);
+ assert.match(html,/ghostMoonGuide\.render\(ctx,\{grip,angle:target\?\.angle\?\?piece\.angle,/);
+ assert.match(html,/moonCenter:\{x:cx,y:cy\},target,time/);
  assert.match(html,/window\.PartouGripVectors\.drawGripVectors/);
  assert.match(html,/src="tangent-control.js"/);
  assert.match(scoring,/flightSpeedMultiplier\(p\)/);
