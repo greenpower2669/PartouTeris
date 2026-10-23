@@ -365,6 +365,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="tangent-control.js"></script>
 <script src="joystick-guide.js"></script>
 <script src="grip-vectors.js"></script>
+<script src="ghost-moon-guide.js"></script>
 <script src="boost-sources.js"></script>
 <script src="visuals.js"></script>
 <script src="arrival.js"></script>
@@ -777,7 +778,22 @@ function frame(time){
     const type=game.boardTypes[r][a];
     wedge(a,r,type>=0?TYPE_COLORS[type]:COLORS[game.board[r][a]],.88,true);
   }
-  moon();pieces();overlays();
+  moon();
+  // PT-029: the ghost Moon is a translucent local circular reference near
+  // the held finger. Paint it UNDER flying pieces to protect urgent visibility.
+  // Its direction follows the SAME tangent used by the actual controls.
+  {
+    const grip=hands.grip;
+    if(grip&&hands.experimental&&!laserMode&&!game.paused&&!game.over&&!settingsOpen){
+      const piece=game.pieces[grip.lane];
+      if(piece&&piece.radius<RINGS){
+        window.PartouGhostMoon.drawGhostMoon(ctx,{
+          x:grip.lastX,y:grip.lastY,angle:piece.angle,sectors:SECTORS
+        });
+      }
+    }
+  }
+  pieces();overlays();
   laserShots=laserShots.filter(shot=>time-shot.at<480);
   // Three Earth defence satellites independently converge on each target.
   const emitters=art.satellites({earth,W,H,time:time/1000,reduced:reducedCelebrations.checked});
