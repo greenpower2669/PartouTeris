@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 
 public final class MainActivity extends Activity {
     private WebView webView;
+    private PartouHallApiBridge hallBridge;
     private void immersive() {
         getWindow().getDecorView().setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
@@ -51,6 +52,17 @@ public final class MainActivity extends Activity {
             }
         });
         configure(webView.getSettings());
+        // A JavaScript bridge is safe only while WebView remains in our
+        // bundled, trusted appassets. Reject navigations to foreign pages.
+        hallBridge = new PartouHallApiBridge(this, webView);
+        webView.addJavascriptInterface(hallBridge, "PartouHall");
+        webView.setWebViewClient(new WebViewClient() {
+            @Override public boolean shouldOverrideUrlLoading(
+                    WebView view, android.webkit.WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                return !url.startsWith("file:///android_asset/");
+            }
+        });
         setContentView(webView);
         webView.loadUrl("file:///android_asset/index.html");
     }
@@ -78,6 +90,7 @@ public final class MainActivity extends Activity {
         super.onPause();
     }
     @Override protected void onDestroy() {
+        if(hallBridge!=null){hallBridge.shutdown();hallBridge=null;}
         if(webView!=null){webView.stopLoading();webView.destroy();webView=null;}
         super.onDestroy();
     }
