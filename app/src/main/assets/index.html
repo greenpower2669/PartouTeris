@@ -787,11 +787,9 @@ function frame(time){
     if(grip&&hands.experimental&&!laserMode&&!game.paused&&!game.over&&!settingsOpen){
       const piece=game.pieces[grip.lane];
       if(piece&&piece.radius<RINGS){
-        window.PartouGhostMoon.drawGhostMoon(ctx,{
-          x:grip.lastX,y:grip.lastY,angle:piece.angle,sectors:SECTORS
-        });
-      }
-    }
+        ghostMoonGuide.render(ctx,{grip,angle:piece.angle,sectors:SECTORS});
+      }else ghostMoonGuide.hide();
+    }else ghostMoonGuide.hide();
   }
   pieces();overlays();
   laserShots=laserShots.filter(shot=>time-shot.at<480);
@@ -845,6 +843,7 @@ const boostSources=new window.PartouBoostSources.BoostSources(
   ({source,lane,active})=>console.info(
     "[PT021][BOOST] "+(active?"ON":"OFF")+" source="+source+" front="+(lane+1))
 );
+const ghostMoonGuide=new window.PartouGhostMoon.GhostMoonGuide();
 const joystick=new window.PartouJoystickGuide.Guide(
   document.getElementById("touchGuide"),document.getElementById("tip"));
 const hands=new window.PartouTouch.TwoHandControls({
