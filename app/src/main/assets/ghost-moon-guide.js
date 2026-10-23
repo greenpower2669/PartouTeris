@@ -93,13 +93,18 @@
       this.pointerId=null;this.lane=null;
       this.anchor=null;this.lambda=null;this.lastTime=null;
     }
-    render(ctx,{grip,angle,sectors=48,moonCenter,time}={}){
+    render(ctx,{grip,angle,sectors=48,moonCenter,target,time}={}){
       if(!grip||![grip.lastX,grip.lastY,angle,moonCenter?.x,
           moonCenter?.y].every(Number.isFinite)){
         this.hide();return false;
       }
+      // PT-032: after a real grab, replace the airborne piece's frame by
+      // the exact projected touchdown footprint. Older callers may omit
+      // target; keep the PT-031 Moon-centre fallback.
+      const reference=target&&Number.isFinite(target.x)&&
+        Number.isFinite(target.y)?target:moonCenter;
       const projection=projectedAnchor({
-        x:grip.lastX,y:grip.lastY,moonCenter,radius:this.radius
+        x:grip.lastX,y:grip.lastY,moonCenter:reference,radius:this.radius
       });
       if(!projection){this.hide();return false;}
       // Regripping, changing lane or losing focus creates a fresh visual
@@ -119,7 +124,7 @@
       }
       this.lastTime=Number.isFinite(time)?time:null;
       const now=projectedAnchor({
-        x:grip.lastX,y:grip.lastY,moonCenter,
+        x:grip.lastX,y:grip.lastY,moonCenter:reference,
         radius:this.radius,lambda:this.lambda
       });
       this.anchor={x:now.x,y:now.y};
