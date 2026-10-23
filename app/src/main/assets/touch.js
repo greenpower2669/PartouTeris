@@ -3,13 +3,15 @@
   // The first contact is a persistent grip. Short taps by another finger
   // rotate ONLY that gripped piece, without stealing selection or movement.
   class TwoHandControls {
-    constructor({sectorCount=48,chooseLane,onSelect,onMove,onRotate,onBoost}) {
+    constructor({sectorCount=48,chooseLane,onSelect,onMove,onRotate,onBoost,projectDrag=null,experimental=false}) {
       this.sectorCount=sectorCount;
       this.chooseLane=chooseLane;
       this.onSelect=onSelect;
       this.onMove=onMove;
       this.onRotate=onRotate;
       this.onBoost=onBoost;
+      this.projectDrag=projectDrag;
+      this.experimental=!!experimental;
       this.grip=null;
       this.boostActive=false;
       this.holdDuration=420; // 420ms starts a ten-times-speed fall; tap remains rotate
@@ -23,7 +25,7 @@
       if(this.grip && this.grip.id===p.id)return false;
       if(!this.grip){
         const lane=this.chooseLane(p.angle);
-        this.grip={id:p.id,lane,lastAngle:p.angle,accumulator:0};
+        this.grip={id:p.id,lane,lastAngle:p.angle,lastX:p.x,lastY:p.y,lastTime:p.time,accumulator:0};
         this.onSelect(lane);
         return true;
       }
@@ -34,9 +36,17 @@
     move(p) {
       if(this.grip && p.id===this.grip.id) {
         const g=this.grip,n=this.sectorCount;
-        const delta=((p.angle-g.lastAngle+n*1.5)%n+n)%n-n/2;
+        // PT-026: use the LAST finger sample, not the finger's absolute angle
+        // around the Moon. This prevents snapping, dead zones and reversals
+        // when the hand moves away from the grabbed piece.
+        const delta=this.experimental&&typeof this.projectDrag==="function"?
+          this.projectDrag(g.lane,{x:g.lastX,y:g.lastY,time:g.lastTime},
+            {x:p.x,y:p.y,time:p.time}):
+          ((p.angle-g.lastAngle+n*1.5)%n+n)%n-n/2;
         g.lastAngle=p.angle;
-        g.accumulator+=delta;
+        g.lastX=p.x;g.lastY=p.y;g.lastTime=p.time;
+        if(!Number.isFinite(delta))return true;
+        g.accumulator=Math.max(-8,Math.min(8,g.accumulator+delta));
         for(let i=0;Math.abs(g.accumulator)>=.8&&i<8;i++){
           const direction=Math.sign(g.accumulator);
           this.onMove(g.lane,direction);
