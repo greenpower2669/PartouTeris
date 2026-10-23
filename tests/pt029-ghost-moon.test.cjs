@@ -81,7 +81,7 @@ test("PT029: ghost is faint and cannot intercept touch or alter game physics",()
  assert.match(ghost,/rgba\(135,235,253,0\.15\)/);
  assert.doesNotMatch(ghost,/pointerdown|addEventListener|setPointerCapture|game\.shift|game\.rotate/);
  assert.match(html,/src="ghost-moon-guide.js"/);
- assert.match(html,/ghostMoonGuide\.render\(ctx,\{grip,angle:piece\.angle,sectors:SECTORS,/);
+ assert.match(html,/ghostMoonGuide\.render\(ctx,\{grip,angle:target\?\.angle\?\?piece\.angle,/);
  assert.ok(html.indexOf("ghostMoonGuide.render(ctx")<html.indexOf("pieces();overlays();"));
  assert.match(html,/ghostMoonGuide\.hide\(\)/);
  assert.match(html,/if\(grip&&hands\.experimental&&!laserMode&&!game\.paused&&!game\.over&&!settingsOpen\)/);
