@@ -294,22 +294,37 @@ class Artist {
     c.beginPath();c.arc(cx,cy,high,a0,a1,false);
     c.arc(cx,cy,low,a1,a0,true);c.closePath();
     c.fillStyle=gradient;c.fill();
-    // PT-036: light originates from the cell itself. Three halo passes
-    // radiate outside the exact mino silhouette; no circular selection mask.
+    // PT-037: visible breathing halo, emitted OUTSIDE each cell silhouette.
+    // The two luminous colors cross-fade as energy rises / falls.
+    // Canvas shadow alone was too weak on Android WebView.
     const energy=Math.max(0,Math.min(1,Number(glow)||0));
     if(energy>0){
+      const blend=Math.max(0,Math.min(1,Number(arguments[0].colorMix)||0));
+      const a=arguments[0].glowA||"#38eaff";
+      const b=arguments[0].glowB||"#ffd36a";
+      const rgb=(hex)=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));
+      const ar=rgb(a),br=rgb(b);
+      const mix=(t)=>"rgb("+ar.map((v,i)=>Math.round(v*(1-t)+br[i]*t)).join(",")+")";
+      const radiance=mix(blend),opposite=mix(1-blend);
       c.save();
       c.globalCompositeOperation="screen";
-      c.globalAlpha=Math.min(0.92,opacity*(.22+.43*energy));
-      c.fillStyle=color;
-      c.shadowColor=color;
-      c.shadowBlur=stepR*(.8+1.6*energy);
-      c.fill();
-      c.globalAlpha=Math.min(.9,opacity*(.2+.40*energy));
-      c.shadowColor="#efffff";
-      c.shadowBlur=stepR*(.3+.6*energy);
-      c.fillStyle="rgba(210,251,255,.60)";
-      c.fill();
+      // Outward glow follows the annular cell shape, not a circle.
+      // Multiple strokes at descending width make a strong, visible aura.
+      c.lineJoin="round";
+      c.strokeStyle=radiance;
+      c.shadowColor=radiance;
+      c.shadowBlur=stepR*(2+2*energy);
+      c.globalAlpha=.35+.53*energy;
+      c.lineWidth=stepR*(.36+.27*energy);
+      c.stroke();
+      c.shadowBlur=stepR*(.75+energy);
+      c.globalAlpha=.65+.3*energy;
+      c.lineWidth=stepR*.22;
+      c.strokeStyle=opposite;c.shadowColor=opposite;c.stroke();
+      // Cell interior clearly fluctuates; preserve original color/texture.
+      c.shadowBlur=stepR*.6;
+      c.globalAlpha=.06+.36*energy;
+      c.fillStyle=radiance;c.fill();
       c.restore();
     }
     if(stroke){
