@@ -376,3 +376,15 @@
 - [x] GitHub Actions #40129936727 **SUCCESS** : 248/248 tests Node (0 échec), build Gradle Android et APK brute vérifiée `temp/PartouTetris-v0.2.28-comic-trilaser-debug.apk` (8 839 507 octets, blob SHA Git `c14bb0b38393ae94ba5238a12358b5e4a67fc406`). Lien direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-comic-feedback-041/temp/PartouTetris-v0.2.28-comic-trilaser-debug.apk
 - [ ] Test Android Samsung : trois faisceaux lisibles pendant le ciblage, explosion et score après 320 ms, popups BD variés, malus vrai, bon placement et non-occlusion des blocs.
 - [ ] Attendre validation Fab avant toute fusion `main`.
+
+
+## PT-042 — Repositionner les bulles BD et hiérarchiser les cadres
+- [x] Branche `feature/lunar-four-fronts-bottom-comics-042` issue de PT-041, main intacte.
+- [x] Déplacer `#comicFeed` directement à l'intérieur du panneau de commandes et le fixer juste au-dessus, sans calcul d'écran et sans toucher aux boutons.
+- [x] Réduire taille et opacité du fond, conserver texte lisible et clics traversants.
+- [x] Bulles ordinaires à coins arrondis et alertes/waouh à contour polygonal zigzag (interception, couronne, combo, malus, gros gain).
+- [x] Conserver bande de mots, anti-répétition, bonus vitesse fractionné, trois lasers synchronisés et score original.
+- [x] Ajouter tests PT-042 et préparer APK 0.2.29 directe.
+- [ ] Confirmer CI Node/Gradle et publication APK non ZIP `temp/PartouTetris-v0.2.29-bottom-comics-debug.apk`.
+- [ ] Essai visuel Samsung : bas du plateau, aucun masquage central, toutes les bulles et formes, petit écran, panneau « POSE » en action.
+- [ ] Pas de fusion main / Release / Play sans accord Fab.
