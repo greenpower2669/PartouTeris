@@ -350,6 +350,6 @@
 - [x] Interception manuelle dans le mode LASER ; bonus de score 120 × vitesse gravitationnelle permanente² plafonné, tir unique par objet et aucun détournement avec chute ×10.
 - [x] Fenêtre d'aide et joystick du bas réellement réduits ; textes plus compacts et laser utilisable.
 - [x] Tests Node PT-039 ajoutés et application Android 0.2.26 préparée.
-- [ ] Attester les tests CI, la compilation Gradle, la publication et le lien direct de l'APK 0.2.26.
+- [x] CI GitHub Actions #40119045022 **SUCCESS** : 232/232 tests Node, zéro échec, Gradle Android terminé, APK brute vérifiée `temp/PartouTetris-v0.2.26-earth-events-debug.apk` (8 831 682 octets, blob SHA `14bb2952780c6d55eee68fbe2f01827d5f44c704`). Téléchargement brut : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-earth-events-039/temp/PartouTetris-v0.2.26-earth-events-debug.apk
 - [ ] Test réel Samsung : objets bien visibles près de la Terre, laser manuel gagnant des points, satellites automatiques, panneau compact y compris avec joystick actif.
 - [ ] Pas de merge main / Release / Play sans validation de Fab.
