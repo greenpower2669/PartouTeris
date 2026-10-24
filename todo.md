@@ -331,3 +331,13 @@
 - [x] Préserver scores PT-034, tangente PT-035, commandes et HOF.
 - [x] CI GitHub Actions #40108753328 **SUCCESS** : 219/219 tests, compilation Android réussie ; APK brute vérifiée `temp/PartouTetris-v0.2.24-bicolor-aura-debug.apk` (8 827 774 octets).
 - [ ] Retour perceptif Fab sur Samsung, contrôler alternance et aura sans anneaux.
+
+
+## PT-038 — Événements waouh, feu laser et espace
+- [x] Branche PT-038 basée sur PT-037, main inchangée.
+- [x] Appliquer aura bicolore pulsée sur la pièce sélectionnée dans l'espace.
+- [x] Ajouter laser → combustion d'une pièce sous parachute et chute temporaire ×3, sans persistance sur le remplacement.
+- [x] Ajouter feu, HUD et vibrations discrètes ainsi que tests moteur/rendu.
+- [ ] Confirmer CI et APK brute v0.2.25 sur GitHub.
+- [ ] Tester effets et cadence sur Samsung Android 16, puis ajuster avec Fab.
+- [ ] Ne pas fusionner main sans validation.
