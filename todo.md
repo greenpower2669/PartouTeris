@@ -329,5 +329,5 @@
 - [x] Large aura externe suivant exactement chaque cellule sélectionnée et sa projection.
 - [x] Transition progressive et cyclique cyan ↔ or, intensité fortement variable et mode visuel doux stable.
 - [x] Préserver scores PT-034, tangente PT-035, commandes et HOF.
-- [ ] CI complète, tests, compilation et APK brute 0.2.24 téléchargeable à confirmer.
+- [x] CI GitHub Actions #40108753328 **SUCCESS** : 219/219 tests, compilation Android réussie ; APK brute vérifiée `temp/PartouTetris-v0.2.24-bicolor-aura-debug.apk` (8 827 774 octets).
 - [ ] Retour perceptif Fab sur Samsung, contrôler alternance et aura sans anneaux.
