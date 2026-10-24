@@ -125,7 +125,7 @@
       if(!p||p.t>=1||Math.hypot(p.x-x,p.y-y)>30)return null;
       const bonus=defenseBonus(fallSeconds);
       this.pending={point:p,firedAt:now,impactAt:now+.32,
-        bonus,speedSquare:Math.pow(8/fallSeconds,2)};
+        bonus,speedSquare:Math.min(25,Math.pow(8/fallSeconds,2))};
       return {type:"earth-locked",reason:"player",x:p.x,y:p.y,
         bonus,form:p.form,impactAt:this.pending.impactAt};
     }
