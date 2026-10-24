@@ -280,9 +280,11 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 </style>
 <link rel="stylesheet" href="hud-pt016.css">
 <link rel="stylesheet" href="joystick-guide.css">
+<link rel="stylesheet" href="comic-feedback.css">
 </head><body>
 <canvas id="screen" aria-label="Lune et quatre secteurs de jeu"></canvas>
 <div id="scoreBurst" aria-hidden="true"></div>
+<div id="comicFeed" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 <div id="hud">
   <div class="brand">
     <img class="pyramids-mark" src="brand-icon.webp" alt="Icône officielle PartouTetris" draggable="false">
@@ -373,6 +375,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="arrival.js"></script>
 <script src="laser-aim.js"></script>
 <script src="earth-events.js"></script>
+<script src="comic-feedback.js"></script>
 <script src="layout.js"></script>
 <script src="celebrations.js"></script>
 <script src="leaderboard.js"></script>
@@ -457,6 +460,9 @@ const festival=new window.PartouFestival.Festival(document.getElementById("score
   reduced:()=>reducedCelebrations.checked,
   bannerHost:document.getElementById("scoreAnnouncement"),
   gainHost:pointFeed
+});
+const comic=new window.PartouComic.ComicFeedback(document.getElementById("comicFeed"),{
+  reduced:()=>reducedCelebrations.checked
 });
 let started=false,settingsOpen=false,pausedBeforeSettings=false;
 const storageKey="partouteris-audio-and-speed-v1";
@@ -609,6 +615,7 @@ function startPlay(newGame=false){
   resetLaserFocus();laserMode=false;updateLaserMode();
   started=true;game.paused=false;lastTime=0;lastSessionSave=performance.now();
   earthEvents.reset(game.seconds); // transient event, never alter saved runs
+  comic.reset();
   startPanel.style.display="none";
   persistSession();
   if(sound.enabled){
@@ -627,7 +634,10 @@ function resize(){
   const controlsTop=document.getElementById("controlDeck").getBoundingClientRect().top;
   ({cx,cy,scale,inner,outer,stepR,earth}=window.PartouLayout.computePortraitLayout({width:W,height:H,headerBottom,controlsTop}));
   festival.position({cx,cy,outer,inner,stepR,earth});
-  // PT-014: all textual gains and celebrations are now inside the fixed HUD.
+  // Compact overlay near the top edge of the board; no permanent game cover.
+  document.getElementById("comicFeed").style.setProperty("--comic-top",
+    Math.round(Math.max(10,headerBottom+22))+"px");
+  // PT-014: old score celebrations still live inside the HUD.
 }
 window.addEventListener("resize",resize);resize();
 const TAU=Math.PI*2;
@@ -769,9 +779,19 @@ function frame(time){
   if(started&&!game.paused&&!game.over){
     for(const ev of earthEvents.tick(game.seconds,{W,earth})){
       if(ev.type==="earth-impact"){
-        sound.cue(ev.reason==="satellite"?"laser":"destroy");
-        if(ev.reason==="satellite")laserMessage("🛰️ SATELLITES · INTERCEPTION",1100);
-        else laserMessage("💥 IMPACT DÉBRIS SPATIAL",1100);
+        if(ev.reason==="player"){
+          // The three cyan beams have been visible since target lock. Only
+          // now: explosion + real reward + comic bubble, exactly once.
+          game.award(ev.bonus,"earth-defense",{
+            form:ev.form,speedSquare:ev.speedSquare
+          });
+          sound.cue("destroy");
+          laserMessage("🌍 DÉFENSE TERRE · +"+ev.bonus.toLocaleString("fr-FR")+" POINTS",1500);
+        }else{
+          sound.cue(ev.reason==="satellite"?"laser":"destroy");
+          if(ev.reason==="satellite")laserMessage("🛰️ SATELLITES · INTERCEPTION",1100);
+          else laserMessage("💥 IMPACT DÉBRIS SPATIAL",1100);
+        }
       }
     }
   }
@@ -798,6 +818,9 @@ function frame(time){
         "s vitesse×="+ev.speedMultiplier.toFixed(2));
     }
     festival.handle(ev);
+    // One vivid but short BD panel for ALL scored gains and every malus.
+    // Extra speed modules reflect the actually earned multiplier.
+    comic.enqueue(ev);
     if(ev.type==="milestone")sound.cue("milestone");
     else if(ev.type!=="points"&&ev.type!=="destroy")sound.cue(ev.type,ev.count);
   }
@@ -823,6 +846,7 @@ function frame(time){
     laserFocusHud.hidden=true;laserTipUntil=0;
   }
   sound.tick(game.paused||game.over,game.level);
+  comic.update(game.seconds,game.paused||settingsOpen||!started);
   if(game.cleared!==before){previousCleared=game.cleared;if(navigator.vibrate)navigator.vibrate(40);}
   backdrop();
   for(let r=0;r<RINGS;r++)for(let a=0;a<SECTORS;a++)if(game.board[r][a]!==-1){
@@ -994,12 +1018,11 @@ canvas.addEventListener("pointerdown",e=>{
     if(now-lastLaserAt>=420){
       const interception=earthEvents.hit(pos.x,pos.y,game.seconds,game.fallInterval());
       if(interception){
+        // The target remains until all three beams have crossed it (320 ms).
+        // Awarding and the comic popup happen only on the impact event.
         resetLaserFocus();lastLaserAt=now;
-        game.award(interception.bonus,"earth-defense",{
-          form:interception.form,speedSquare:Math.pow(8/game.fallInterval(),2)
-        });
         sound.cue("laser");
-        laserMessage("🌍 DÉFENSE TERRE · +"+interception.bonus.toLocaleString("fr-FR")+" POINTS",1500);
+        laserMessage("⚡ TRIPLE LASER · VERROUILLAGE",620);
         if(navigator.vibrate)navigator.vibrate([16,28,42]);
         return;
       }
