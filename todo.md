@@ -388,3 +388,17 @@
 - [x] CI [GitHub Actions #40133532082](https://github.com/greenpower2669/PartouTetris/actions/runs/40133532082) **SUCCESS** : 254 tests Node réussis / zéro échec, compilation Gradle Android ; APK non ZIP `temp/PartouTetris-v0.2.29-bottom-comics-debug.apk` vérifiée (8 840 047 octets, blob SHA `b89c4d0b3caefb78ae8d87280afe749abeba7369`). Téléchargement direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-bottom-comics-042/temp/PartouTetris-v0.2.29-bottom-comics-debug.apk
 - [ ] Essai visuel Samsung : bas du plateau, aucun masquage central, toutes les bulles et formes, petit écran, panneau « POSE » en action.
 - [ ] Pas de fusion main / Release / Play sans accord Fab.
+
+
+## PT-043 — Micro-zoom BD et pluies de blocs occasionnelles (25/10/2026)
+- [x] Créer `feature/lunar-four-fronts-comic-meteor-shower-043` à partir de PT-042 sans modifier `main`.
+- [x] Bulles BD recentrées horizontalement au-dessus des commandes et fonds nettement plus transparents.
+- [x] Micro-grossissement fort très court (×1,10 lisse / ×1,24 zigzag), retour à la taille habituelle, fade, modes doux conservés.
+- [x] Ajouter alertes BD `meteor` avec vocabulaire varié et sans points fictifs, priorité devant messages ordinaires.
+- [x] Introduire de rares pluies de 3–6 objets Terre indépendants et décalés, 45–90 s d'intervalle, trajectoires et formes variées ; 6 cibles et 162 particules max.
+- [x] Réutiliser pour chaque mini-bloc les interceptions satellites/spontanées, le ciblage par les 3 lasers du joueur, l'explosion post-salve et le bonus vitesse² PT-039 sans duplication.
+- [x] Pause, mode effets doux, ancienne grille lunaire, score anti-inflation, sauvegardes et HOF conservés.
+- [x] Tests PT-043 ajoutés et Android 0.2.30 préparé.
+- [ ] Vérifier les tests CI, l'assemblage Android, APK non ZIP `temp/PartouTetris-v0.2.30-meteor-shower-debug.apk` et livrer un lien direct.
+- [ ] Essai Samsung SM-A576B Android 16 : popup centrée et très brève, visibilité Terre lors des pluies, fréquence, laser manuel et cadence générale.
+- [ ] Aucun merge `main` ou Release sans validation explicite de Fab.
