@@ -194,4 +194,4 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Le malus PT-018 avant PT-034 ne dépendait que de la hauteur du bloc, pas de la vitesse permanente de gravité ; il restait 80 à 4000 points pour une seule brique.
 - Correction sur branche PT-034 : multiplier la pénalité hauteur par (8 / fallInterval())² ; réduire les nouvelles récompenses globales à 65 %, plafonner le facteur de vitesse du gain à ×10. L'anti-exploit PT-030 reste fondé sur la durée de vol réellement mesurée.
 - Cas à recontrôler : coût nul seulement pour coordonnées invalides, score non négatif si malus supérieur au solde, boost tactile sans impact sur le prix, anciennes sessions et historiques inchangés, calcul du bonus pont/géodésie cohérent.
-- En attente : CI complète Android et essai Samsung. Ne pas décrire cette validation comme acquise avant ses résultats.
+- CI #40085127619 **SUCCESS** : tests Node (206), Gradle Android et publication de l'APK brute sous `temp/PartouTetris-v0.2.20-scoring-debug.apk`. **Essai réel Samsung encore à effectuer** ; aucun résultat de terrain présumé.
