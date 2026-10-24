@@ -297,8 +297,8 @@
 - [x] Orienter ce repère comme `joystick-guide.js` et `tangent-control.js`, sans changer les commandes ni la sensibilité.
 - [x] Conserver repère de pose PT-032, flèches bleues au doigt et joystick « POSE » sous le jeu.
 - [x] Ajouter tests géométriques sur 48 secteurs, franchissement 47/0, pivot mobile, rendu discret, absence de mutation du moteur et compatibilité PT-034.
-- [ ] CI : tests Node, compilation Gradle, publication APK debug directe 0.2.21.
-- [ ] Vérifier l'APK non ZIP `temp/PartouTetris-v0.2.21-tangent-debug.apk` et communiquer le lien direct à Fab.
+- [x] CI #40087650577 : **213 tests Node réussis, zéro échec**, compilation Gradle Android et publication APK directe 0.2.21 **SUCCESS**.
+- [x] APK non ZIP `temp/PartouTetris-v0.2.21-tangent-debug.apk` vérifiée : 8 826 914 octets, blob SHA Git `a6c44cac5c97316fb4924db71b3b24ad7c214359`. Téléchargement direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-tangent-035/temp/PartouTetris-v0.2.21-tangent-debug.apk
 - [ ] Essai sur Samsung SM-A576B Android 16 : doigt loin, doigt proche, tangente locale, diagonales, quatre fronts, rotation et mouvements rapides, compatibilité PT-034.
 - [ ] PT-033 reste séparé (remplacement du cercle jaune et pulsation de la projection), ne pas le réaliser implicitement.
 - [ ] Pas de fusion `main` ni publication définitive sans validation.
