@@ -364,3 +364,15 @@
 - [x] CI GitHub Actions #40122239539 **SUCCESS** : **239/239 tests Node**, zéro échec ; Gradle Android réussi ; APK brute `temp/PartouTetris-v0.2.27-particle-tail-debug.apk` vérifiée (8 832 546 octets, blob SHA `04eab107f1aac02300f1ee09311b19fffac00380`). Lien direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-particle-tail-040/temp/PartouTetris-v0.2.27-particle-tail-debug.apk
 - [ ] Test visuel sur Samsung SM-A576B : traînée visible, détachée en étincelles et non en « bâton » lors d'une rotation, absence d'occlusion du terrain.
 - [ ] Aucune fusion `main` sans validation explicite de Fab.
+
+
+## PT-041 — Feedback BD multiformule, phases vitesse et interception tri-laser
+- [x] Nouvelle branche `feature/lunar-four-fronts-comic-feedback-041` issue de PT-040 ; aucun merge `main`.
+- [x] Appui joueur → cible conservée → salve **trois lasers simultanés** des trois satellites pendant 320 ms → impact → disparition et explosion → unique bonus réel et popup.
+- [x] Banque riche de formulations françaises pour défense, poses, couronnes, ponts, malus et gains ; éviter de réutiliser les deux dernières phrases.
+- [x] Cartouches temporaires façon comics visibles mais non tactiles, couleur distincte pour gains/malus, texte hiérarchisé ; pause/effets doux respectés.
+- [x] Petites bulles `+40 %` par phase lorsque le vrai bonus vitesse existe, pourcentage total exact si le bonus est grand. Aucun faux bonus ni score ajouté.
+- [x] Câblage pour toutes les mutations `points` et `destroy`, anciens festivals conservés, tests PT-041 ajoutés et vieux tests d'interception actualisés.
+- [ ] Valider CI Node + Gradle, APK brute `temp/PartouTetris-v0.2.28-comic-trilaser-debug.apk` et lien direct.
+- [ ] Test Android Samsung : trois faisceaux lisibles pendant le ciblage, explosion et score après 320 ms, popups BD variés, malus vrai, bon placement et non-occlusion des blocs.
+- [ ] Attendre validation Fab avant toute fusion `main`.
