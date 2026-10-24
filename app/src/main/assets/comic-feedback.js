@@ -183,7 +183,9 @@ class ComicFeedback {
    this.host.hidden=false;
  }
  update(now,paused=false){
-   if(!Number.isFinite(now)||paused||!this.host)return;
+   if(!Number.isFinite(now)||!this.host)return;
+   this.host.classList.toggle("comic-paused",paused);
+   if(paused)return;
    if(this.current&&now-this.startedAt>this.duration(this.current)){
      this.current=null;
      this.host.replaceChildren();this.host.hidden=true;
