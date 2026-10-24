@@ -385,6 +385,6 @@
 - [x] Bulles ordinaires à coins arrondis et alertes/waouh à contour polygonal zigzag (interception, couronne, combo, malus, gros gain).
 - [x] Conserver bande de mots, anti-répétition, bonus vitesse fractionné, trois lasers synchronisés et score original.
 - [x] Ajouter tests PT-042 et préparer APK 0.2.29 directe.
-- [ ] Confirmer CI Node/Gradle et publication APK non ZIP `temp/PartouTetris-v0.2.29-bottom-comics-debug.apk`.
+- [x] CI [GitHub Actions #40133532082](https://github.com/greenpower2669/PartouTetris/actions/runs/40133532082) **SUCCESS** : 254 tests Node réussis / zéro échec, compilation Gradle Android ; APK non ZIP `temp/PartouTetris-v0.2.29-bottom-comics-debug.apk` vérifiée (8 840 047 octets, blob SHA `b89c4d0b3caefb78ae8d87280afe749abeba7369`). Téléchargement direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-bottom-comics-042/temp/PartouTetris-v0.2.29-bottom-comics-debug.apk
 - [ ] Essai visuel Samsung : bas du plateau, aucun masquage central, toutes les bulles et formes, petit écran, panneau « POSE » en action.
 - [ ] Pas de fusion main / Release / Play sans accord Fab.
