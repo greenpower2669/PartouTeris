@@ -187,3 +187,11 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - PartouTetris n'avait qu'un Top10 en local. Ajout de l'historique complet, idempotence par runId et synchronisation cache/world inspirées de ces projets.
 - Sur serveur commun, la route du gameId partoutetris n'a pas pu être confirmée ; l'application garde les scores localement, signale 403/404, aucune fabrication de classement en cas de panne.
 - Test Android requis : publication réelle, sync deux appareils, hors ligne et doublons.
+
+
+## PT-034 — Diagnostic du score excessif et des destructions peu pénalisantes (24/10/2026)
+- Sur PT-032, le score au carré de la durée de vol PT-030 peut atteindre ×100 pour une pose ou une couronne. Ce plafond multiplie le rendement des enchaînements, expliquant l'envolée des scores ressentie par Fab.
+- Le malus PT-018 avant PT-034 ne dépendait que de la hauteur du bloc, pas de la vitesse permanente de gravité ; il restait 80 à 4000 points pour une seule brique.
+- Correction sur branche PT-034 : multiplier la pénalité hauteur par (8 / fallInterval())² ; réduire les nouvelles récompenses globales à 65 %, plafonner le facteur de vitesse du gain à ×10. L'anti-exploit PT-030 reste fondé sur la durée de vol réellement mesurée.
+- Cas à recontrôler : coût nul seulement pour coordonnées invalides, score non négatif si malus supérieur au solde, boost tactile sans impact sur le prix, anciennes sessions et historiques inchangés, calcul du bonus pont/géodésie cohérent.
+- En attente : CI complète Android et essai Samsung. Ne pas décrire cette validation comme acquise avant ses résultats.
