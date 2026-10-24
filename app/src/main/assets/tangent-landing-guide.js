@@ -38,7 +38,7 @@
     const {center,ends,tangent,links}=g;
     const reduced=!!args.reducedMotion;
     const time=Number.isFinite(args.time)?args.time:0;
-    const pulse=reduced?.5:(.5+.5*Math.sin(time/550));
+    const pulse=reduced ? 0.5 : (0.5+0.5*Math.sin(time/550));
     ctx.save();
     ctx.lineCap="round";ctx.lineJoin="round";
     // These links are behind all pieces and as discreet as the ghost Moon:
