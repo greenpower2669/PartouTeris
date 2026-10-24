@@ -319,6 +319,6 @@
 - [x] Dessiner des halos qui épousent chaque mino réel et projeté avec deux passes lumineuses et variation de luminance claire.
 - [x] Conserver l'absence d'anneaux et le mode visuel doux.
 - [x] Ajouter tests de non-régression PT-036 et préparer debug 0.2.23.
-- [ ] Confirmer les tests Node, APK brute dans `temp/PartouTetris-v0.2.23-irradiant-debug.apk` et compilation CI.
+- [x] CI #40107340300 réussie : **219/219 tests**, build Android Gradle et APK directe vérifiée `temp/PartouTetris-v0.2.23-irradiant-debug.apk` (8 827 338 octets).
 - [ ] Vérifier l'effet visuel sur Samsung et ajuster après retour de Fab si besoin.
 - [ ] Aucun merge main sans validation.
