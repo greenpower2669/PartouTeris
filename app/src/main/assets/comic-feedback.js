@@ -135,7 +135,7 @@ function comicModel(event,deck){
  const percent=info||category==="malus"?0:speedPercent(event);
  return {
    category,heading:deck.pick(category,true),phrase:deck.pick(category),
-   score:info?"SATELLITES EN ALERTE":(category==="malus"?"−":"+")+
+   score:info?"DÉFENSE TERRE":(category==="malus"?"−":"+")+
      value.toLocaleString("fr-FR")+" pts",
    speed:percent,stages:speedStages(percent),
    // Displayed score is always the ACTUAL awarded/charged amount.
@@ -166,7 +166,10 @@ class ComicFeedback {
      const ordinary=this.queue.findIndex(item=>item.priority===1);
      this.queue.splice(ordinary>=0?ordinary:0,1);
    }
-   this.queue.push(model);
+   // Meteor showers are rare and must not wait behind routine placement
+   // messages; queue the alert at the front without interrupting a reader.
+   if(model.category==="meteor")this.queue.unshift(model);
+   else this.queue.push(model);
    return model;
  }
  paint(model){
