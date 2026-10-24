@@ -375,6 +375,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="arrival.js"></script>
 <script src="laser-aim.js"></script>
 <script src="earth-events.js"></script>
+<script src="earth-shower.js"></script>
 <script src="comic-feedback.js"></script>
 <script src="layout.js"></script>
 <script src="celebrations.js"></script>
@@ -448,6 +449,7 @@ function laserMessage(text,duration=1300){
 }
 let laserShots=[];
 const earthEvents=new window.PartouEarthEvents.EarthEvents();
+const meteorShower=new window.PartouMeteorShower.MeteorShower();
 const laserButton=document.getElementById("laserButton");
 function updateLaserMode(){
   laserButton.setAttribute("aria-pressed",String(laserMode));
@@ -615,6 +617,7 @@ function startPlay(newGame=false){
   resetLaserFocus();laserMode=false;updateLaserMode();
   started=true;game.paused=false;lastTime=0;lastSessionSave=performance.now();
   earthEvents.reset(game.seconds); // transient event, never alter saved runs
+  meteorShower.reset(game.seconds); // rare, independent shower scenery
   comic.reset();
   startPanel.style.display="none";
   persistSession();
@@ -776,7 +779,16 @@ function frame(time){
   // PT-039: new Earth arrivals are independent of the four gameplay lanes.
   // Using game.seconds makes events stop when the game is paused.
   if(started&&!game.paused&&!game.over){
-    for(const ev of earthEvents.tick(game.seconds,{W,earth})){
+    const earthTick=[...earthEvents.tick(game.seconds,{W,earth}),
+      ...meteorShower.tick(game.seconds,{W,earth})];
+    for(const ev of earthTick){
+      if(ev.type==="earth-shower"){
+        // One comic ALERT, no score mutation. Alternate French phrases
+        // via the PT-041 anti-repeat phrase deck.
+        comic.enqueue({type:"info",reason:"meteor-shower",count:ev.count});
+        sound.cue("laser");
+        laserMessage("☄️ ALERTE MÉTÉORITIQUE · "+ev.count+" BLOCS",1500);
+      }
       if(ev.type==="earth-impact"){
         if(ev.reason==="player"){
           // The three cyan beams have been visible since target lock. Only
@@ -883,6 +895,8 @@ function frame(time){
   // Three Earth defence satellites independently converge on each target.
   const emitters=art.satellites({earth,W,H,time:time/1000,reduced:reducedCelebrations.checked});
   earthEvents.draw(ctx,{now:game.seconds,reduced:reducedCelebrations.checked,
+    emitters,speedRatio:Math.max(1,8/game.fallInterval())});
+  meteorShower.draw(ctx,{now:game.seconds,reduced:reducedCelebrations.checked,
     emitters,speedRatio:Math.max(1,8/game.fallInterval())});
   for(const shot of laserShots)for(const from of emitters){
      const elapsed=time-shot.at;
@@ -1015,7 +1029,11 @@ canvas.addEventListener("pointerdown",e=>{
     // Player laser intercepts the independently moving Earth-bound block.
     // Score is determined by permanent gravity only, not the x10 finger drop.
     if(now-lastLaserAt>=420){
-      const interception=earthEvents.hit(pos.x,pos.y,game.seconds,game.fallInterval());
+      // Only one coordinated tri-laser lock at any given time,
+      // even when several objects approach Earth in the same rain.
+      const interception=(earthEvents.pending||meteorShower.locked!==null)?null:
+        meteorShower.hit(pos.x,pos.y,game.seconds,game.fallInterval())||
+        earthEvents.hit(pos.x,pos.y,game.seconds,game.fallInterval());
       if(interception){
         // The target remains until all three beams have crossed it (320 ms).
         // Awarding and the comic popup happen only on the impact event.
