@@ -55,8 +55,8 @@
       if(!a||!p||p.t<=0)return [];
       const speed=clamp(Number(speedRatio)||1,1,2.5);
       // Quicker permanent gravity produces a slightly longer energetic tail.
-      const history=(reduced?.32:.72)*Math.sqrt(speed);
-      const count=reduced?8:27;
+      const history=(reduced ? 0.32 : 0.72)*Math.sqrt(speed);
+      const count=reduced ? 8 : 27;
       const dx=a.endX-a.x0,dy=a.endY-a.y0;
       const length=Math.hypot(dx,dy)||1;
       const perpendicular={x:-dy/length,y:dx/length};
@@ -76,9 +76,9 @@
         particles.push({
           x:past.x+perpendicular.x*spread,
           y:past.y+perpendicular.y*spread,
-          radius:(reduced?.85:1.05)+(1-fraction)*(reduced?1.0:2.6)
+          radius:(reduced ? 0.85 : 1.05)+(1-fraction)*(reduced ? 1.0 : 2.6)
             +(i%5===0?.85:0),
-          opacity:(reduced?.57:.87)*Math.pow(1-fraction,1.45),
+          opacity:(reduced ? 0.57 : 0.87)*Math.pow(1-fraction,1.45),
           color
         });
       }
