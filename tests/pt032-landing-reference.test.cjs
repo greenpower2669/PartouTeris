@@ -112,7 +112,7 @@ test("PT032: selection is still on actual piece and guide still only while grabb
  assert.match(html,/src="landing-guide.js"/);
  assert.match(html,/target=projectedLanding\(piece\)/);
  assert.match(html,/moonCenter:\{x:cx,y:cy\},target,time/);
- assert.doesNotMatch(html,/window\\.PartouLandingGuide\\.drawLandingCue\\(ctx,target/);
+ assert.equal(html.includes('window.PartouLandingGuide.drawLandingCue(ctx,target'),false);
  assert.match(html,/if\(grip&&hands\.experimental&&!laserMode&&!game\.paused&&!game\.over&&!settingsOpen\)/);
 });
 test("PT032: no score/controls mutation; reticle is translucent and display-only",()=>{
