@@ -19,7 +19,7 @@
     constructor(rng=Math.random){this.rng=rng;this.reset();}
     random(){return clamp(Number(this.rng())||0,0,0.9999999);}
     reset(now=0){
-      this.active=null;this.effects=[];this.lastType=-1;
+      this.active=null;this.pending=null;this.effects=[];this.lastType=-1;
       this.nextAt=now+9+this.random()*5;
     }
     spawn(now,{W,earth}){
@@ -86,8 +86,8 @@
     }
     resolve(now,reason){
       if(!this.active)return null;
-      const obj=this.active,point=this.position(obj,now);
-      this.active=null;
+      const obj=this.active,point=this.pending?.point||this.position(obj,now);
+      this.active=null;this.pending=null;
       this.effects.push({...point,start:now,reason,form:obj.type});
       if(this.effects.length>7)this.effects.shift();
       return {type:"earth-impact",reason,x:point.x,y:point.y,form:obj.type};
@@ -95,6 +95,16 @@
     tick(now,geometry){
       if(!Number.isFinite(now))return [];
       this.effects=this.effects.filter(e=>now-e.start<1.15);
+      // PT-041: a player's three beams visibly converge BEFORE detonation.
+      // Game time, not wall clock, suspends this phase during pauses.
+      if(this.pending){
+        if(now>=this.pending.impactAt){
+          const pending=this.pending;
+          return [{...this.resolve(now,"player"),bonus:pending.bonus,
+            speedSquare:pending.speedSquare}];
+        }
+        return [];
+      }
       if(!this.active){
         if(now>=this.nextAt){
           const ev=this.spawn(now,geometry);
@@ -109,22 +119,26 @@
       return [];
     }
     hit(x,y,now,fallSeconds){
-      if(!Number.isFinite(x)||!Number.isFinite(y)||!this.active)return null;
+      if(!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(now)||
+         !this.active||this.pending)return null;
       const p=this.position(this.active,now);
       if(!p||p.t>=1||Math.hypot(p.x-x,p.y-y)>30)return null;
-      const ev=this.resolve(now,"player");
-      return {...ev,bonus:defenseBonus(fallSeconds)};
+      const bonus=defenseBonus(fallSeconds);
+      this.pending={point:p,firedAt:now,impactAt:now+.32,
+        bonus,speedSquare:Math.pow(8/fallSeconds,2)};
+      return {type:"earth-locked",reason:"player",x:p.x,y:p.y,
+        bonus,form:p.form,impactAt:this.pending.impactAt};
     }
     draw(ctx,{now,reduced=false,emitters=[],speedRatio=1}={}){
       if(!ctx||!Number.isFinite(now))return;
-      const p=this.position(this.active,now);
+      const p=this.pending?this.pending.point:this.position(this.active,now);
       if(p){
         const shape=SHAPES[p.form],color=COLORS[p.form];
         // Hot particles trail BEHIND the moving tetromino in world coordinates.
         // Soft incandescent white/yellow/orange fades into scattered embers.
         ctx.save();
         ctx.globalCompositeOperation="lighter";
-        for(const spark of this.trailParticles(now,{reduced,speedRatio})){
+        for(const spark of this.trailParticles(this.pending?.firedAt??now,{reduced,speedRatio})){
           ctx.globalAlpha=spark.opacity;
           ctx.fillStyle=spark.color;
           ctx.shadowColor=spark.color;
@@ -142,6 +156,24 @@
           ctx.strokeRect(sx*10-4.5,sy*10-4.5,9,9);
         }
         ctx.restore();
+      }
+      if(this.pending&&emitters.length){
+        const phase=clamp((now-this.pending.firedAt)/.32,0,1);
+        // Three simultaneous laser rays, one per actual pyramid satellite;
+        // never hide or remove the target until the subsequent impact tick.
+        const point=this.pending.point;
+        for(const from of emitters.slice(0,3)){
+          if(!from||!Number.isFinite(from.x)||!Number.isFinite(from.y))continue;
+          ctx.save();ctx.globalCompositeOperation="lighter";
+          ctx.lineCap="round";
+          ctx.shadowColor="#55e8ff";ctx.shadowBlur=reduced?6:17+10*phase;
+          ctx.strokeStyle="#22cfff";ctx.globalAlpha=.75+.2*phase;
+          ctx.lineWidth=reduced?2:4.2;ctx.beginPath();
+          ctx.moveTo(from.x,from.y);ctx.lineTo(point.x,point.y);ctx.stroke();
+          ctx.shadowColor="#faffff";ctx.shadowBlur=6;
+          ctx.lineWidth=1.6;ctx.strokeStyle="#eaffff";ctx.stroke();
+          ctx.restore();
+        }
       }
       for(const e of this.effects){
         const life=clamp((now-e.start)/1.15,0,1);
