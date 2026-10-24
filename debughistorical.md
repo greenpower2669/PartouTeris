@@ -219,3 +219,10 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 ## PT-040 — « tige » parasite sur débris spatial (24/10/2026)
 - Capture fournie par Fab : sur mini-bloc coloré approchant la Terre, `earth-events.js.draw()` utilisait un segment fixe `moveTo(-9,14)` → `lineTo(-24-p.t*10,36)`, dans la couleur identique au bloc et dans les coordonnées tournantes du tétraminos ; rendait une barre inorganique, orientée selon sa rotation plutôt que selon le mouvement.
 - Correction : particules discrètes obtenues par échantillonnage temporel de la trajectoire, non vecteur fixe, décalage transversal léger, palette chaude et extinction progressive. Appels `arc/fill` additifs, respect de l'option de mouvements doux. Vérifier la qualité sur vrai écran AMOLED Android ; tests unitaires ne prouvent pas la perception réelle.
+
+
+## PT-041 — Les lasers arrivaient après la disparition de la cible; score trop monotone (24/10/2026)
+- Échec perceptif constaté par Fab : un tap laser sur le bloc PT-039 provoquait `resolve(now,'player')` immédiatement. `earth-events.js` affichait donc l'explosion sans tir préalable, avec **zéro rayon satellite** pour un `reason='player'` (son dessin de faisceau était réservé à `reason='satellite'`).
+- Correction du pipeline en deux phases : `hit` crée un état `pending` avec point et bonus figés ; les trois faisceaux réels issus des satellites sont dessinés 320 ms, puis `tick` lance une seule explosion/récompense. L'appel direct à `game.award(interception.bonus)` sur tap est retiré. Aucune duplication possible pendant le verrouillage.
+- Les anciens retours de points utilisaient surtout le podium/scoreboard et des formulations statiques. Un narrateur BD centralisé lit uniquement les événements effectivement émis par le moteur et varie les phrases anti-répétition, montre les montants exacts et décompose l'accélération *réellement rémunérée* en tranches de 40 % pour l'animation.
+- CI et vérification visuelle sur Samsung à confirmer ; attention : les tests DOM assurent la géométrie et la chronologie, pas la lisibilité réelle sur écran.
