@@ -137,7 +137,7 @@
       const type=this.bag.splice(i,1)[0];
       this.spawnedTypes[type]++;
       this.pieces[lane]={lane,type,angle:12*lane,radius:RINGS+SPACE_STEPS,
-        rot:0,boost:false,spawnedAtSeconds:this.seconds};
+        rot:0,boost:false,ignitedUntil:0,spawnedAtSeconds:this.seconds};
       this.fall[lane]=0;
     }
     canPlace(p,angle=p.angle,radius=p.radius,rot=p.rot) {
@@ -185,6 +185,15 @@
       const data={type:'laser',lane,angle:p.angle,radius:p.radius,moved,rotated,impactSector};
       this.events.push(data);
       return data;
+    }
+    ignite(lane){
+      const piece=this.pieces[lane];
+      if(this.over||this.paused||!piece||piece.radius>=RINGS)return false;
+      // A laser burns the lunar parachute for four seconds of active play.
+      // It is independent from touch boost and cannot affect later pieces.
+      piece.ignitedUntil=Math.max(piece.ignitedUntil||0,this.seconds+4);
+      this.events.push({type:"ignite",lane,radius:piece.radius,until:piece.ignitedUntil});
+      return true;
     }
     boost(lane,value) {
       if(this.pieces[lane]) this.pieces[lane].boost=!!value;
@@ -368,7 +377,8 @@
       for(let lane=0;lane<LANES;lane++) {
         let p=this.pieces[lane];
         if(!p)continue;
-        this.fall[lane]+=dt*(p.boost?BOOST_MULTIPLIER:1);
+        this.fall[lane]+=dt*Math.max(p.boost?BOOST_MULTIPLIER:1,
+          (p.ignitedUntil||0)>this.seconds?3:1);
         // A longer Earth-to-Moon approach (5 stages at 82% of the interval).
         // A bounded while loop makes ×10 exact, even at high levels / 60fps.
         for(let moves=0;moves<8;moves++){
