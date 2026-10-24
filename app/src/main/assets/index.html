@@ -645,11 +645,25 @@ function projectedLanding(piece){
     inner,stepR,sectors:SECTORS
   });
 }
+// PT-033: animate the actual minos and landing silhouette instead of rings.
+function selectionLuminance(time){
+  if(reducedCelebrations.checked)return 0.5;
+  return 0.5+0.5*Math.sin(time/620);
+}
 function pieces(){
+  const pulse=selectionLuminance(performance.now());
   for(const p of game.pieces){
     if(!p||p.radius>=RINGS)continue;
     const ghost=game.ghost(p);
-    for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))wedge(a,r,TYPE_COLORS[p.type],.20,false);
+    const active=p.lane===selected;
+    ctx.save();
+    if(active){
+      ctx.shadowColor=TYPE_COLORS[p.type];
+      ctx.shadowBlur=5+5*pulse;
+    }
+    for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))
+      wedge(a,r,TYPE_COLORS[p.type],active?.32+.13*pulse:.20,false);
+    ctx.restore();
   }
   for(const p of game.pieces){
     if(!p)continue;
@@ -663,34 +677,25 @@ function pieces(){
       });
       const blocks=cellsOf(p);
       const relative=blocks.map(([a,r])=>[mod(a-p.angle+SECTORS/2,SECTORS)-SECTORS/2,r-p.radius]);
+      ctx.save();
+      if(p.lane===selected){ctx.shadowColor=TYPE_COLORS[p.type];ctx.shadowBlur=6+6*pulse;}
       art.spacePiece({position:spot,cells:relative,color:TYPE_COLORS[p.type],
         time:performance.now()/1000,reduced:reducedCelebrations.checked,size:stepR});
+      ctx.restore();
     }else{
       art.incoming({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
         time:performance.now()/1000,reduced:reducedCelebrations.checked});
       if(window.PartouVisuals.shouldDeployCanopy(p.radius,RINGS))
         art.canopy({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
           color:TYPE_COLORS[p.type],reduced:reducedCelebrations.checked});
-      for(const [a,r] of cellsOf(p))wedge(a,r,TYPE_COLORS[p.type],.94,true);
+      ctx.save();
+      if(p.lane===selected){ctx.shadowColor=TYPE_COLORS[p.type];ctx.shadowBlur=6+7*pulse;}
+      for(const [a,r] of cellsOf(p))
+        wedge(a,r,TYPE_COLORS[p.type],p.lane===selected?.94+.06*pulse:.94,true);
+      ctx.restore();
     }
   }
-  const p=game.pieces[selected];
-  if(p){
-    let x,y;
-    if(p.radius>=RINGS){
-      const spot=window.PartouArrival.projectEarthApproach({
-        earth,cx,cy,outer,sector:p.angle,lane:p.lane,radial:p.radius,
-        rings:RINGS,spaceSteps:SPACE_STEPS,
-        stepFraction:Math.min(1,game.fall[p.lane]/(game.fallInterval()*SPACE_INTERVAL_FACTOR))
-      });
-      if(!spot)return;({x,y}=spot);
-    }else{
-      const angle=rad(p.angle+.5),r=Math.min(outer+19,inner+(p.radius+1)*stepR);
-      [x,y]=point(angle,r);
-    }
-    ctx.strokeStyle="#fff4a4";ctx.lineWidth=hands.isGripping()?4:2.5;
-    ctx.beginPath();ctx.arc(x,y,hands.isGripping()?13:8,0,TAU);ctx.stroke();
-  }
+  // PT-033: selected piece and ghost glow directly; no occluding yellow ring.
 }
 function overlays(){
   art.energy({cx,cy,inner,outer,flash:game.flash,time:performance.now()/1000});
@@ -808,7 +813,7 @@ function frame(time){
             angle:target.angle,sectors:SECTORS,stepR,time,
             reducedMotion:reducedCelebrations.checked
           });
-          window.PartouLandingGuide.drawLandingCue(ctx,target,{stepR});
+          // PT-033: the landing minos themselves glow; no circular reticle.
         }
       }else ghostMoonGuide.hide();
     }else ghostMoonGuide.hide();
