@@ -281,3 +281,11 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - `index.html` : suppression du dessin de l'anneau jaune de sélection ; suppression de l'appel au cercle cyan de pose ; halo coloré et modulation de luminance directement sur les cellules de la pièce active et de la projection. Animation stabilisée en mode « effets visuels doux », aucune forme géométrique opaque ajoutée.
 - Contrôles, mouvement tangent, lune fantôme, guidage doigt, laser, sauvegarde, score PT-034, HOF et sons inchangés. Version debug 0.2.22 / versionCode 33 ; tests `tests/pt033-selection-glow.test.cjs`.
 - Livraison CI #40106508588 **SUCCESS** : 217 tests Node sans échec, compilation Gradle, APK directe `temp/PartouTetris-v0.2.22-glow-debug.apk` vérifiée (8 827 066 octets). **Essai visuel Samsung restant.** Aucun merge `main` sans validation explicite de Fab.
+
+
+## PT-036 — Aura réellement irradiante sur minos sélectionnés (24/10/2026)
+- Retour d'essai Fab PT-033 : l'éclairage et les variations ne se voient pas assez. Il faut une luminosité variable irradiant autour de la forme de la pièce tenue **et** de sa projection, sans remettre de cercles.
+- Branche `feature/lunar-four-fronts-irradiant-036` issue de PT-033/PT-035/PT-034.
+- Correction dans `visuals.js` : nouvelles passes de lumière en composition `screen`, avec flou lumineux variable et rehausse cyan/blanc directement sur chaque cellule et son contour. L'aura suit la géométrie réelle des quatre minos, jamais un marqueur circulaire. `index.html` donne à la vraie pièce et à sa projection la même respiration lente plus contrastée, sans déformer la forme ; effet fixe en mode visuel doux.
+- Éviter tout changement de commande, HOF, scores, audio et sauvegardes. Android 0.2.23 / versionCode 34, tests PT-036, APK brute CI ; aucun merge main sans accord de Fab.
+- Statut : attente du résultat CI et de validation visuelle sur Samsung.
