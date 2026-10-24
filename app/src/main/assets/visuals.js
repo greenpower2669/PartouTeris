@@ -280,7 +280,7 @@ class Artist {
     c.lineWidth=Math.max(1.5,r*.032);c.strokeStyle="#f8d28b99";
     c.beginPath();c.arc(cx,cy,r,3.5,5.55);c.stroke();
   }
-  cell({cx,cy,inner,stepR,sector,ring,color,opacity=1,stroke=true}){
+  cell({cx,cy,inner,stepR,sector,ring,color,opacity=1,stroke=true,glow=0}){
     if(ring<0||ring>=16)return;
     const c=this.ctx, palette=shadeFor(color);
     const a0=-Math.PI/2+sector*TAU/48+.009;
@@ -294,6 +294,24 @@ class Artist {
     c.beginPath();c.arc(cx,cy,high,a0,a1,false);
     c.arc(cx,cy,low,a1,a0,true);c.closePath();
     c.fillStyle=gradient;c.fill();
+    // PT-036: light originates from the cell itself. Three halo passes
+    // radiate outside the exact mino silhouette; no circular selection mask.
+    const energy=Math.max(0,Math.min(1,Number(glow)||0));
+    if(energy>0){
+      c.save();
+      c.globalCompositeOperation="screen";
+      c.globalAlpha=Math.min(0.92,opacity*(.22+.43*energy));
+      c.fillStyle=color;
+      c.shadowColor=color;
+      c.shadowBlur=stepR*(.8+1.6*energy);
+      c.fill();
+      c.globalAlpha=Math.min(.9,opacity*(.2+.40*energy));
+      c.shadowColor="#efffff";
+      c.shadowBlur=stepR*(.3+.6*energy);
+      c.fillStyle="rgba(210,251,255,.60)";
+      c.fill();
+      c.restore();
+    }
     if(stroke){
       c.strokeStyle="rgba(255,252,228,.65)";c.lineWidth=.85;c.stroke();
       c.beginPath();c.arc(cx,cy,high-1.2,a0+.004,a1-.004);
