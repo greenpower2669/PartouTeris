@@ -276,3 +276,16 @@
 - [ ] Activer ou valider réellement la route serveur du jeu partoutetris et son schéma de score.
 - [ ] Faire essai Android 16, deux appareils pour classement inter-joueurs, test hors ligne.
 - [ ] Ne pas fusionner main sans accord.
+
+
+## PT-034 — Rééquilibrage des scores et destruction vitesse² (24/10/2026)
+- [x] Branche isolée créée depuis `feature/lunar-four-fronts-landing-032` ; `main` préservée.
+- [x] Coût d'une destruction = ancien coût selon la hauteur × carré du rapport entre vitesse réelle permanente et vitesse de départ à 8 secondes/étage.
+- [x] Les raccourcis tactiles de chute ×10 ne changent pas le prix du laser ; score ne descend jamais en dessous de zéro.
+- [x] Gains des poses et couronnes réduits de 35 % ; bonus de vitesse réelle limité à ×10 ; affichage des bonus pont/géodésie ajusté.
+- [x] Anciennes sauvegardes et scores conservés ; tests spécialisés ajoutés dans `tests/pt034-scoring-balance.test.cjs`.
+- [ ] Vérifier tous les tests Node et la construction Gradle via GitHub Actions.
+- [ ] Vérifier et partager une APK debug brute `temp/PartouTetris-v0.2.20-scoring-debug.apk`.
+- [ ] Essai réel Fab sur Samsung Android 16 : partie lente/rapide, coût du laser et équilibre des nouveaux scores ; évaluer les anciens classements non recalculés.
+- [ ] PT-033 visuel à coder séparément, seulement après ordre explicite, puis fusion des changements envisagée après tests.
+- [ ] Aucun merge `main` ni publication définitive sans validation.
