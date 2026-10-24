@@ -226,3 +226,9 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Correction du pipeline en deux phases : `hit` crée un état `pending` avec point et bonus figés ; les trois faisceaux réels issus des satellites sont dessinés 320 ms, puis `tick` lance une seule explosion/récompense. L'appel direct à `game.award(interception.bonus)` sur tap est retiré. Aucune duplication possible pendant le verrouillage.
 - Les anciens retours de points utilisaient surtout le podium/scoreboard et des formulations statiques. Un narrateur BD centralisé lit uniquement les événements effectivement émis par le moteur et varie les phrases anti-répétition, montre les montants exacts et décompose l'accélération *réellement rémunérée* en tranches de 40 % pour l'animation.
 - CI GitHub Actions #40129936727 **SUCCESS**, 248 tests et APK Android v0.2.28 générée (8 839 507 octets). Vérification visuelle sur Samsung à effectuer : les tests DOM assurent la géométrie et la chronologie, pas la lisibilité réelle sur écran.
+
+
+## PT-042 — Cartouche comic opaque masquant la moitié droite du plateau (24/10/2026)
+- Capture Fab : le `#comicFeed` PT-041 utilisait `position:fixed;top:var(--comic-top)` et un panneau opaque avec découpe polygonale pour **tous** les événements. Résultat : gros cartouche `COMBO ! Assemblage magistral +2234 pts` affiché au-dessus du centre et masquant les pièces.
+- Réparation sans modifier les scores : l'élément est désormais un enfant absolu du deck de commandes, `bottom:calc(100% + 8px)` ; fonds semi-transparents, typographie et dimensions réduites ; formes **arrondies** pour gains normaux et **zigzag** pour messages prioritaires. Pas d'écoute tactile, composition responsive, trois satellites PT-041 intacts.
+- Résultat CI et essai sur Samsung à vérifier. Attention au mode guide actif qui modifie la taille du panneau : l'ancrage DOM doit suivre automatiquement la limite supérieure du deck.
