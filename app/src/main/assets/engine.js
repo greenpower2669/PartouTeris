@@ -3,6 +3,8 @@
   const SECTORS = 48, RINGS = 10, LANES = 4, SPACE_STEPS = 5, BOOST_MULTIPLIER=10, SPACE_INTERVAL_FACTOR=.82, MILESTONE_STEP = 1000, PLACEMENT_POINTS = 40;
   const LOCKED_LASER_HOLD_MS=1300, DESTRUCTION_BASE=80;
   const MAX_WAIT_SECONDS=8, RING_SPEED_FACTOR=.92, CONTINUITY_FACTOR=2, ROYAL_BRIDGE_FACTOR=2, GEODESY_FACTOR=35;
+  // PT-034: score moderation applies to new gains only; never rescale saved records.
+  const SCORE_PAYOUT_RATIO=.65, SPEED_BONUS_CAP=10;
   const FORMS = [
     [[-1,0],[0,0],[1,0],[2,0]],
     [[0,0],[1,0],[0,1],[1,1]],
@@ -66,7 +68,7 @@
       // Difficulty preview only. PT-030: never use the CURRENT slider state
       // as the payout of a piece already travelling.
       const relativeSpeed=MAX_WAIT_SECONDS/this.fallInterval();
-      return Math.min(100,1+Math.pow(Math.max(0,relativeSpeed-1),2));
+      return Math.min(SPEED_BONUS_CAP,1+Math.pow(Math.max(0,relativeSpeed-1),2));
     }
     // Reference time for the same route if gravity remained at the original
     // eight-second difficulty. Includes the final blocked downward step,
@@ -91,13 +93,16 @@
       const nominal=this.nominalFlightSeconds(p);
       if(!Number.isFinite(nominal)||nominal<=0)return 1;
       const relativeSpeed=nominal/duration;
-      return Math.min(100,1+Math.pow(Math.max(0,relativeSpeed-1),2));
+      return Math.min(SPEED_BONUS_CAP,1+Math.pow(Math.max(0,relativeSpeed-1),2));
     }
     drainEvents(){return this.events.splice(0);}
-    // PT-018: upward bricks carry an increasing destructive cost.
+    // PT-034: high bricks cost more, multiplied by the square of sustained
+    // gravitational speed versus the initial 8 seconds/stage. Short ×10
+    // touch boosts must never change this permanent-speed penalty.
     destructionPenalty(radius){
       if(!Number.isInteger(radius)||radius<0||radius>=RINGS)return 0;
-      return DESTRUCTION_BASE*(radius+1)*Math.ceil((radius+1)/2);
+      const speedRatio=MAX_WAIT_SECONDS/this.fallInterval();
+      return Math.round(DESTRUCTION_BASE*(radius+1)*Math.ceil((radius+1)/2)*speedRatio*speedRatio);
     }
     destroyLockedCell(sector,radius){
       if(this.over||this.paused||!Number.isInteger(sector)||!Number.isInteger(radius)||
@@ -109,7 +114,8 @@
       const charged=Math.min(this.score,penalty);
       this.score-=charged;
       const result={type:"destroy",sector,radius,owner,penalty,charged,
-        multiplier:(radius+1)*Math.ceil((radius+1)/2),total:this.score};
+        multiplier:(radius+1)*Math.ceil((radius+1)/2),
+        speedPenaltyMultiplier:Math.pow(MAX_WAIT_SECONDS/this.fallInterval(),2),total:this.score};
       this.events.push(result);
       return result;
     }
@@ -278,10 +284,10 @@
       const multiplier=Math.max(1,contacts);
       const chain=this.placementContinuity(blocks);
       const speedMultiplier=Number.isFinite(earnedFlightMultiplier)?
-        Math.max(1,Math.min(100,earnedFlightMultiplier)):1;
+        Math.max(1,Math.min(SPEED_BONUS_CAP,earnedFlightMultiplier)):1;
       const rawPoints=base*multiplier+chain.continuityPoints+
         chain.bridgePoints+chain.geodesyPoints;
-      return {points:Math.max(1,Math.round(rawPoints*speedMultiplier)),
+      return {points:Math.max(1,Math.round(rawPoints*speedMultiplier*SCORE_PAYOUT_RATIO)),
         base,size,sizePoints,centerBonus,contacts,multiplier,
         speedMultiplier:Math.round(speedMultiplier*1000)/1000,
         ...chain};
@@ -316,7 +322,7 @@
         speedSource:"measured-flight"});
       if(reward.bridges>0)this.events.push({type:'bridge',lane,
         bridges:reward.bridges,geodesy:reward.geodesy,
-        bonus:Math.round((reward.bridgePoints+reward.geodesyPoints)*reward.speedMultiplier),
+        bonus:Math.round((reward.bridgePoints+reward.geodesyPoints)*reward.speedMultiplier*SCORE_PAYOUT_RATIO),
         chains:reward.chains});
       if(Array.isArray(arrivals))arrivals.push(earnedFlightMultiplier);
       this.pieces[lane]=null;
@@ -341,9 +347,9 @@
         // The crown triggered by this landing cannot use the newly selected
         // slider speed, nor the gravity that changes AFTER the crown clears.
         const speedMultiplier=Number.isFinite(earnedFlightMultiplier)?
-          Math.max(1,Math.min(100,earnedFlightMultiplier)):1;
+          Math.max(1,Math.min(SPEED_BONUS_CAP,earnedFlightMultiplier)):1;
         const gained=Math.round((480*n*n*this.level+
-          100*Math.max(0,this.combo-1))*speedMultiplier);
+          100*Math.max(0,this.combo-1))*speedMultiplier*SCORE_PAYOUT_RATIO);
         this.flash=1;
         this.events.push({type:'ring',count:n,gained,combo:this.combo,
           level:this.level,fallInterval:this.fallInterval(),speedMultiplier});
@@ -389,7 +395,7 @@
       this.flash=Math.max(0,this.flash-dt*1.2);
     }
   }
-  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,MAX_WAIT_SECONDS,RING_SPEED_FACTOR,FORMS,COLORS,FORM_NAMES,TYPE_COLORS,CHIRALITY,cellsOf,mod};
+  const api={Game,SECTORS,RINGS,LANES,SPACE_STEPS,BOOST_MULTIPLIER,SPACE_INTERVAL_FACTOR,LOCKED_LASER_HOLD_MS,DESTRUCTION_BASE,MILESTONE_STEP,PLACEMENT_POINTS,MAX_WAIT_SECONDS,RING_SPEED_FACTOR,SCORE_PAYOUT_RATIO,SPEED_BONUS_CAP,FORMS,COLORS,FORM_NAMES,TYPE_COLORS,CHIRALITY,cellsOf,mod};
   root.PartouEngine=api;
   if(typeof module!=="undefined"&&module.exports) module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
