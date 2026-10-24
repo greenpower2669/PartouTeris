@@ -367,6 +367,7 @@ html,body {height:100%;height:100dvh;overscroll-behavior:none}
 <script src="grip-vectors.js"></script>
 <script src="ghost-moon-guide.js"></script>
 <script src="landing-guide.js"></script>
+<script src="tangent-landing-guide.js"></script>
 <script src="boost-sources.js"></script>
 <script src="visuals.js"></script>
 <script src="arrival.js"></script>
@@ -798,7 +799,17 @@ function frame(time){
         const target=projectedLanding(piece);
         ghostMoonGuide.render(ctx,{grip,angle:target?.angle??piece.angle,
           sectors:SECTORS,moonCenter:{x:cx,y:cy},target,time});
-        if(target)window.PartouLandingGuide.drawLandingCue(ctx,target,{stepR});
+        // PT-035: move the local tangent cue onto the projected Moon pivot.
+        // Keep original cyan finger arrows and the bottom tutorial intact.
+        if(target&&ghostMoonGuide.anchor){
+          window.PartouTangentLanding.drawLocalTangent(ctx,{
+            anchor:ghostMoonGuide.anchor,target,
+            finger:{x:grip.lastX,y:grip.lastY},
+            angle:target.angle,sectors:SECTORS,stepR,time,
+            reducedMotion:reducedCelebrations.checked
+          });
+          window.PartouLandingGuide.drawLandingCue(ctx,target,{stepR});
+        }
       }else ghostMoonGuide.hide();
     }else ghostMoonGuide.hide();
   }
