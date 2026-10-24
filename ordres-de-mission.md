@@ -273,3 +273,11 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - **Non-régression :** `tangent-control.js`, `touch.js`, `engine.js`, sauvegardes, anti-exploit PT-030, score modéré PT-034, Hall of Fame, laser, chute ×10 et audio inchangés par PT-035. La correction visuelle distincte PT-033 (cercle jaune / pulsation de la pièce) n'est pas incluse.
 - **Branche :** `feature/lunar-four-fronts-tangent-035` issue de PT-034 pour garder les correctifs de score ; version debug `0.2.21`, versionCode 32 ; tests `tests/pt035-local-tangent.test.cjs`. Pas de fusion `main` ou publication Release/Play sans validation explicite de Fab.
 - **Livraison technique validée :** [GitHub Actions #40087650577](https://github.com/greenpower2669/PartouTetris/actions/runs/40087650577) **SUCCESS** (213 tests Node, zéro échec, build Gradle). APK debug brute 0.2.21 disponible sous `temp/PartouTetris-v0.2.21-tangent-debug.apk` (8 826 914 octets, SHA Git blob `a6c44cac5c97316fb4924db71b3b24ad7c214359`). **Essai perceptif réel Fab/Samsung toujours à faire.**
+
+
+## PT-033 — Sélection et projection lumineuses, sans anneaux (24/10/2026)
+- Ordre de Fab après capture annotée : retirer les cercles qui occultent la pièce sélectionnée et sa pose projetée ; les remplacer par une aura discrète et une modulation douce de luminance.
+- Développement réalisé **après** PT-035 sur `feature/lunar-four-fronts-glow-033` issue de `feature/lunar-four-fronts-tangent-035`, pour conserver la tangente projetée PT-035 et les scores PT-034.
+- `index.html` : suppression du dessin de l'anneau jaune de sélection ; suppression de l'appel au cercle cyan de pose ; halo coloré et modulation de luminance directement sur les cellules de la pièce active et de la projection. Animation stabilisée en mode « effets visuels doux », aucune forme géométrique opaque ajoutée.
+- Contrôles, mouvement tangent, lune fantôme, guidage doigt, laser, sauvegarde, score PT-034, HOF et sons inchangés. Version debug 0.2.22 / versionCode 33 ; tests `tests/pt033-selection-glow.test.cjs`.
+- Pas de merge `main` sans validation explicite de Fab ; essai visuel Samsung à effectuer après CI.
