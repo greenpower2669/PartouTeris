@@ -86,10 +86,10 @@ function speedPercent(event){
  const multiplier=event.reason==="earth-defense"?
    Number(event.speedSquare):Number(event.speedMultiplier);
  if(!Number.isFinite(multiplier)||multiplier<=1.005)return 0;
- return Math.min(900,Math.max(0,Math.round((multiplier-1)*100)));
+ return Math.min(2400,Math.max(0,Math.round((multiplier-1)*100)));
 }
 function speedStages(percent){
- const total=Math.max(0,Math.min(900,Math.round(Number(percent)||0)));
+ const total=Math.max(0,Math.min(2400,Math.round(Number(percent)||0)));
  if(!total)return [];
  const count=Math.floor(total/40),remainder=total%40;
  // Display only three of potentially 22 incremental chunks, then an
