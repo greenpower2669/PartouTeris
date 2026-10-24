@@ -3,25 +3,26 @@
 #comicFeed{
  position:absolute;z-index:5;
  top:auto;bottom:calc(100% + 8px);
- right:clamp(8px,2.5vw,16px);left:auto;
- width:min(55vw,255px);max-height:min(27vh,175px);
+ left:50%;right:auto;transform:translateX(-50%);
+ width:min(60vw,280px);max-height:min(27vh,175px);
  pointer-events:none;
  filter:drop-shadow(0 2px 7px #020916b8);
 }
 #comicFeed[hidden]{display:none!important}
-#comicFeed:has(.comic-malus){right:auto;left:clamp(8px,2.5vw,16px)}
+#comicFeed:has(.comic-malus){left:50%;right:auto}
 #comicFeed .comic-card{
  --tone:#67dfff;--flash:#ffc759;
- --panel-start:rgba(14,47,77,.68);
- --panel-end:rgba(5,25,48,.49);
+ --panel-start:rgba(14,47,77,.43);
+ --panel-end:rgba(5,25,48,.31);
  position:relative;isolation:isolate;
  box-sizing:border-box;overflow:hidden;
  padding:8px 11px 9px;
  color:#f7ffff;
  text-shadow:0 1px 2px #010b1a,0 0 5px #020a16;
- transform-origin:80% 80%;
- animation:comicPunch .28s cubic-bezier(.19,1.7,.35,1) both,
-           comicFade .34s ease-in 1.38s both;
+ --comic-peak:1.10;
+ transform-origin:50% 80%;
+ animation:comicPunch .36s cubic-bezier(.2,.78,.25,1) both,
+           comicFade .28s ease-in 1.35s both;
 }
 /* Normal information: polished, quiet, ROUNDED border. */
 #comicFeed .comic-smooth{
@@ -34,6 +35,7 @@
    The fine opaque outer shell and inset translucent pane create a
    clean sawtooth edge, not the old huge opaque rectangle. */
 #comicFeed .comic-burst{
+ --comic-peak:1.24;
  border:0;border-radius:0;
  padding:11px 14px 12px;
  clip-path:polygon(
@@ -62,9 +64,9 @@
 #comicFeed .comic-placement{--tone:#75eeff;--flash:#b1dfff}
 #comicFeed .comic-malus{
  --tone:#ffc1bb;--flash:#ff535a;
- --panel-start:rgba(99,20,48,.70);
- --panel-end:rgba(41,10,31,.54);
- transform-origin:20% 80%;
+ --panel-start:rgba(99,20,48,.45);
+ --panel-end:rgba(41,10,31,.33);
+ transform-origin:50% 80%;
 }
 #comicFeed .comic-heading{
  display:block;color:var(--flash);
@@ -101,9 +103,10 @@
    calc(.17s + var(--stage-index)*.16s) both;
 }
 @keyframes comicPunch{
- 0%{opacity:0;transform:translateY(9px) scale(.72) rotate(-2deg)}
- 70%{opacity:1;transform:translateY(-2px) scale(1.045) rotate(.5deg)}
- 100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+  0%{opacity:0;transform:translateY(6px) scale(.90)}
+  24%{opacity:1;transform:translateY(-2px) scale(var(--comic-peak))}
+  48%{opacity:1;transform:translateY(0) scale(1.035)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
 }
 @keyframes comicFade{0%{opacity:1}100%{opacity:0;transform:scale(.94) translateY(-3px)}}
 @keyframes comicStep{
@@ -118,13 +121,13 @@
 #comicFeed .comic-still{animation:none!important}
 #comicFeed .comic-still .comic-stage{animation:none!important;opacity:1}
 @media(max-height:700px){
- #comicFeed{width:min(54vw,235px);max-height:23vh}
+ #comicFeed{width:min(58vw,255px);max-height:23vh}
  #comicFeed .comic-card{padding:5px 8px 6px}
  #comicFeed .comic-heading{font-size:clamp(12px,3vw,18px)}
  #comicFeed .comic-amount{font-size:clamp(14px,3.7vw,20px)}
 }
 @media(max-width:360px){
- #comicFeed{width:58vw}
+ #comicFeed{width:61vw}
  #comicFeed .comic-phrase{font-size:10px}
  #comicFeed .comic-stage{font-size:9px}
 }
