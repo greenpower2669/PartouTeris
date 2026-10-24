@@ -682,13 +682,35 @@ function pieces(){
       if(p.lane===selected){ctx.shadowColor=TYPE_COLORS[p.type];ctx.shadowBlur=6+6*pulse;}
       art.spacePiece({position:spot,cells:relative,color:TYPE_COLORS[p.type],
         time:performance.now()/1000,reduced:reducedCelebrations.checked,size:stepR});
+      if(p.lane===selected){
+        // PT-038: neon cyan/or aura surrounds the actual space minos.
+        // Screen blend and wider blur are visible before the parachute phase.
+        const halo=mix>.5?"#ffd36a":"#38eaff";
+        ctx.save();ctx.globalCompositeOperation="screen";
+        ctx.globalAlpha=.24+.52*pulse;
+        ctx.shadowColor=halo;ctx.shadowBlur=18+26*pulse;
+        ctx.filter="brightness("+(1.15+1.2*pulse)+")";
+        art.spacePiece({position:spot,cells:relative,color:halo,
+          time:performance.now()/1000,reduced:true,size:stepR});
+        ctx.restore();
+      }
       ctx.restore();
     }else{
       art.incoming({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
         time:performance.now()/1000,reduced:reducedCelebrations.checked});
-      if(window.PartouVisuals.shouldDeployCanopy(p.radius,RINGS))
+      const burning=(p.ignitedUntil||0)>game.seconds;
+      if(window.PartouVisuals.shouldDeployCanopy(p.radius,RINGS)&&!burning)
         art.canopy({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
           color:TYPE_COLORS[p.type],reduced:reducedCelebrations.checked});
+      if(burning){
+        // Animated fiery exhaust accompanies a burning parachute piece.
+        art.incoming({cx,cy,inner,stepR,angle:p.angle,radial:p.radius,
+          time:performance.now()/260,reduced:false});
+        ctx.save();ctx.globalCompositeOperation="screen";
+        ctx.shadowColor="#ff8e28";ctx.shadowBlur=15+8*pulse;
+        for(const [a,r] of cellsOf(p))wedge(a,r,"#ff9c36",.28+.25*pulse,false);
+        ctx.restore();
+      }
       ctx.save();
       if(p.lane===selected){ctx.shadowColor=TYPE_COLORS[p.type];ctx.shadowBlur=6+7*pulse;}
       for(const [a,r] of cellsOf(p))
@@ -966,13 +988,20 @@ canvas.addEventListener("pointerdown",e=>{
     if(now-lastLaserAt<420)return;
     const lane=nearestLaserPiece(pos);
     if(lane<0)return;
+    const piece=game.pieces[lane];
+    const canIgnite=piece.radius<RINGS;
     const shot=game.laser(lane,pos.angle);
-    if(!shot)return;
+    const ignited=canIgnite&&game.ignite(lane);
+    if(!shot&&!ignited)return;
     selected=lane;lastLaserAt=now;
     const p=game.pieces[lane];
     const radius=inner+Math.min(p.radius,10)*stepR+Math.max(0,p.radius-10)*stepR*.58+stepR*.36;
     const [x,y]=point(rad(p.angle+.5),radius);
     laserShots.push({to:{x,y},at:now});
+    if(ignited){
+      sound.cue("laser");laserMessage("🔥 PARACHUTE EN FEU · DESCENTE ×3",1500);
+      if(navigator.vibrate)navigator.vibrate([24,20,35]);
+    }
     return;
   }
   if(hands.down(touchInfo(e)))canvas.setPointerCapture(e.pointerId);
