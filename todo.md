@@ -338,6 +338,6 @@
 - [x] Appliquer aura bicolore pulsée sur la pièce sélectionnée dans l'espace.
 - [x] Ajouter laser → combustion d'une pièce sous parachute et chute temporaire ×3, sans persistance sur le remplacement.
 - [x] Ajouter feu, HUD et vibrations discrètes ainsi que tests moteur/rendu.
-- [ ] Confirmer CI et APK brute v0.2.25 sur GitHub.
+- [x] GitHub Actions #40111344628 **SUCCESS** : 223 tests réussis, zéro échec, Gradle et APK brute `temp/PartouTetris-v0.2.25-wow-debug.apk` vérifiée (8 828 482 octets).
 - [ ] Tester effets et cadence sur Samsung Android 16, puis ajuster avec Fab.
 - [ ] Ne pas fusionner main sans validation.
