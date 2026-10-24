@@ -309,6 +309,6 @@
 - [x] Supprimer l'anneau jaune de la pièce et l'appel du cercle de projection.
 - [x] Illuminer les cellules réelles et projetées, même couleur, pulsation douce ; respecter effets visuels doux.
 - [x] Préserver tangente PT-035 et scoring PT-034, tests PT-033 ajoutés.
-- [ ] Confirmer tests Node, compilation Gradle, publication APK 0.2.22 non ZIP.
+- [x] CI GitHub Actions #40106508588 : 217/217 tests réussis, Gradle Android réussi et APK directe publiée ; fichier vérifié `temp/PartouTetris-v0.2.22-glow-debug.apk` (8 827 066 octets).
 - [ ] Essai réel Samsung Android 16 : lisibilité avec doigt sur pièce, sur projection et en mouvement rapide.
 - [ ] Jamais de fusion main sans accord explicite de Fab.
