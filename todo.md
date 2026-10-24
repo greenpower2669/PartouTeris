@@ -399,6 +399,6 @@
 - [x] Réutiliser pour chaque mini-bloc les interceptions satellites/spontanées, le ciblage par les 3 lasers du joueur, l'explosion post-salve et le bonus vitesse² PT-039 sans duplication.
 - [x] Pause, mode effets doux, ancienne grille lunaire, score anti-inflation, sauvegardes et HOF conservés.
 - [x] Tests PT-043 ajoutés et Android 0.2.30 préparé.
-- [ ] Vérifier les tests CI, l'assemblage Android, APK non ZIP `temp/PartouTetris-v0.2.30-meteor-shower-debug.apk` et livrer un lien direct.
+- [x] GitHub Actions #40142339981 **SUCCESS** : 262/262 tests Node (zéro échec), compilation Gradle Android et APK brute vérifiée `temp/PartouTetris-v0.2.30-meteor-shower-debug.apk` (8 842 555 octets, SHA Git `39a67c0f26d49502a7d537781f34b9d3c65eca3f`). Téléchargement direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-comic-meteor-shower-043/temp/PartouTetris-v0.2.30-meteor-shower-debug.apk
 - [ ] Essai Samsung SM-A576B Android 16 : popup centrée et très brève, visibilité Terre lors des pluies, fréquence, laser manuel et cadence générale.
 - [ ] Aucun merge `main` ou Release sans validation explicite de Fab.
