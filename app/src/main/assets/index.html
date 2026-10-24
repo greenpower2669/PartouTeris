@@ -630,8 +630,8 @@ window.addEventListener("resize",resize);resize();
 const TAU=Math.PI*2;
 function rad(a){return -Math.PI/2+a*TAU/SECTORS}
 function point(angle,r){return [cx+Math.cos(angle)*r,cy+Math.sin(angle)*r]}
-function wedge(s,r,color,opacity=1,stroke=true,glow=0){
-  art.cell({cx,cy,inner,stepR,sector:s,ring:r,color,opacity,stroke,glow});
+function wedge(s,r,color,opacity=1,stroke=true,glow=0,colorMix=0){
+  art.cell({cx,cy,inner,stepR,sector:s,ring:r,color,opacity,stroke,glow,colorMix});
 }
 function backdrop(){
   art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash,earth,
@@ -652,6 +652,7 @@ function selectionLuminance(time){
 }
 function pieces(){
   const pulse=selectionLuminance(performance.now());
+  const mix=reducedCelebrations.checked?.5:(.5+.5*Math.sin(performance.now()/650));
   for(const p of game.pieces){
     if(!p||p.radius>=RINGS)continue;
     const ghost=game.ghost(p);
@@ -662,7 +663,7 @@ function pieces(){
       ctx.shadowBlur=5+5*pulse;
     }
     for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))
-      wedge(a,r,TYPE_COLORS[p.type],active?.42+.2*pulse:.20,false,active?.55+.45*pulse:0);
+      wedge(a,r,TYPE_COLORS[p.type],active?.42+.2*pulse:.20,false,active?.12+.88*pulse:0,active?mix:0);
     ctx.restore();
   }
   for(const p of game.pieces){
@@ -691,7 +692,7 @@ function pieces(){
       ctx.save();
       if(p.lane===selected){ctx.shadowColor=TYPE_COLORS[p.type];ctx.shadowBlur=6+7*pulse;}
       for(const [a,r] of cellsOf(p))
-        wedge(a,r,TYPE_COLORS[p.type],p.lane===selected?.94+.06*pulse:.94,true,p.lane===selected?.55+.45*pulse:0);
+        wedge(a,r,TYPE_COLORS[p.type],p.lane===selected?.94+.06*pulse:.94,true,p.lane===selected?.12+.88*pulse:0,p.lane===selected?mix:0);
       ctx.restore();
     }
   }
