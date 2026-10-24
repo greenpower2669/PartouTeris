@@ -630,8 +630,8 @@ window.addEventListener("resize",resize);resize();
 const TAU=Math.PI*2;
 function rad(a){return -Math.PI/2+a*TAU/SECTORS}
 function point(angle,r){return [cx+Math.cos(angle)*r,cy+Math.sin(angle)*r]}
-function wedge(s,r,color,opacity=1,stroke=true){
-  art.cell({cx,cy,inner,stepR,sector:s,ring:r,color,opacity,stroke});
+function wedge(s,r,color,opacity=1,stroke=true,glow=0){
+  art.cell({cx,cy,inner,stepR,sector:s,ring:r,color,opacity,stroke,glow});
 }
 function backdrop(){
   art.backdrop({W,H,cx,cy,inner,outer,stepR,sectors:SECTORS,flash:game.flash,earth,
@@ -647,8 +647,8 @@ function projectedLanding(piece){
 }
 // PT-033: animate the actual minos and landing silhouette instead of rings.
 function selectionLuminance(time){
-  if(reducedCelebrations.checked)return 0.5;
-  return 0.5+0.5*Math.sin(time/620);
+  if(reducedCelebrations.checked)return 0.65;
+  return 0.5+0.5*Math.sin(time/420);
 }
 function pieces(){
   const pulse=selectionLuminance(performance.now());
@@ -662,7 +662,7 @@ function pieces(){
       ctx.shadowBlur=5+5*pulse;
     }
     for(const [a,r] of cellsOf(p,p.angle,ghost,p.rot))
-      wedge(a,r,TYPE_COLORS[p.type],active?.32+.13*pulse:.20,false);
+      wedge(a,r,TYPE_COLORS[p.type],active?.42+.2*pulse:.20,false,active?.55+.45*pulse:0);
     ctx.restore();
   }
   for(const p of game.pieces){
@@ -691,7 +691,7 @@ function pieces(){
       ctx.save();
       if(p.lane===selected){ctx.shadowColor=TYPE_COLORS[p.type];ctx.shadowBlur=6+7*pulse;}
       for(const [a,r] of cellsOf(p))
-        wedge(a,r,TYPE_COLORS[p.type],p.lane===selected?.94+.06*pulse:.94,true);
+        wedge(a,r,TYPE_COLORS[p.type],p.lane===selected?.94+.06*pulse:.94,true,p.lane===selected?.55+.45*pulse:0);
       ctx.restore();
     }
   }
