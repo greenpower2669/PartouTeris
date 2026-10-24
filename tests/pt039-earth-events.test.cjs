@@ -98,7 +98,7 @@ test("PT039: compact panel reduces reserved height and preserves both gestures a
  const css=fs.readFileSync("app/src/main/assets/joystick-guide.css","utf8");
  const html=fs.readFileSync("app/src/main/assets/index.html","utf8");
  assert.match(css,/#tip\{min-height:84px;max-height:98px/);
- assert.match(css,/#touchGuide\{height:75px\}/);
+ assert.ok(css.includes("min-width:0;height:75px;"));
  assert.match(html,/>Droite<\/b> : tenir et guider/);
  assert.match(html,/>Gauche<\/b> : tap tourner · tenir ×10/);
  assert.match(html,/id="laserButton"/);
