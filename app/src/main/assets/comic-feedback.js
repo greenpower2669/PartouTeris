@@ -129,7 +129,12 @@ function comicModel(event,deck){
    speed:percent,stages:speedStages(percent),
    // Displayed score is always the ACTUAL awarded/charged amount.
    gain:value,
-   priority:category==="earth"||category==="ring"||category==="malus"?2:1
+   // PT-042: importance is part of the message model, not guessed from
+   // decorative text. Big points and all alert/wow events have jagged edges.
+   priority:["earth","ring","malus","bridge","milestone"].includes(category)||
+     event.combo>=2||value>=1500?2:1,
+   frame:["earth","ring","malus","bridge","milestone"].includes(category)||
+     event.combo>=2||value>=1500?"burst":"smooth"
  };
 }
 class ComicFeedback {
@@ -156,7 +161,7 @@ class ComicFeedback {
  paint(model){
    if(!this.host)return;
    const card=document.createElement("div");
-   card.className="comic-card comic-"+model.category;
+   card.className="comic-card comic-"+model.category+" comic-"+model.frame;
    const head=document.createElement("strong");
    head.className="comic-heading";head.textContent=model.heading;
    const phrase=document.createElement("span");
