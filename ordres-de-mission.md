@@ -295,3 +295,12 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - **Retour Fab :** le bloc PT-036 paraît lumineux, mais aucune variation perceptible d'intensité, pas de bascule bicolore et aura extérieure absente. Corriger et consigner dans Git.
 - Branche `feature/lunar-four-fronts-bicolor-aura-037` créée depuis PT-036. `visuals.js` : aura de forme cellulaire par traits diffus larges (non circulaires), composition lumineuse, alternance interpolée cyan/or, énergie modulant l'épaisseur et l'opacité. `index.html` : phase de couleur et respiration synchronisées sur la pièce choisie et sa projection. Mode « effets doux » fixe pour limiter le scintillement.
 - Aucun changement gameplay, scores PT-034, repère tangent PT-035, sauvegarde, Hall of Fame ni musique ; `main` préservée. APK cible 0.2.24 debug directe ; validation visuelle Samsung indispensable.
+
+
+## PT-038 — Énergie spatiale, embrasement laser et animation renforcée (24/10/2026)
+- Fab demande de prolonger l'aura de sélection bicolore cyan/or dans l'espace avant parachute, d'augmenter l'animation et qu'un tir laser sur un bloc sous parachute l'enflamme et accélère sa chute.
+- Branche expérimentale `feature/lunar-four-fronts-wow-038` issue de PT-037, conservation PT-034/035/037.
+- `index.html` affiche la respiration énergétique en espace sur la pièce sélectionnée ; une pièce lunaire frappée au laser peut être embrasée, perdre temporairement son voile, produire une traînée enflammée et afficher un événement HUD.
+- `engine.js` : `ignite(lane)` limite la combustion à une pièce entrée dans la zone lunaire ; accélération ×3 durant 4 secondes actives, distincte de la commande chute ×10, état remis à zéro à la prochaine apparition.
+- Effets de feu et halos procéduraux, sans fichiers sonores externes ; conserver collisions, sauvegardes, Hall of Fame, scores, tangente, musique et sécurité du laser. Version d'essai 0.2.25. Aucun merge `main` sans consentement.
+- Vérifier CI et essai réel sur Samsung : intensité en espace, explosion visuelle et récupération normale après 4 s.
