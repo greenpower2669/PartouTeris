@@ -73,7 +73,7 @@ test("PT039: arbitrary render remains fully independent of game collision",()=>{
  const ctx=new Proxy({},{
    get(_t,k){
      if(k==="save"||k==="restore"||k==="beginPath"||k==="moveTo"||
-        k==="lineTo"||k==="arc"||k==="stroke"||k==="fillRect"||
+        k==="lineTo"||k==="arc"||k==="stroke"||k==="fill"||k==="fillRect"||
         k==="strokeRect"||k==="translate"||k==="rotate")
        return (...v)=>calls.push([k,...v]);
      return undefined;
