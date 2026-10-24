@@ -90,7 +90,7 @@ test("PT039: runtime uses manual laser hit before fixed bricks, auto FX, and loc
  assert.match(html,/earthEvents\.tick\(game\.seconds,\{W,earth\}\)/);
  assert.match(html,/earthEvents\.draw\(ctx,\{now:game\.seconds/);
  assert.match(html,/earthEvents\.hit\(pos\.x,pos\.y,game\.seconds,game\.fallInterval\(\)\)/);
- assert.match(html,/game\.award\(interception\.bonus,"earth-defense"/);
+ assert.match(html,/game\.award\(ev\.bonus,"earth-defense"/);
  assert.ok(html.indexOf("earthEvents.hit(pos.x,pos.y")<html.indexOf("const fixed=lockedLaserCell(pos)"));
  assert.match(html,/earthEvents\.reset\(game\.seconds\)/);
 });
