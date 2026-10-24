@@ -859,7 +859,8 @@ function frame(time){
   laserShots=laserShots.filter(shot=>time-shot.at<480);
   // Three Earth defence satellites independently converge on each target.
   const emitters=art.satellites({earth,W,H,time:time/1000,reduced:reducedCelebrations.checked});
-  earthEvents.draw(ctx,{now:game.seconds,reduced:reducedCelebrations.checked,emitters});
+  earthEvents.draw(ctx,{now:game.seconds,reduced:reducedCelebrations.checked,
+    emitters,speedRatio:Math.max(1,8/game.fallInterval())});
   for(const shot of laserShots)for(const from of emitters){
      const elapsed=time-shot.at;
      if(elapsed<112)art.charge({from,progress:elapsed/112,reduced:reducedCelebrations.checked});
