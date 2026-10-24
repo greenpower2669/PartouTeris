@@ -208,3 +208,9 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Capture annotée : les deux anneaux de sélection/pose recouvrent visuellement les blocs et leur silhouette future.
 - Correctif : retrait de l'arc de sélection dessiné sur la pièce et du cercle de destination affiché par `drawLandingCue` ; aura colorée très légère sur les quatre cellules actives et leurs quatre silhouettes de pose, avec oscillation lente et réduction de mouvement honorée.
 - Préservation de PT-035 (tangente Lune projetée), PT-034 (scores) et du moteur de contrôle. Vérifier CI puis test sur smartphone.
+
+
+## PT-039 — Zone d'aide trop haute et manque de rythme près de la Terre (24/10/2026)
+- Captures Fab : le grand panneau inférieur occulte inutilement une fraction importante de la Terre, même quand le joystick pédagogique est affiché ; `joystick-guide.css` imposait auparavant 136 px de hauteur au panneau et 121 px au guide actif. PT-039 réduit ces valeurs à 84 px et 75 px avec limites adaptatives et libellés compacts ; maintenir laser accessible.
+- Nouveau scénario indépendant du jeu : mini-blocs arrivant vers la Terre, interception automatique par les satellites ou explosions aléatoires ; en mode laser, un contact sur un bloc événementiel donne un bonus proportionnel au carré de la gravité durable. Anciennes sauvegardes et scores restent inchangés.
+- Hypothèses de gameplay de cette première livraison : une cible à la fois, un tir payant au plus, +120 points à 8 s, +480 à 4 s, +1920 à 2 s, cap +3000 ; aucune hausse par boost manuel. Temps suspendu pendant pause. À vérifier en test Android, aucune validation tactile présumée.
