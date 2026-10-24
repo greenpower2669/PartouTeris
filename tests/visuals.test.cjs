@@ -32,7 +32,7 @@ test('Parachutes are visual-only and constrained by the same zone rule',()=>{
  assert.match(art,/if\(!shouldDeployCanopy\(radial\)\)return false/);
  assert.ok(html.includes('shouldDeployCanopy(p.radius,RINGS)&&!burning'));
  assert.match(html,/art\.canopy\(/);
- assert.match(html,/if\\(burning\\)\\{/);
+ assert.ok(html.includes('if(burning){'));
 });
 test('Three terrestrial satellites are positioned and used as convergent laser emitters',()=>{
  const art=fs.readFileSync('app/src/main/assets/visuals.js','utf8');
