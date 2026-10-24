@@ -993,7 +993,7 @@ canvas.addEventListener("pointerdown",e=>{
     if(now-lastLaserAt>=420){
       const interception=earthEvents.hit(pos.x,pos.y,game.seconds,game.fallInterval());
       if(interception){
-        lastLaserAt=now;
+        resetLaserFocus();lastLaserAt=now;
         game.award(interception.bonus,"earth-defense",{
           form:interception.form,speedSquare:Math.pow(8/game.fallInterval(),2)
         });
