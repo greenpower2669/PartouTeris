@@ -341,3 +341,15 @@
 - [x] GitHub Actions #40111344628 **SUCCESS** : 223 tests réussis, zéro échec, Gradle et APK brute `temp/PartouTetris-v0.2.25-wow-debug.apk` vérifiée (8 828 482 octets).
 - [ ] Tester effets et cadence sur Samsung Android 16, puis ajuster avec Fab.
 - [ ] Ne pas fusionner main sans validation.
+
+
+## PT-039 — Débris Terre, défense et fenêtre basse (24/10/2026)
+- [x] Branche isolée `feature/lunar-four-fronts-earth-events-039` issue de PT-038 ; garder toutes les fonctions antérieures.
+- [x] Nouvel objet secondaire aléatoire s'approchant de la Terre ; sept formes, pas de répétition consécutive.
+- [x] Résolutions automatiques : laser satellite ou explosion autonome avec événements graphiques.
+- [x] Interception manuelle dans le mode LASER ; bonus de score 120 × vitesse gravitationnelle permanente² plafonné, tir unique par objet et aucun détournement avec chute ×10.
+- [x] Fenêtre d'aide et joystick du bas réellement réduits ; textes plus compacts et laser utilisable.
+- [x] Tests Node PT-039 ajoutés et application Android 0.2.26 préparée.
+- [ ] Attester les tests CI, la compilation Gradle, la publication et le lien direct de l'APK 0.2.26.
+- [ ] Test réel Samsung : objets bien visibles près de la Terre, laser manuel gagnant des points, satellites automatiques, panneau compact y compris avec joystick actif.
+- [ ] Pas de merge main / Release / Play sans validation de Fab.
