@@ -47,6 +47,43 @@
         y:active.y0+(active.endY-active.y0)*e,
         t,angle:active.spin+3.8*t,form:active.type};
     }
+    // PT-040: luminous particles sampled along the REAL past trajectory.
+    // Drawing from past positions, rather than rotating a rigid segment,
+    // prevents the old colored "stick" from turning with the tetromino.
+    trailParticles(now,{reduced=false,speedRatio=1}={}){
+      const a=this.active,p=this.position(a,now);
+      if(!a||!p||p.t<=0)return [];
+      const speed=clamp(Number(speedRatio)||1,1,2.5);
+      // Quicker permanent gravity produces a slightly longer energetic tail.
+      const history=(reduced?.32:.72)*Math.sqrt(speed);
+      const count=reduced?8:27;
+      const dx=a.endX-a.x0,dy=a.endY-a.y0;
+      const length=Math.hypot(dx,dy)||1;
+      const perpendicular={x:-dy/length,y:dx/length};
+      const particles=[];
+      for(let i=0;i<count;i++){
+        const fraction=(i+1)/(count+1),age=history*fraction;
+        const pastTime=now-age;
+        if(pastTime<=a.start)break;
+        const past=this.position(a,pastTime);
+        if(Math.hypot(past.x-p.x,past.y-p.y)<1.3)continue;
+        // Deterministic jitter: no random calls or animation flicker.
+        const jitter=Math.sin(i*17.17+a.type*4.31+a.spin*2.7);
+        const spread=jitter*(1.5+3.5*fraction);
+        const color=fraction<.09?COLORS[a.type]:
+          fraction<.30?"#fff1cb":fraction<.53?"#ffcf62":
+          fraction<.77?"#ff922e":"#e85a24";
+        particles.push({
+          x:past.x+perpendicular.x*spread,
+          y:past.y+perpendicular.y*spread,
+          radius:(reduced?.85:1.05)+(1-fraction)*(reduced?1.0:2.6)
+            +(i%5===0?.85:0),
+          opacity:(reduced?.57:.87)*Math.pow(1-fraction,1.45),
+          color
+        });
+      }
+      return particles;
+    }
     resolve(now,reason){
       if(!this.active)return null;
       const obj=this.active,point=this.position(obj,now);
@@ -78,17 +115,26 @@
       const ev=this.resolve(now,"player");
       return {...ev,bonus:defenseBonus(fallSeconds)};
     }
-    draw(ctx,{now,reduced=false,emitters=[]}={}){
+    draw(ctx,{now,reduced=false,emitters=[],speedRatio=1}={}){
       if(!ctx||!Number.isFinite(now))return;
       const p=this.position(this.active,now);
       if(p){
         const shape=SHAPES[p.form],color=COLORS[p.form];
+        // Hot particles trail BEHIND the moving tetromino in world coordinates.
+        // Soft incandescent white/yellow/orange fades into scattered embers.
+        ctx.save();
+        ctx.globalCompositeOperation="lighter";
+        for(const spark of this.trailParticles(now,{reduced,speedRatio})){
+          ctx.globalAlpha=spark.opacity;
+          ctx.fillStyle=spark.color;
+          ctx.shadowColor=spark.color;
+          ctx.shadowBlur=reduced?2:Math.min(10,spark.radius*2.4);
+          ctx.beginPath();ctx.arc(spark.x,spark.y,spark.radius,0,Math.PI*2);ctx.fill();
+        }
+        ctx.restore();
         ctx.save();
         ctx.translate(p.x,p.y);ctx.rotate(p.angle);
-        // A gently oscillating hot tail shows direction and makes targeting legible.
-        ctx.shadowColor=color;ctx.shadowBlur=reduced?5:16;
-        ctx.strokeStyle=color;ctx.lineWidth=3;ctx.globalAlpha=reduced?.35:.55;
-        ctx.beginPath();ctx.moveTo(-9,14);ctx.lineTo(-24-p.t*10,36);ctx.stroke();
+        ctx.shadowColor=color;ctx.shadowBlur=reduced?4:8;
         ctx.globalAlpha=.95;
         for(const [sx,sy] of shape){
           ctx.fillStyle=color;ctx.fillRect(sx*10-4.5,sy*10-4.5,9,9);
