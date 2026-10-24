@@ -284,8 +284,8 @@
 - [x] Les raccourcis tactiles de chute ×10 ne changent pas le prix du laser ; score ne descend jamais en dessous de zéro.
 - [x] Gains des poses et couronnes réduits de 35 % ; bonus de vitesse réelle limité à ×10 ; affichage des bonus pont/géodésie ajusté.
 - [x] Anciennes sauvegardes et scores conservés ; tests spécialisés ajoutés dans `tests/pt034-scoring-balance.test.cjs`.
-- [ ] Vérifier tous les tests Node et la construction Gradle via GitHub Actions.
-- [ ] Vérifier et partager une APK debug brute `temp/PartouTetris-v0.2.20-scoring-debug.apk`.
+- [x] CI GitHub Actions #40085127619 réussie : 206 tests Node, compilation Gradle, publication de l'APK brute.
+- [x] APK brute `temp/PartouTetris-v0.2.20-scoring-debug.apk` vérifiée sur GitHub (8 825 021 octets, SHA Git blob `f14a2627b890fc3de72a03ac6b1dfd5bf839a454`).
 - [ ] Essai réel Fab sur Samsung Android 16 : partie lente/rapide, coût du laser et équilibre des nouveaux scores ; évaluer les anciens classements non recalculés.
 - [ ] PT-033 visuel à coder séparément, seulement après ordre explicite, puis fusion des changements envisagée après tests.
 - [ ] Aucun merge `main` ni publication définitive sans validation.
