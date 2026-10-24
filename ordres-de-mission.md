@@ -263,3 +263,13 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - Aucun changement de la sélection visuelle : PT-033 reste une mission distincte, préparée et en attente d'ordre de code. Tactile, lasers, sauvegardes, progression, classement, audio et assets préservés.
 - Branche : `feature/lunar-four-fronts-score-balance-034`, créée depuis PT-032 ; cible debug 0.2.20 / versionCode 31. Ajouter des tests de calcul et un APK brut téléchargeable. **Ne jamais fusionner `main` sans validation explicite de Fab.**
 - Statut : GitHub Actions #40085127619 **SUCCESS** : 206 tests Node réussis, Gradle et APK brute v0.2.20 construite et publiée (8 825 021 octets). **Essai réel Samsung restant à effectuer**, aucune validation tactile présumée.
+
+
+## PT-035 — Tangente locale au niveau de la Lune projetée (24/10/2026)
+- **Ordre explicite de Fab :** « Maintenant c'est la tangentielle qui devrait être au niveau de la lune. Pièce projetée et doigt. » puis « Tu peux coder louloute ».
+- Fab estime que le positionnement de la petite Lune fantôme PT-032 est bon ; il demande que la **lecture de la tangente** apparaisse au niveau de **cette Lune projetée**, en relation avec la projection de pose et le doigt. Ne pas déplacer la vraie pièce en modifiant uniquement la lecture visuelle.
+- **Implémentation :** `tangent-landing-guide.js` calcule une tangente au centre mobile `ghostMoonGuide.anchor` avec `target.angle`, commune à `joystick-guide.js` et `tangent-control.js`. Deux traits fins translucides relient la projection de pose au pivot, puis celui-ci au doigt réel. La tangente cyan est courte, symétrique, peu opaque, avec flèches et point pivot creux ; dessinée derrière les pièces. Pulsation désactivée ou stabilisée en mode visuel doux.
+- **Intégration :** `index.html` l'affiche seulement pendant une prise valide, dans la zone lunaire, en mode tangentiel, hors pause/laser/réglages/fin ; recalcul à chaque frame après le repositionnement PT-032 de la lune fantôme. Flèches bleues autour du doigt, joystick pédagogique inférieur et repère de la pose conservés.
+- **Non-régression :** `tangent-control.js`, `touch.js`, `engine.js`, sauvegardes, anti-exploit PT-030, score modéré PT-034, Hall of Fame, laser, chute ×10 et audio inchangés par PT-035. La correction visuelle distincte PT-033 (cercle jaune / pulsation de la pièce) n'est pas incluse.
+- **Branche :** `feature/lunar-four-fronts-tangent-035` issue de PT-034 pour garder les correctifs de score ; version debug `0.2.21`, versionCode 32 ; tests `tests/pt035-local-tangent.test.cjs`. Pas de fusion `main` ou publication Release/Play sans validation explicite de Fab.
+- **Statut :** code et tests PT-035 poussés ; CI Android et essai visuel sur Samsung à confirmer.
