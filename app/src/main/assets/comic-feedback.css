@@ -1,8 +1,8 @@
 /* PT-042: short non-interactive comics above controls, not the lunar board.
-   Bottom coordinate is measured from the top of the real control deck. */
+   Absolutely anchored to the control deck, so guide height never breaks it. */
 #comicFeed{
- position:fixed;z-index:5;
- top:auto;bottom:var(--comic-bottom,calc(18vh + 12px));
+ position:absolute;z-index:5;
+ top:auto;bottom:calc(100% + 8px);
  right:clamp(8px,2.5vw,16px);left:auto;
  width:min(55vw,255px);max-height:min(27vh,175px);
  pointer-events:none;
