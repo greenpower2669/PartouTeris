@@ -312,3 +312,13 @@
 - [x] CI GitHub Actions #40106508588 : 217/217 tests réussis, Gradle Android réussi et APK directe publiée ; fichier vérifié `temp/PartouTetris-v0.2.22-glow-debug.apk` (8 827 066 octets).
 - [ ] Essai réel Samsung Android 16 : lisibilité avec doigt sur pièce, sur projection et en mouvement rapide.
 - [ ] Jamais de fusion main sans accord explicite de Fab.
+
+
+## PT-036 — Aura irradiante visible (24/10/2026)
+- [x] Branche issue de PT-033, score PT-034 et guide PT-035 conservés.
+- [x] Dessiner des halos qui épousent chaque mino réel et projeté avec deux passes lumineuses et variation de luminance claire.
+- [x] Conserver l'absence d'anneaux et le mode visuel doux.
+- [x] Ajouter tests de non-régression PT-036 et préparer debug 0.2.23.
+- [ ] Confirmer les tests Node, APK brute dans `temp/PartouTetris-v0.2.23-irradiant-debug.apk` et compilation CI.
+- [ ] Vérifier l'effet visuel sur Samsung et ajuster après retour de Fab si besoin.
+- [ ] Aucun merge main sans validation.
