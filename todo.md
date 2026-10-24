@@ -322,3 +322,12 @@
 - [x] CI #40107340300 réussie : **219/219 tests**, build Android Gradle et APK directe vérifiée `temp/PartouTetris-v0.2.23-irradiant-debug.apk` (8 827 338 octets).
 - [ ] Vérifier l'effet visuel sur Samsung et ajuster après retour de Fab si besoin.
 - [ ] Aucun merge main sans validation.
+
+
+## PT-037 — Intensité, alternance cyan-or et aura (24/10/2026)
+- [x] Branche `feature/lunar-four-fronts-bicolor-aura-037` créée depuis PT-036 ; `main` intacte.
+- [x] Large aura externe suivant exactement chaque cellule sélectionnée et sa projection.
+- [x] Transition progressive et cyclique cyan ↔ or, intensité fortement variable et mode visuel doux stable.
+- [x] Préserver scores PT-034, tangente PT-035, commandes et HOF.
+- [ ] CI complète, tests, compilation et APK brute 0.2.24 téléchargeable à confirmer.
+- [ ] Retour perceptif Fab sur Samsung, contrôler alternance et aura sans anneaux.
