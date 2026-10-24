@@ -30,7 +30,7 @@ test('Parachutes are visual-only and constrained by the same zone rule',()=>{
  const html=fs.readFileSync('app/src/main/assets/index.html','utf8');
  assert.match(art,/canopy\(\{cx,cy,inner,stepR,angle,radial/);
  assert.match(art,/if\(!shouldDeployCanopy\(radial\)\)return false/);
- assert.match(html,/if\\(window\\.PartouVisuals\\.shouldDeployCanopy\\(p\\.radius,RINGS\\)\\&\\&!burning\\)/);
+ assert.ok(html.includes('shouldDeployCanopy(p.radius,RINGS)&&!burning'));
  assert.match(html,/art\.canopy\(/);
  assert.doesNotMatch(html,/art\.canopy\([\s\S]*?art\.incoming\(/);
 });
