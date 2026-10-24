@@ -15,7 +15,7 @@ test("PT040: particle exhaust replaces the former rigid colored stick",()=>{
   const source=fs.readFileSync("app/src/main/assets/earth-events.js","utf8");
   assert.doesNotMatch(source,/ctx\.lineTo\(-24-p\.t\*10,36\)/);
   assert.doesNotMatch(source,/ctx\.moveTo\(-9,14\)/);
-  assert.match(source,/trailParticles\(now,\{reduced,speedRatio\}\)/);
+  assert.ok(source.includes("trailParticles(this.pending?.firedAt??now,{reduced,speedRatio})"));
   assert.match(source,/ctx\.globalCompositeOperation="lighter"/);
 });
 
@@ -94,5 +94,5 @@ test("PT040: Earth-event effects and score contract are not changed",()=>{
   const html=fs.readFileSync("app/src/main/assets/index.html","utf8");
   assert.match(html,/speedRatio:Math\.max\(1,8\/game\.fallInterval\(\)\)/);
   assert.match(html,/earthEvents\.hit\(pos\.x,pos\.y,game\.seconds,game\.fallInterval\(\)\)/);
-  assert.match(html,/game\.award\(interception\.bonus,"earth-defense"/);
+  assert.match(html,/game\.award\(ev\.bonus,"earth-defense"/);
 });
