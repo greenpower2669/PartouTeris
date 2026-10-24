@@ -29,7 +29,7 @@ test("PT035: tangent is centered on the CURRENT projected lunar anchor, not on t
  near((q.ends[0].y+q.ends[1].y)/2,anchor.y);
  assert.notDeepEqual(q.center,finger);
  assert.notDeepEqual(q.center,target);
- assert.deepEqual(q.links[0],[target,anchor]);
+ assert.deepEqual(q.links[0],[{x:target.x,y:target.y},anchor]);
  assert.deepEqual(q.links[1],[anchor,finger]);
 });
 test("PT035: tangent orientation matches same input engine and joystick for all 48 sectors",()=>{
