@@ -289,3 +289,9 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - Correction dans `visuals.js` : nouvelles passes de lumière en composition `screen`, avec flou lumineux variable et rehausse cyan/blanc directement sur chaque cellule et son contour. L'aura suit la géométrie réelle des quatre minos, jamais un marqueur circulaire. `index.html` donne à la vraie pièce et à sa projection la même respiration lente plus contrastée, sans déformer la forme ; effet fixe en mode visuel doux.
 - Éviter tout changement de commande, HOF, scores, audio et sauvegardes. Android 0.2.23 / versionCode 34, tests PT-036, APK brute CI ; aucun merge main sans accord de Fab.
 - Statut : attente du résultat CI et de validation visuelle sur Samsung.
+
+
+## PT-037 — Aura bicolore alternée et intensité visible (24/10/2026)
+- **Retour Fab :** le bloc PT-036 paraît lumineux, mais aucune variation perceptible d'intensité, pas de bascule bicolore et aura extérieure absente. Corriger et consigner dans Git.
+- Branche `feature/lunar-four-fronts-bicolor-aura-037` créée depuis PT-036. `visuals.js` : aura de forme cellulaire par traits diffus larges (non circulaires), composition lumineuse, alternance interpolée cyan/or, énergie modulant l'épaisseur et l'opacité. `index.html` : phase de couleur et respiration synchronisées sur la pièce choisie et sa projection. Mode « effets doux » fixe pour limiter le scintillement.
+- Aucun changement gameplay, scores PT-034, repère tangent PT-035, sauvegarde, Hall of Fame ni musique ; `main` préservée. APK cible 0.2.24 debug directe ; validation visuelle Samsung indispensable.
