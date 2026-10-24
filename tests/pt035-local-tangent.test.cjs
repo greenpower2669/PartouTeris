@@ -84,7 +84,7 @@ test("PT035: engine and touch unchanged; marker is visual-only and only on activ
  assert.match(html,/anchor:ghostMoonGuide\.anchor,target,/);
  assert.match(html,/finger:\{x:grip\.lastX,y:grip\.lastY\}/);
  assert.match(html,/window\.PartouGripVectors\.drawGripVectors/);
- assert.doesNotMatch(html,/window\\.PartouLandingGuide\\.drawLandingCue\\(ctx,target/);
+ assert.equal(html.includes('window.PartouLandingGuide.drawLandingCue(ctx,target'),false);
  assert.match(html,/joystick\.render\(landing\?\.angle\?\?piece\.angle/);
  assert.doesNotMatch(module,/game\.shift|game\.rotate|game\.score|setPointerCapture|addEventListener|pointerdown|localStorage/);
 });
