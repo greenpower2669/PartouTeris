@@ -195,3 +195,10 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Correction sur branche PT-034 : multiplier la pénalité hauteur par (8 / fallInterval())² ; réduire les nouvelles récompenses globales à 65 %, plafonner le facteur de vitesse du gain à ×10. L'anti-exploit PT-030 reste fondé sur la durée de vol réellement mesurée.
 - Cas à recontrôler : coût nul seulement pour coordonnées invalides, score non négatif si malus supérieur au solde, boost tactile sans impact sur le prix, anciennes sessions et historiques inchangés, calcul du bonus pont/géodésie cohérent.
 - CI #40085127619 **SUCCESS** : tests Node (206), Gradle Android et publication de l'APK brute sous `temp/PartouTetris-v0.2.20-scoring-debug.apk`. **Essai réel Samsung encore à effectuer** ; aucun résultat de terrain présumé.
+
+
+## PT-035 — Décalage perceptif entre Lune projetée et direction tangentielle (24/10/2026)
+- Observation Fab après essai de PT-032 : la petite Lune projetée est à peu près correctement placée, mais les grands vecteurs tangentiels étaient visibles autour du doigt, séparés du pivot lunaire intermédiaire. Le joueur veut lire la tangente **au niveau du pivot entre doigt et pose future**.
+- Correction visuelle seulement : un petit axe cyan local et des flèches sont calculés à `ghostMoonGuide.anchor` sur l'axe tangent de `target.angle`; deux traits translucides relient `target`, `anchor` et la coordonnée du doigt. Rendu avant les blocs, sans modifier la projection d'entrée ni la position des pièces.
+- Tests de référence : mêmes vecteurs unitaires que joystick et moteur dans les 48 secteurs, raccord 47/0 et recalcul lorsque la projection bouge. Ne pas confondre avec le besoin PT-033 de supprimer ultérieurement le cercle jaune de sélection.
+- CI et test réel Samsung non encore validés au moment de la rédaction ; vérifier avant livraison.
