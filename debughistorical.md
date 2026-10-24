@@ -202,3 +202,9 @@ Une brique occupe une surface très étroite dans les 48 secteurs. En version 0.
 - Correction visuelle seulement : un petit axe cyan local et des flèches sont calculés à `ghostMoonGuide.anchor` sur l'axe tangent de `target.angle`; deux traits translucides relient `target`, `anchor` et la coordonnée du doigt. Rendu avant les blocs, sans modifier la projection d'entrée ni la position des pièces.
 - Tests de référence : mêmes vecteurs unitaires que joystick et moteur dans les 48 secteurs, raccord 47/0 et recalcul lorsque la projection bouge. Ne pas confondre avec le besoin PT-033 de supprimer ultérieurement le cercle jaune de sélection.
 - CI et test réel Samsung non encore validés au moment de la rédaction ; vérifier avant livraison.
+
+
+## PT-033 — Anneaux occultants (24/10/2026)
+- Capture annotée : les deux anneaux de sélection/pose recouvrent visuellement les blocs et leur silhouette future.
+- Correctif : retrait de l'arc de sélection dessiné sur la pièce et du cercle de destination affiché par `drawLandingCue` ; aura colorée très légère sur les quatre cellules actives et leurs quatre silhouettes de pose, avec oscillation lente et réduction de mouvement honorée.
+- Préservation de PT-035 (tangente Lune projetée), PT-034 (scores) et du moteur de contrôle. Vérifier CI puis test sur smartphone.
