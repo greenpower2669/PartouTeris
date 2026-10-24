@@ -17,10 +17,10 @@ test("PT042: comic feed is docked INSIDE controls, before tip and buttons, never
 });
 test("PT042: card is light and translucent, bottom aligned, non-blocking on touchscreen",()=>{
  assert.match(css,/#comicFeed\{[\s\S]*?pointer-events:none/);
- assert.match(css,/--panel-start:rgba\\(14,47,77,\\.43\\)/);
- assert.match(css,/--panel-end:rgba\\(5,25,48,\\.31\\)/);
+ assert.ok(css.includes("--panel-start:rgba(14,47,77,.43)"));
+ assert.ok(css.includes("--panel-end:rgba(5,25,48,.31)"));
  assert.doesNotMatch(css,/background:linear-gradient\(160deg,#0d1a35f5/);
- assert.match(css,/width:min\\(60vw,280px\\)/);
+ assert.ok(css.includes("width:min(60vw,280px)"));
  assert.match(css,/@media\(max-height:700px\)/);
  assert.match(css,/@media\(max-width:360px\)/);
 });
