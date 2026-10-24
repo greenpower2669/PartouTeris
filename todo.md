@@ -353,3 +353,14 @@
 - [x] CI GitHub Actions #40119045022 **SUCCESS** : 232/232 tests Node, zéro échec, Gradle Android terminé, APK brute vérifiée `temp/PartouTetris-v0.2.26-earth-events-debug.apk` (8 831 682 octets, blob SHA `14bb2952780c6d55eee68fbe2f01827d5f44c704`). Téléchargement brut : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-earth-events-039/temp/PartouTetris-v0.2.26-earth-events-debug.apk
 - [ ] Test réel Samsung : objets bien visibles près de la Terre, laser manuel gagnant des points, satellites automatiques, panneau compact y compris avec joystick actif.
 - [ ] Pas de merge main / Release / Play sans validation de Fab.
+
+
+## PT-040 — Remplacer la tige par une queue de particules (24/10/2026)
+- [x] Branche autonome `feature/lunar-four-fronts-particle-tail-040` issue de PT-039 ; rien fusionné sur `main`.
+- [x] Retirer le trait plein coloré derrière le bloc événementiel se dirigeant vers la Terre.
+- [x] Émettre des particules étincelantes blanc-jaune-orange déclinant en taille et opacité, en suivant l'historique réel du déplacement et non la rotation.
+- [x] Longueur légèrement fonction de la gravité permanente, sans influence de la chute manuelle ×10 ; mode visuel doux allégé.
+- [x] Maintenir gameplay, bonus, lasers et interfaces PT-039 ; ajouter tests PT-040.
+- [ ] CI complète Node et Android, APK brute `temp/PartouTetris-v0.2.27-particle-tail-debug.apk` vérifiée et lien direct transmis.
+- [ ] Test visuel sur Samsung SM-A576B : traînée visible, détachée en étincelles et non en « bâton » lors d'une rotation, absence d'occlusion du terrain.
+- [ ] Aucune fusion `main` sans validation explicite de Fab.
