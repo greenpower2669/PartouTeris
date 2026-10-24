@@ -289,3 +289,16 @@
 - [ ] Essai réel Fab sur Samsung Android 16 : partie lente/rapide, coût du laser et équilibre des nouveaux scores ; évaluer les anciens classements non recalculés.
 - [ ] PT-033 visuel à coder séparément, seulement après ordre explicite, puis fusion des changements envisagée après tests.
 - [ ] Aucun merge `main` ni publication définitive sans validation.
+
+
+## PT-035 — Tangente sur la Lune projetée (24/10/2026)
+- [x] Branche isolée `feature/lunar-four-fronts-tangent-035` à partir de PT-034, préserver les scores et `main`.
+- [x] Ajouter le repère tangent local au centre mobile de la Lune projetée, en liaison visuelle légère avec la pose future et le doigt.
+- [x] Orienter ce repère comme `joystick-guide.js` et `tangent-control.js`, sans changer les commandes ni la sensibilité.
+- [x] Conserver repère de pose PT-032, flèches bleues au doigt et joystick « POSE » sous le jeu.
+- [x] Ajouter tests géométriques sur 48 secteurs, franchissement 47/0, pivot mobile, rendu discret, absence de mutation du moteur et compatibilité PT-034.
+- [ ] CI : tests Node, compilation Gradle, publication APK debug directe 0.2.21.
+- [ ] Vérifier l'APK non ZIP `temp/PartouTetris-v0.2.21-tangent-debug.apk` et communiquer le lien direct à Fab.
+- [ ] Essai sur Samsung SM-A576B Android 16 : doigt loin, doigt proche, tangente locale, diagonales, quatre fronts, rotation et mouvements rapides, compatibilité PT-034.
+- [ ] PT-033 reste séparé (remplacement du cercle jaune et pulsation de la projection), ne pas le réaliser implicitement.
+- [ ] Pas de fusion `main` ni publication définitive sans validation.
