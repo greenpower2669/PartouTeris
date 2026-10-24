@@ -361,6 +361,6 @@
 - [x] Émettre des particules étincelantes blanc-jaune-orange déclinant en taille et opacité, en suivant l'historique réel du déplacement et non la rotation.
 - [x] Longueur légèrement fonction de la gravité permanente, sans influence de la chute manuelle ×10 ; mode visuel doux allégé.
 - [x] Maintenir gameplay, bonus, lasers et interfaces PT-039 ; ajouter tests PT-040.
-- [ ] CI complète Node et Android, APK brute `temp/PartouTetris-v0.2.27-particle-tail-debug.apk` vérifiée et lien direct transmis.
+- [x] CI GitHub Actions #40122239539 **SUCCESS** : **239/239 tests Node**, zéro échec ; Gradle Android réussi ; APK brute `temp/PartouTetris-v0.2.27-particle-tail-debug.apk` vérifiée (8 832 546 octets, blob SHA `04eab107f1aac02300f1ee09311b19fffac00380`). Lien direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-particle-tail-040/temp/PartouTetris-v0.2.27-particle-tail-debug.apk
 - [ ] Test visuel sur Samsung SM-A576B : traînée visible, détachée en étincelles et non en « bâton » lors d'une rotation, absence d'occlusion du terrain.
 - [ ] Aucune fusion `main` sans validation explicite de Fab.
