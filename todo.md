@@ -302,3 +302,13 @@
 - [ ] Essai sur Samsung SM-A576B Android 16 : doigt loin, doigt proche, tangente locale, diagonales, quatre fronts, rotation et mouvements rapides, compatibilité PT-034.
 - [ ] PT-033 reste séparé (remplacement du cercle jaune et pulsation de la projection), ne pas le réaliser implicitement.
 - [ ] Pas de fusion `main` ni publication définitive sans validation.
+
+
+## PT-033 — Aura sur pièce et projection (24/10/2026)
+- [x] Branche dédiée issue de PT-035, main intacte.
+- [x] Supprimer l'anneau jaune de la pièce et l'appel du cercle de projection.
+- [x] Illuminer les cellules réelles et projetées, même couleur, pulsation douce ; respecter effets visuels doux.
+- [x] Préserver tangente PT-035 et scoring PT-034, tests PT-033 ajoutés.
+- [ ] Confirmer tests Node, compilation Gradle, publication APK 0.2.22 non ZIP.
+- [ ] Essai réel Samsung Android 16 : lisibilité avec doigt sur pièce, sur projection et en mouvement rapide.
+- [ ] Jamais de fusion main sans accord explicite de Fab.
