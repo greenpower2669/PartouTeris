@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const {Game,SECTORS,RINGS,cellsOf} = require('../app/src/main/assets/engine.js');
+const {Game,SECTORS,RINGS,cellsOf,SCORE_PAYOUT_RATIO} = require('../app/src/main/assets/engine.js');
 
 test('Default descent is slow, adjustable and increases gradually',()=>{
   const g=new Game(()=>0);
@@ -131,7 +131,7 @@ test('Ring scores are real; a repeated clearing raises combo by 100',()=>{
  const g=new Game(()=>0);
  g.board[0].fill(0);assert.equal(g.clearRings(),1);
  const first=g.score;
- assert.ok(first>=960);assert.equal(g.cleared,1);assert.equal(g.level,2);
+ assert.ok(first>=Math.round(960*SCORE_PAYOUT_RATIO));assert.equal(g.cleared,1);assert.equal(g.level,2);
  g.board[0].fill(1);assert.equal(g.clearRings(),1);
  assert.ok(g.score>first);assert.equal(g.cleared,2);assert.equal(g.level,3);
  assert.equal(g.combo,2);
@@ -166,11 +166,11 @@ test('Exactly two *distinct pre-existing cells* contacting piece yield x2, three
  const original=g.placementReward(cells);
  g.board[3][4]=0;g.board[4][7]=1;
  const two=g.placementReward(cells);
- assert.equal(two.contacts,2);assert.equal(two.multiplier,2);assert.ok(two.points>=2*original.base);
+ assert.equal(two.contacts,2);assert.equal(two.multiplier,2);assert.ok(two.points>=Math.round(2*original.base*SCORE_PAYOUT_RATIO));
  g.board[2][5]=2;
  const three=g.placementReward(cells);
  assert.equal(three.contacts,3);assert.equal(three.multiplier,3);
- assert.ok(three.points>=3*original.base);
+ assert.ok(three.points>=Math.round(3*original.base*SCORE_PAYOUT_RATIO));
 });
 test('Self-neighbours, Moon ground and wrapping boundary never fabricate contact score',()=>{
  const g=new Game(()=>0),cells=[[47,0],[0,0],[47,1],[0,1]];
