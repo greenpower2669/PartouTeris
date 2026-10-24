@@ -373,6 +373,6 @@
 - [x] Cartouches temporaires façon comics visibles mais non tactiles, couleur distincte pour gains/malus, texte hiérarchisé ; pause/effets doux respectés.
 - [x] Petites bulles `+40 %` par phase lorsque le vrai bonus vitesse existe, pourcentage total exact si le bonus est grand. Aucun faux bonus ni score ajouté.
 - [x] Câblage pour toutes les mutations `points` et `destroy`, anciens festivals conservés, tests PT-041 ajoutés et vieux tests d'interception actualisés.
-- [ ] Valider CI Node + Gradle, APK brute `temp/PartouTetris-v0.2.28-comic-trilaser-debug.apk` et lien direct.
+- [x] GitHub Actions #40129936727 **SUCCESS** : 248/248 tests Node (0 échec), build Gradle Android et APK brute vérifiée `temp/PartouTetris-v0.2.28-comic-trilaser-debug.apk` (8 839 507 octets, blob SHA Git `c14bb0b38393ae94ba5238a12358b5e4a67fc406`). Lien direct : https://raw.githubusercontent.com/greenpower2669/PartouTetris/feature/lunar-four-fronts-comic-feedback-041/temp/PartouTetris-v0.2.28-comic-trilaser-debug.apk
 - [ ] Test Android Samsung : trois faisceaux lisibles pendant le ciblage, explosion et score après 320 ms, popups BD variés, malus vrai, bon placement et non-occlusion des blocs.
 - [ ] Attendre validation Fab avant toute fusion `main`.
