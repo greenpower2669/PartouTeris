@@ -26,8 +26,8 @@
       if(this.active||!earth||!Number.isFinite(W)||W<=0)return null;
       // Seven rotating mino silhouettes, with no consecutive repeated shape.
       const n=SHAPES.length;
-      let type=Math.floor(this.random()*(n-1));
-      if(type>=this.lastType)type++;
+      let type=Math.floor(this.random()*(this.lastType<0?n:n-1));
+      if(this.lastType>=0&&type>=this.lastType)type++;
       this.lastType=type;
       const side=this.random()<.5?-1:1;
       const x0=side<0?-22:W+22;
