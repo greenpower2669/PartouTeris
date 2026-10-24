@@ -280,4 +280,4 @@ Fab demande 7 couleurs fixes par forme, sac de 7 tirages et logs L/J/S/Z des pos
 - Développement réalisé **après** PT-035 sur `feature/lunar-four-fronts-glow-033` issue de `feature/lunar-four-fronts-tangent-035`, pour conserver la tangente projetée PT-035 et les scores PT-034.
 - `index.html` : suppression du dessin de l'anneau jaune de sélection ; suppression de l'appel au cercle cyan de pose ; halo coloré et modulation de luminance directement sur les cellules de la pièce active et de la projection. Animation stabilisée en mode « effets visuels doux », aucune forme géométrique opaque ajoutée.
 - Contrôles, mouvement tangent, lune fantôme, guidage doigt, laser, sauvegarde, score PT-034, HOF et sons inchangés. Version debug 0.2.22 / versionCode 33 ; tests `tests/pt033-selection-glow.test.cjs`.
-- Pas de merge `main` sans validation explicite de Fab ; essai visuel Samsung à effectuer après CI.
+- Livraison CI #40106508588 **SUCCESS** : 217 tests Node sans échec, compilation Gradle, APK directe `temp/PartouTetris-v0.2.22-glow-debug.apk` vérifiée (8 827 066 octets). **Essai visuel Samsung restant.** Aucun merge `main` sans validation explicite de Fab.
