@@ -60,6 +60,14 @@ const BANKS=Object.freeze({
     "Bonus de rapidité !","L'élan fait la différence !",
     "Trajectoire express !","Cadence gagnante !",
     "Poussée gagnante !","Élan orbital !","Vitesse payante !"
+  ],
+  meteor:[
+    "Pluie de météores !","Alerte sur la Terre !",
+    "Débris en approche !","Menaces multiples !",
+    "Bombardement orbital !","Défense planétaire !",
+    "Vague de blocs !","Alerte Pharaonites !",
+    "Ciel incandescent !","Déluge spatial !",
+    "Les satellites en position !","Tempête de débris !"
   ]
 });
 const HEADINGS={
@@ -70,10 +78,12 @@ const HEADINGS={
  malus:["MALUS !","OUPS !","PÉNALITÉ !","ATTENTION !"],
  milestone:["PALIER !","EXPLOIT !","WAOUH !"],
  gain:["BONUS !","POINTS !","GAGNÉ !"],
- speed:["VITESSE !","TURBO !","ACCÉLÉRATION !"]
+ speed:["VITESSE !","TURBO !","ACCÉLÉRATION !"],
+ meteor:["ALERTE !","MENACES !","TEMPÊTE !","DÉFENSE !"]
 };
 function categoryFor(ev){
  if(!ev)return null;
+ if(ev.type==="info"&&ev.reason==="meteor-shower")return "meteor";
  if(ev.type==="destroy")return "malus";
  if(ev.type!=="points"||!(ev.gained>0))return null;
  if(ev.reason==="earth-defense")return "earth";
@@ -120,20 +130,21 @@ class PhraseDeck {
 function comicModel(event,deck){
  const category=categoryFor(event);
  if(!category)return null;
- const value=category==="malus"?(event.charged||0):event.gained;
- const percent=category==="malus"?0:speedPercent(event);
+ const info=category==="meteor";
+ const value=info?0:category==="malus"?(event.charged||0):event.gained;
+ const percent=info||category==="malus"?0:speedPercent(event);
  return {
    category,heading:deck.pick(category,true),phrase:deck.pick(category),
-   score:(category==="malus"?"−":"+")+
+   score:info?"SATELLITES EN ALERTE":(category==="malus"?"−":"+")+
      value.toLocaleString("fr-FR")+" pts",
    speed:percent,stages:speedStages(percent),
    // Displayed score is always the ACTUAL awarded/charged amount.
    gain:value,
    // PT-042: importance is part of the message model, not guessed from
    // decorative text. Big points and all alert/wow events have jagged edges.
-   priority:["earth","ring","malus","bridge","milestone"].includes(category)||
+   priority:["earth","ring","malus","bridge","milestone","meteor"].includes(category)||
      event.combo>=2||value>=1500?2:1,
-   frame:["earth","ring","malus","bridge","milestone"].includes(category)||
+   frame:["earth","ring","malus","bridge","milestone","meteor"].includes(category)||
      event.combo>=2||value>=1500?"burst":"smooth"
  };
 }
@@ -201,7 +212,7 @@ class ComicFeedback {
      this.paint(this.current);
    }
  }
- duration(model){return this.reduced()?1.2:Math.min(2.4,1.35+.19*model.stages.length);}
+ duration(model){return this.reduced()?1.2:Math.min(2.5,1.68+.19*model.stages.length);}
 }
 root.PartouComic={BANKS,HEADINGS,PhraseDeck,categoryFor,speedPercent,
   speedStages,comicModel,ComicFeedback};
