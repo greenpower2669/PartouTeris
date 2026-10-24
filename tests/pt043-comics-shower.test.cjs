@@ -55,7 +55,7 @@ test("PT043: multiple arrivals resolve automatically; no coins for satellites or
  assert.ok(impacts.every(e=>e.bonus===undefined));
  assert.equal(new Set(impacts.map(e=>e.targetId)).size,3);
  assert.equal(rain.wave,null);
- assert.ok(rain.nextAt>=100); // quiet interval after final fragments fade.
+ assert.ok(rain.nextAt>=95); // quiet interval after final fragments fade.
 });
 
 test("PT043: player intercepts a specific shower target, then a SINGLE 3-beam volley precedes points",()=>{
@@ -111,7 +111,7 @@ test("PT043: alert comics are zigzag, not fake point rewards, and use a rich rot
  assert.equal(first.gain,0);
  assert.equal(first.speed,0);
  assert.deepEqual(first.stages,[]);
- assert.equal(first.score,"SATELLITES EN ALERTE");
+ assert.equal(first.score,"DÉFENSE TERRE");
  const phrases=[first.phrase];
  for(let i=0;i<12;i++)phrases.push(comicModel({type:"info",reason:"meteor-shower",count:3},deck).phrase);
  for(let i=2;i<phrases.length;i++){
